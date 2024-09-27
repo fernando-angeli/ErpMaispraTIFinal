@@ -1,0 +1,50 @@
+@font-face {
+    font-family: Lato;
+    src: url(assets/fonts/Lato/Lato-Regular.ttf);
+}
+@font-face {
+    font-family: Montserrat;
+    src: url(assets/fonts/Montserrat/Montserrat-VariableFont_wght.ttf);
+}
+
+
+body,html, body * {
+    margin: 0;
+    padding: 0;
+}
+
+/* body {
+    display: grid;
+    grid-template-columns: auto min(1440px, 100%) auto;
+}
+body * {
+    grid-column: 2/3;
+} */
+ * {
+    box-sizing: border-box;
+ }
+
+
+
+:root {
+    --primary-normal: #1B3B4B;
+    --primary-light: #B4D3E4;
+    --primary-dark: #0E1D25;
+
+    --system-success: #8ED24B;
+    --system-info: #5B7BED;
+    --system-warning: #FFBA35;
+    --system-danger: #FF3E3E;
+    --system-inactive: #F3F1F1;
+
+    --secondary-normal: #FF8328;
+    --secondary-light: #FF951A;
+    --secondary-dark: #DF5D00;
+
+    --text-100: #2A153B;
+    --text-80: #564463;
+    --text-60: #80728A;
+    --text-40: #AAA1B1;
+    --text-20: #D5D0D8;
+    --text-0: #FFFFFF;
+}

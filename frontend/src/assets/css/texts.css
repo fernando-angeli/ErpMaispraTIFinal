@@ -1,0 +1,66 @@
+h1 {
+    color: var(--text-100);
+    text-align: center;
+    font-family: Lato;
+    font-size: 48px;
+    font-style: normal;
+    font-weight: 900;
+    line-height: 100%; /* 48px */
+}
+h2 {
+    color: var(--text-100);
+    text-align: center;
+    font-family: Lato;
+    font-size: 40px;
+    font-style: normal;
+    font-weight: 900;
+    line-height: 100%; /* 40px */
+}
+h3 {
+    color: var(--text-100);
+    text-align: center;
+    font-family: Lato;
+    font-size: 36px;
+    font-style: normal;
+    font-weight: 900;
+    line-height: 100%; /* 36px */
+}
+h4, label {
+    color: var(--text-100);
+    text-align: center;
+    font-family: Lato;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 900;
+    line-height: 100%; /* 24px */
+}
+p, .text {
+    color: var(--text-100);
+    text-align: center;
+
+    /* Text */
+    font-family: Lato;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 150%; /* 24px */
+}
+.small-text {
+    color: var(--text-100);
+    text-align: center;
+
+    /* Small */
+    font-family: Lato;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 100%; /* 12px */
+}
+
+
+
+h1.strong, h2.strong, h3.strong, h4.strong {
+    font-family: Montserrat;
+    font-style: normal;
+    font-weight: 700;
+}

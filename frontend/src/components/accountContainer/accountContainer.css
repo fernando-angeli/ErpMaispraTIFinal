@@ -1,0 +1,19 @@
+.containerAccount {
+    display: flex;
+    gap: 32px;
+}
+
+.account {
+    display: flex;
+    align-items: center;
+    gap: 9px ;
+}
+
+.account label {
+    color: var(--text-20);
+    text-align: left;
+}
+
+.exitIcon {
+    cursor: pointer;
+}
