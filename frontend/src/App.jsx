@@ -17,10 +17,13 @@ function App() {
     <>
       <Router>
         <Header isLoggedIn={isLogged}/>
+        <ProtectedRoute isLoggedIn={isLogged}>
+          <NavigationMenu/>
+        </ProtectedRoute>
         <Routes>
           <Route path='/' element={
             <ProtectedRoute isLoggedIn={isLogged}>
-              <NavigationMenu/>
+              
             </ProtectedRoute>
           }/>
         </Routes>

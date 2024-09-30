@@ -31,9 +31,9 @@ function NavigationMenu() {
         }
     ]
     return (
-        <>
-            <OptionsNavigationMenu arrayOptions={options}/>
-        </>
+        
+        <OptionsNavigationMenu arrayOptions={options}/>
+        
     )
 }
 

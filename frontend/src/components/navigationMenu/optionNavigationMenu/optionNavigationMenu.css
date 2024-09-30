@@ -1,0 +1,19 @@
+div.option {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    flex-basis: 20%;
+    padding: 28px;
+    cursor: pointer;
+    background-color: var(--primary-normal);
+    gap: 18px;
+}
+
+
+label.optionDescription {
+    color: var(--text-20);
+    font-weight: 500;
+    text-align: left;
+    cursor: pointer;
+}
