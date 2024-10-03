@@ -4,7 +4,6 @@ import './assets/css/buttons.css'
 import './assets/css/inputs.css'
 
 import { useState } from 'react'
-import HomePage from './pages/HomePage'
 import Header from './components/header/header'
 import ProtectedRoute from './components/ProtectedRoute'
 import NavigationMenu from './components/navigationMenu/NavigationMenu'
