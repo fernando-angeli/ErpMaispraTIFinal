@@ -8,6 +8,7 @@ function OptionsNavigationMenu({arrayOptions}) {
 
     arrayOptions.map((option, index) => {
         toReturn.push(
+
             <div key={index} className='option'>
                     <div  className='optionResposive'>
                 <img src={option.icon} alt="" className='optionIcon'/>

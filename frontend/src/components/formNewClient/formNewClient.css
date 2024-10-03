@@ -1,6 +1,7 @@
 div.containerForm {
     width: 70%;
     margin: 0 auto; 
+    border: solid 1px rgb(55, 0, 255);
 }
 
 h2.tabTitle {
@@ -15,6 +16,7 @@ form.formNewClient {
     grid-template-columns: 1fr 1fr;
     column-gap: 60px;
     row-gap: 15px;
+    border: solid 1px green;
 }
 
 label#labelNewClientAddress {
@@ -35,6 +37,21 @@ div.radiosCPForCNPJ {
     align-items: center;
 } 
 
+form.formNewClient .divButtons {
+    grid-column: 2/3;
+    display: flex;
+    justify-content: end;
+    gap: 15px;
+    margin-top: 15px;
+
+   
+}
+
+.isInvalid {
+    border-color: var(--system-danger);
+    background-color: #fff2f2;
+}
+
 
 /* ------------- PERSONALIZED RADIO ------------- */
 
@@ -43,6 +60,7 @@ div.radiosCPForCNPJ {
 
 .inputRadioCpfCnpj {
     display: none;
+    transition-duration: 2s;
 }
 
 .inputRadioCpfCnpj + label:before {
@@ -73,6 +91,7 @@ div.radiosCPForCNPJ {
 
 .labelRadio {
     cursor: pointer !important;
+    
 }
 
 /* ------------- PLACEHODER COLOR ------------- */
