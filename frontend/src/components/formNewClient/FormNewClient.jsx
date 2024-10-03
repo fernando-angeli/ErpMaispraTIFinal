@@ -1,9 +1,10 @@
 import { useState } from 'react'
 import './formNewClient.css'
-
+import { CgAdd } from "react-icons/cg";
+import { CgRemove } from "react-icons/cg";
 function FormNewClient() {
+    const [ResponsiveCliente, setResponsiveCliente] = useState(true)
     const [CPForCNPJ, setOption] = useState("cpf")
-
     const [newClientName, setNewClientName] = useState("")
     const [newClientEmail, setNewClientEmail] = useState("")
     const [newClientAddress, setNewClientAddress] = useState("")
@@ -47,15 +48,17 @@ function FormNewClient() {
         setNewClientCPForCNPJ("")
     }
 
-   
+    const resposiveClienteShow = () => {
+        setResponsiveCliente(!ResponsiveCliente);
+    };
 
     
-    
-
     return (
         <div className='containerForm'>
-            <h2 className='tabTitle'>Adicionar Cliente</h2>
-            <form className='formNewClient' id='formNewClient' onSubmit={handleSubmit} onReset={handleReset}>
+            <h2 className='tabTitle'>Adicionar Cliente 
+            <a  className="hide-desktop" onClick={resposiveClienteShow}> {ResponsiveCliente ? <CgAdd size={45}/> : <CgRemove size={45}/> }</a>
+                </h2>
+            <form className={ResponsiveCliente ? 'visibleformNewClient' : 'hiddenformNewClient'}  id='formNewClient' onSubmit={handleSubmit} onReset={handleReset} >
 
                 <label htmlFor="newClientName" className='inputLabel' id='labelNewClientName'>
                     <span className='inputDescription'>Nome:</span> 

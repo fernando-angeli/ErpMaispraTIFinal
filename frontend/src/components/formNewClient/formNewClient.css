@@ -1,22 +1,29 @@
+.hide-desktop{
+    display: none;
+    text-decoration: none;
+    color: black;
+}
+
 div.containerForm {
     width: 70%;
     margin: 0 auto; 
-    border: solid 1px rgb(55, 0, 255);
 }
 
 h2.tabTitle {
     text-align: left;
     margin-left: 15px;
     margin-block: 40px;
-    
 }
 
-form.formNewClient {
+form.visibleformNewClient {
     display: grid;
     grid-template-columns: 1fr 1fr;
     column-gap: 60px;
     row-gap: 15px;
-    border: solid 1px green;
+}
+
+form.hiddenformNewClient {
+    display: none;
 }
 
 label#labelNewClientAddress {
@@ -110,4 +117,88 @@ form.formNewClient .divButtons {
  
 :-ms-input-placeholder {  
     color: var(--text-40);  
+}
+
+@media (max-width: 768px) {
+    .hide-desktop{
+        display: block;
+        margin-left: 0.25em;
+    }
+    div.containerForm {
+        width: 98%;
+        margin: 0 auto; 
+    }
+    h2.tabTitle {
+        text-align: center;
+        margin-left: none;
+        margin-block: none;
+        display: flex;
+       justify-content: center;
+       align-items: center;
+        flex-direction: row;
+    }
+    form.visibleformNewClient {
+        display: flex;
+        flex-direction: column;
+    }
+
+    form.hiddenformNewClient {
+        display: none;
+        flex-direction: column;
+    }
+    
+    label#labelNewClientAddress {
+        grid-column: 1/3;
+    }
+    
+    label.labelRadiosCpfCnpj {
+        display: flex;
+        align-items: center;
+        margin-bottom: 0.36em;
+    }
+    
+    div.radiosCPForCNPJ {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        align-items: center;
+    } 
+    
+    .divButtons {
+        grid-column: 2/3;
+        display: flex;
+        justify-content: center;
+        gap: 1em;
+        margin:none;
+    
+       
+    }
+    
+    .isInvalid {
+        border-color: var(--system-danger);
+        background-color: #fff2f2;
+    }
+    
+    /* ------------- PERSONALIZED RADIO ------------- */
+    
+    .inputRadioCpfCnpj {
+        padding: 1em;
+        display: none;
+        transition-duration: 2s;
+    }
+    
+    .inputRadioCpfCnpj + label:before {
+        width: 27px;
+        height: 27px;
+        border-radius: 8px;
+        border: 1px solid var(--primary-dark);
+        
+        content: "\00a0";
+        display: inline-block;
+        
+        margin: 0 .25em 0 0;
+        padding:0;
+    }
+
+
 }
