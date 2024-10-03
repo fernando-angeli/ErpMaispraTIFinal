@@ -7,7 +7,7 @@ function AccountContainer({isLoggedIn}) {
         return (
             <>
                     <div className='account'>
-                        <img src={userIcon} alt="" className='userIcon'/> 
+                        <img src={userIcon} alt="" className='userIcon' draggable="false"/> 
                         <label>Olá,<br/>Fulano</label>
                     </div> 
             </>

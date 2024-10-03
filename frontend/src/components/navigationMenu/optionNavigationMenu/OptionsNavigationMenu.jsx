@@ -8,8 +8,8 @@ function OptionsNavigationMenu({arrayOptions}) {
 
     arrayOptions.map((option, index) => {
         toReturn.push(
-            <div key={index} className='option'>
-                <img src={option.icon} alt="" className='optionIcon'/>
+            <div key={index} className='option notSelectable'>
+                <img src={option.icon} alt="" className='optionIcon' draggable="false"/>
                 <label className='optionDescription'>{option.description}</label>
             </div>
         )
