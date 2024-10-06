@@ -1,7 +1,6 @@
 div.containerForm {
     width: 70%;
     margin: 0 auto; 
-    border: solid 1px rgb(55, 0, 255);
 }
 
 h2.tabTitle {
@@ -16,7 +15,6 @@ form.formNewClient {
     grid-template-columns: 1fr 1fr;
     column-gap: 60px;
     row-gap: 15px;
-    border: solid 1px green;
 }
 
 label#labelNewClientAddress {
