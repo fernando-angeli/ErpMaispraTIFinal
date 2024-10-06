@@ -7,8 +7,10 @@ function AccountContainer({isLoggedIn}) {
         return (
             <>
                     <div className='account'>
-                        <img src={userIcon} alt="" className='userIcon' draggable="false"/> 
-                        <label>Olá,<br/>Fulano</label>
+      
+                        <img src={userIcon} alt="" className='userIcon'/> 
+                        <label>Olá,<br/>Emerson Costa</label>
+
                     </div> 
             </>
 
