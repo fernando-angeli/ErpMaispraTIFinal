@@ -64,8 +64,8 @@ public class ResourceExceptionHandler {
         return ResponseEntity.status(status).body(error);
     }
 
-    @ExceptionHandler({ExpiredJwtException.class, JwtTokenException.class})
-    public ResponseEntity<StandardError> token(JwtTokenException e, HttpServletRequest request){
+    @ExceptionHandler(ExpiredJwtException.class)
+    public ResponseEntity<StandardError> token(ExpiredJwtException e, HttpServletRequest request){
         HttpStatus status = HttpStatus.UNAUTHORIZED;
         StandardError error = new StandardError();
         error.setTimestamp(Instant.now());
@@ -75,5 +75,4 @@ public class ResourceExceptionHandler {
         error.setPath(request.getRequestURI());
         return ResponseEntity.status(status).body(error);
     }
-
 }
