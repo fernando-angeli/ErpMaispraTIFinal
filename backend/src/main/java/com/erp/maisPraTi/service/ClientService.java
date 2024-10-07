@@ -14,11 +14,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 
-import static com.erp.maisPraTi.utils.EntityMapper.convertToDto;
-import static com.erp.maisPraTi.utils.EntityMapper.convertToEntity;
+import static com.erp.maisPraTi.util.EntityMapper.convertToDto;
+import static com.erp.maisPraTi.util.EntityMapper.convertToEntity;
 
 @Service
 public class ClientService {

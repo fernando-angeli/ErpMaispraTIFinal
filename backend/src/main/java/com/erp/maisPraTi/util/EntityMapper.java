@@ -1,4 +1,4 @@
-package com.erp.maisPraTi.utils;
+package com.erp.maisPraTi.util;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
