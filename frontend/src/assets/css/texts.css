@@ -55,6 +55,7 @@ p, .text {
     font-style: normal;
     font-weight: 400;
     line-height: 100%; /* 12px */
+    
 }
 
 
@@ -64,3 +65,4 @@ h1.strong, h2.strong, h3.strong, h4.strong {
     font-style: normal;
     font-weight: 700;
 }
+

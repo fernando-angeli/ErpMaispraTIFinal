@@ -2,18 +2,54 @@ div.option {
     display: flex;
     align-items: center;
     justify-content: center;
-    
     flex-basis: 20%;
     padding: 28px;
     cursor: pointer;
     background-color: var(--primary-normal);
     gap: 18px;
 }
-
+.optionResposive{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
 label.optionDescription {
     color: var(--text-20);
     font-weight: 500;
     text-align: left;
+    padding: 0.5em;
     cursor: pointer;
+}
+
+@media (max-width: 768px) {
+    div.option {
+        display: flex;
+        align-items: none;
+        justify-content: none;
+        border-radius: 1rem ;
+        flex-basis: none;
+        padding: none;
+        cursor: pointer;
+        background-color: var(--primary-normal);
+        gap: 18px;
+    }
+    div.option img{
+        width: 3em;
+    }
+    .optionResposive{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 7em;
+        height: 1.5em;
+    }
+    label.optionDescription {
+        color: var(--text-20);
+        font-weight: 500;
+        font-size: 1em;
+        padding: 0.5em;
+        cursor: pointer;
+    }
+    
 }
