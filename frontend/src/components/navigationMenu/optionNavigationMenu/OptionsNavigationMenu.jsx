@@ -1,9 +1,10 @@
 import './optionNavigationMenu.css'
 import { useState } from 'react'
 
+
 function OptionsNavigationMenu({arrayOptions}) {
     const [selected, setSelected] = useState(0)
-
+    
     let toReturn = []
 
     arrayOptions.map((option, index) => {
