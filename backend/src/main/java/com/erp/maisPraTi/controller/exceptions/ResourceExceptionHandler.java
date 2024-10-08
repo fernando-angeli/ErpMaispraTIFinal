@@ -1,5 +1,7 @@
 package com.erp.maisPraTi.controller.exceptions;
 
+import com.erp.maisPraTi.service.exceptions.AccessDeniedException;
+import com.erp.maisPraTi.service.exceptions.DatabaseException;
 import com.erp.maisPraTi.service.exceptions.JwtTokenException;
 import com.erp.maisPraTi.service.exceptions.ResourceNotFoundException;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -22,7 +24,19 @@ public class ResourceExceptionHandler {
         StandardError error = new StandardError();
         error.setTimestamp(Instant.now());
         error.setStatus(status.value());
-        error.setError("Resource not found");
+        error.setError("Not found");
+        error.setMessage(e.getMessage());
+        error.setPath(request.getRequestURI());
+        return ResponseEntity.status(status).body(error);
+    }
+
+    @ExceptionHandler(DatabaseException.class)
+    public ResponseEntity<StandardError> handleDataIntegrityViolation(DatabaseException e, HttpServletRequest request){
+        HttpStatus status = HttpStatus.CONFLICT;
+        StandardError error = new StandardError();
+        error.setTimestamp(Instant.now());
+        error.setStatus(status.value());
+        error.setError("Data integrity");
         error.setMessage(e.getMessage());
         error.setPath(request.getRequestURI());
         return ResponseEntity.status(status).body(error);
@@ -75,5 +89,18 @@ public class ResourceExceptionHandler {
         error.setPath(request.getRequestURI());
         return ResponseEntity.status(status).body(error);
     }
+
+    //CAPTURAR EXCEPTIONS NAO TRATADAS
+//    @ExceptionHandler(Exception.class)
+//    public ResponseEntity<StandardError> handleAllExceptions(Exception e, HttpServletRequest request) {
+//        HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+//        StandardError error = new StandardError();
+//        error.setTimestamp(Instant.now());
+//        error.setStatus(status.value());
+//        error.setError("Internal Server Error");
+//        error.setMessage(e.getMessage());
+//        error.setPath(request.getRequestURI());
+//        return ResponseEntity.status(status).body(error);
+//    }
 
 }

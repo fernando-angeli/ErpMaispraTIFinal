@@ -10,10 +10,8 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class RoleDto {
+public class RoleUpdateDto {
 
-    private long id;
     @NotBlank(message = "O campo nome é obrigatório.")
     private String authority;
-
 }

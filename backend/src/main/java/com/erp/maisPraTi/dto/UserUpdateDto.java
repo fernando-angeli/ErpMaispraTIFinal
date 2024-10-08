@@ -23,6 +23,6 @@ public class UserUpdateDto {
     @Email(message="E-mail é obrigatório.")
     private String email;
 
-    Set<RoleDto> roles = new HashSet<>();
+    Set<RoleDto> roles;
 
 }

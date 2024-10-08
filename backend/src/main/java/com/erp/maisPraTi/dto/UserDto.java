@@ -1,5 +1,6 @@
 package com.erp.maisPraTi.dto;
 
+import jakarta.persistence.Column;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -15,15 +16,17 @@ import java.util.Set;
 public class UserDto {
 
     private Long id;
+
     @NotBlank(message = "Campo obrigatório.")
     private String firstName;
 
     @NotBlank(message = "Campo obrigatório.")
     private String lastName;
 
+    @Column(unique = true)
     @Email(message="E-mail é obrigatório.")
     private String email;
 
-    Set<RoleDto> roles = new HashSet<>();
+    Set<RoleDto> roles;
 
 }
