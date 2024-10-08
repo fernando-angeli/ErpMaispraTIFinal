@@ -1,25 +1,26 @@
 package com.erp.maisPraTi.service;
 
+import com.erp.maisPraTi.dto.RoleDto;
 import com.erp.maisPraTi.dto.UserDto;
 import com.erp.maisPraTi.dto.UserUpdateDto;
+import com.erp.maisPraTi.model.Role;
 import com.erp.maisPraTi.model.User;
 import com.erp.maisPraTi.repository.UserRepository;
 import com.erp.maisPraTi.service.exceptions.DatabaseException;
 import com.erp.maisPraTi.service.exceptions.ResourceNotFoundException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.Set;
 
 import static com.erp.maisPraTi.util.EntityMapper.convertToDto;
 import static com.erp.maisPraTi.util.EntityMapper.convertToEntity;
@@ -30,19 +31,23 @@ public class UserService implements UserDetailsService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private RoleService roleService;
+
     @Transactional
     public UserDto insert(UserDto userDto) {
         User newUser = convertToEntity(userDto, User.class);
         newUser.setCreatedAt(LocalDateTime.now());
         newUser.setUpdatedAt(LocalDateTime.now());
-        newUser = userRepository.save(convertToEntity(userDto, User.class));
+        insertOrUpdateRoles(userDto.getRoles(), newUser);
+        newUser = userRepository.save(newUser);
         return convertToDto(newUser, UserDto.class);
     }
 
     @Transactional(readOnly = true)
     public Optional<UserDto> findById(Long id) {
-        verifyExistsId(id);
-        Optional<User> user = userRepository.findById(id);
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Id não localizado: " + id));
         return Optional.of(convertToDto(user, UserDto.class));
     }
 
@@ -55,11 +60,19 @@ public class UserService implements UserDetailsService {
     @Transactional
     public UserDto update(Long id, UserUpdateDto userUpdateDto){
         verifyExistsId(id);
-        User user = userRepository.getReferenceById(id);
-        convertToEntity(userUpdateDto, user);
-        user.setUpdatedAt(LocalDateTime.now());
-        user = userRepository.save(user);
-        return convertToDto(user, UserDto.class);
+        try{
+            User user = userRepository.getReferenceById(id);
+            user.getRoles().clear();
+            convertToEntity(userUpdateDto, user);
+            user.setUpdatedAt(LocalDateTime.now());
+            insertOrUpdateRoles(userUpdateDto.getRoles(), user);
+            user = userRepository.save(user);
+            return convertToDto(user, UserDto.class);
+        } catch (DataIntegrityViolationException e){
+            throw new DatabaseException("Não foi possível fazer a alteração neste usuário.");
+        } catch (Exception e) {
+            throw new DatabaseException("Erro inesperado ao tentar atualizar o usuário.");
+        }
     }
 
     @Transactional
@@ -68,7 +81,23 @@ public class UserService implements UserDetailsService {
         try{
             userRepository.deleteById(id);
         } catch (DataIntegrityViolationException e){
-            throw new DatabaseException("Não foi possível excluir este usuário.");
+            throw new DatabaseException("Não foi possível excluir este usuário. Ele pode estar vinculado a outros registros.");
+        } catch (Exception e) {
+            throw new DatabaseException("Erro inesperado ao tentar excluir o usuário.");
+        }
+    }
+
+    private void insertOrUpdateRoles(Set<RoleDto> roleDtos, User user) {
+        user.getRoles().clear();
+        roleDtos.forEach(roleDto -> {
+            Role role = convertToEntity(roleService.findById(roleDto.getId()), Role.class);
+            user.getRoles().add(role);
+        });
+    }
+
+    private void verifyExistsId(Long id){
+        if(!userRepository.existsById(id)){
+            throw new ResourceNotFoundException("Id não localizado: " + id);
         }
     }
 
@@ -79,12 +108,6 @@ public class UserService implements UserDetailsService {
             throw new UsernameNotFoundException("Usuário não encontrado: " + email);
         }
         return user;
-    }
-
-    private void verifyExistsId(Long id){
-        if(!userRepository.existsById(id)){
-            throw new ResourceNotFoundException("Id [" + id + "] não localizado.");
-        }
     }
 
 }

@@ -1,47 +1,28 @@
 import './App.css'
 import './assets/css/texts.css'
 import './assets/css/buttons.css'
-import './assets/css/inputs.css'
 
 import { useState } from 'react'
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
-
+import HomePage from './pages/HomePage'
 import Header from './components/header/header'
 import ProtectedRoute from './components/ProtectedRoute'
 import NavigationMenu from './components/navigationMenu/NavigationMenu'
-import AddClientPage from './pages/addClientPage/AddClientPage'
-import HomePage from './pages/HomePage'
-import Login from './pages/LoginPage/Login'
-import { useAuth } from './components/AuthContext';
 
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 
 function App() {
-  const { isAuthenticated } = useAuth();
-  console.log(isAuthenticated)
-  const[isLogged, log] = useState(isAuthenticated)
+  const[isLogged, log] = useState(true)
+
   return (
     <>
       <Router>
-        {isLogged && <Header isLoggedIn={isLogged}/>}
-        <ProtectedRoute isLoggedIn={isLogged}>
-          <NavigationMenu/>
-        </ProtectedRoute>
+        <Header isLoggedIn={isLogged}/>
         <Routes>
-          <Route path='/cliente' element={
+          <Route path='/' element={
             <ProtectedRoute isLoggedIn={isLogged}>
-              <AddClientPage/>
+              <NavigationMenu/>
             </ProtectedRoute>
           }/>
-
-      {!isLogged && (
-        <Route path='/login' element={<Login />} />
-      )}
-
-            <Route path='/home' element={
-              <ProtectedRoute isLoggedIn={isLogged}>
-                <HomePage/>
-              </ProtectedRoute>
-            }/>
         </Routes>
       </Router>
     </>

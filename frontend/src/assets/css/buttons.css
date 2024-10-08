@@ -110,14 +110,3 @@ button.outline {
     border-style: solid;
     border-width: 1px;
 }
-
-
-
-/* --------- HOVERS --------- */
-
-button.primaryNormal:hover {
-    background-color: var(--primary-normal-hover);
-}
-button.primaryLight:hover {
-    background-color: var(--primary-light-hover);
-}

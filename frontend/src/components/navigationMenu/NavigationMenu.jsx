@@ -31,9 +31,9 @@ function NavigationMenu() {
         }
     ]
     return (
-        
-        <OptionsNavigationMenu arrayOptions={options} className='resposive'/>
-        
+        <>
+            <OptionsNavigationMenu arrayOptions={options}/>
+        </>
     )
 }
 

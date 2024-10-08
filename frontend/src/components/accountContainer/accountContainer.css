@@ -1,4 +1,7 @@
-
+.containerAccount {
+    display: flex;
+    gap: 32px;
+}
 
 .account {
     display: flex;
@@ -13,34 +16,4 @@
 
 .exitIcon {
     cursor: pointer;
-}
-
-p{
-    color: var(--text-20); 
-}
-
-@media (max-width: 768px) {
-    .account {
-        display: flex;
-        align-items: center;
-        gap: 0.5em ;
-        padding-right: 1rem;
-    }
-
-    .account img{
-        width: 4em;
-    }
-    
-    .account label {
-        color: var(--text-20);
-        font-size:1em;
-        width: 3em;
-        
-    }
-    
-    .exitIcon {
-        cursor: pointer;
-    }
-
-   
 }

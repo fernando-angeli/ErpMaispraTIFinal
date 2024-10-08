@@ -1,10 +1,7 @@
-
 function HomePage() {
-
-  
     return (
         <>
-            <h1 className="">To na home</h1>
+            <h1 className=""></h1>
         </>
     )
 }
