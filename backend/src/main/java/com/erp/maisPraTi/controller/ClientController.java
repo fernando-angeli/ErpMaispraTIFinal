@@ -15,6 +15,7 @@ import java.net.URI;
 import java.util.Optional;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:5173")
 @RequestMapping(value = "/clientes")
 public class ClientController {
 
