@@ -28,3 +28,11 @@ padding: 2em;
     justify-content: center;
     align-items: center;
 }
+
+.error{
+    color: red;
+    width: 60%;
+}
+.sucess{
+    color: green;
+}

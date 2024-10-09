@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import './optionNavigationMenu.css'
 import { useState } from 'react'
 
@@ -11,10 +12,12 @@ function OptionsNavigationMenu({arrayOptions}) {
         toReturn.push(
 
             <div key={index} className='option'>
+                    <Link to={option.url}>
                     <div  className='optionResposive'>
                 <img src={option.icon} alt="" className='optionIcon'/>
                 <label className='optionDescription'>{option.description}</label>
                     </div>
+                    </Link>
             </div>
         )
     })

@@ -56,7 +56,7 @@ function FormNewClient() {
     return (
         <div className='containerForm'>
             <h2 className='tabTitle'>Adicionar Cliente 
-            <a  className="hide-desktop" onClick={resposiveClienteShow}> {ResponsiveCliente ? <CgAdd size={45}/> : <CgRemove size={45}/> }</a>
+            <a  className="hide-desktop" onClick={resposiveClienteShow}> {!ResponsiveCliente ? <CgAdd size={45}/> : <CgRemove size={45}/> }</a>
                 </h2>
             <form className={ResponsiveCliente ? 'visibleformNewClient' : 'hiddenformNewClient'}  id='formNewClient' onSubmit={handleSubmit} onReset={handleReset} >
 
