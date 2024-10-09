@@ -1,4 +1,4 @@
-package com.erp.maisPraTi.utils;
+package com.erp.maisPraTi.util;
 
 public class CPFValidator {
 

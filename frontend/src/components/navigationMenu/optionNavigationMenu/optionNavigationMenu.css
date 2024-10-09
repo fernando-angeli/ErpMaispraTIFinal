@@ -8,6 +8,10 @@ div.option {
     background-color: var(--primary-normal);
     gap: 18px;
 }
+
+.option a{
+    text-decoration: none;
+}
 .optionResposive{
     display: flex;
     justify-content: center;

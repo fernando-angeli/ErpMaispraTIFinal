@@ -4,6 +4,7 @@ import com.erp.maisPraTi.enums.ClientStatus;
 import com.erp.maisPraTi.enums.Gender;
 import com.erp.maisPraTi.enums.TypePfOrPj;
 import com.erp.maisPraTi.service.validations.ClientInserValid;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.Email;
@@ -33,7 +34,7 @@ public class ClientUpdateDto {
 
     private String cpfCnpj;
 
-    private String rgOrIe;
+    private String rgIe;
 
     private String phoneNumber;
 
@@ -64,6 +65,7 @@ public class ClientUpdateDto {
     @Enumerated(EnumType.STRING)
     private ClientStatus status;
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private LocalDateTime updatedAt;
 
 }

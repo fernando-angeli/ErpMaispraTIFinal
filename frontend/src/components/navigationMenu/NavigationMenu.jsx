@@ -11,7 +11,8 @@ function NavigationMenu() {
     let options = [
         {
             icon: newClientIcon,
-            description: "Novo Cliente"
+            description: "Novo Cliente",
+            url:"/cliente"
         },
         {
             icon: newSupplierIcon,

@@ -1,9 +1,11 @@
 package com.erp.maisPraTi.controller.exceptions;
 
+import com.erp.maisPraTi.service.exceptions.DatabaseException;
 import com.erp.maisPraTi.service.exceptions.ResourceNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -20,24 +22,49 @@ public class ResourceExceptionHandler {
         StandardError error = new StandardError();
         error.setTimestamp(Instant.now());
         error.setStatus(status.value());
-        error.setError("Resource not found");
+        error.setError("Not found");
+        error.setMessage(e.getMessage());
+        error.setPath(request.getRequestURI());
+        return ResponseEntity.status(status).body(error);
+    }
+
+    @ExceptionHandler(DatabaseException.class)
+    public ResponseEntity<StandardError> handleDataIntegrityViolation(DatabaseException e, HttpServletRequest request){
+        HttpStatus status = HttpStatus.CONFLICT;
+        StandardError error = new StandardError();
+        error.setTimestamp(Instant.now());
+        error.setStatus(status.value());
+        error.setError("Data integrity");
         error.setMessage(e.getMessage());
         error.setPath(request.getRequestURI());
         return ResponseEntity.status(status).body(error);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ValidationError> validation(MethodArgumentNotValidException e, HttpServletRequest request){
+    public ResponseEntity<StandardError> validation(MethodArgumentNotValidException e, HttpServletRequest request){
         HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
         ValidationError error = new ValidationError();
         error.setTimestamp(Instant.now());
         error.setStatus(status.value());
         error.setError("Validation error");
-        //error.setMessage(e.getMessage());
+        error.setMessage(e.getMessage());
         error.setPath(request.getRequestURI());
         for(FieldError f : e.getBindingResult().getFieldErrors()){
             error.addError(f.getField(), f.getDefaultMessage());
         }
         return ResponseEntity.status(status).body(error);
     }
+
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<StandardError> authentication(AuthenticationException e, HttpServletRequest request){
+        HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
+        StandardError error = new StandardError();
+        error.setTimestamp(Instant.now());
+        error.setStatus(status.value());
+        error.setError("Authentication error");
+        error.setMessage(e.getMessage());
+        error.setPath(request.getRequestURI());
+        return ResponseEntity.status(status).body(error);
+    }
+
 }
