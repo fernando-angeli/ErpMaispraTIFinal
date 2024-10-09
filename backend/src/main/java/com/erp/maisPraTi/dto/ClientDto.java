@@ -4,6 +4,8 @@ import com.erp.maisPraTi.enums.ClientStatus;
 import com.erp.maisPraTi.enums.Gender;
 import com.erp.maisPraTi.enums.TypePfOrPj;
 import com.erp.maisPraTi.service.validations.ClientInserValid;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.Email;
@@ -23,6 +25,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class ClientDto {
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Long id;
 
     @NotBlank(message = "O campo nome é obrigatório.")
@@ -67,8 +70,10 @@ public class ClientDto {
     @Enumerated(EnumType.STRING)
     private ClientStatus status;
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private LocalDateTime createdAt;
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private LocalDateTime updatedAt;
 
 }
