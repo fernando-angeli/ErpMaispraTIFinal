@@ -122,7 +122,7 @@ form.formNewClient .divButtons {
 @media (max-width: 768px) {
     .hide-desktop{
         display: block;
-        margin-left: 0.25em;
+        margin-left: 0.05em;
     }
     div.containerForm {
         width: 98%;
