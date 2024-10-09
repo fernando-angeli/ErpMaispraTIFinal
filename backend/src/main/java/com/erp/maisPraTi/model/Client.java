@@ -37,7 +37,7 @@ public class Client {
     private String cpfCnpj;
 
     @Column(unique = true)
-    private String rgOrIe;
+    private String rgIe;
 
     private String phoneNumber;
     private String email;
