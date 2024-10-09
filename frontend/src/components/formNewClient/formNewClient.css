@@ -44,7 +44,7 @@ div.radiosCPForCNPJ {
     align-items: center;
 } 
 
-form.formNewClient .divButtons {
+.divButtons {
     grid-column: 2/3;
     display: flex;
     justify-content: end;
