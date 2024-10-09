@@ -15,6 +15,7 @@ import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -58,9 +59,18 @@ public class SecurityConfig{
     @Autowired
     private CustomAccessDeniedHandler customAccessDeniedHandler;
 
-    private static final String[] PUBLIC = {"/auth/**", "/h2-console/**"};
+    private static final String[] PUBLIC = {
+            "/auth/**",
+            "/h2-console/**",
+            "/v3/api-docs/**",
+            "/api-docs/**",
+            "/swagger-ui/**",
+            "/swagger-resources/**",
+            "/documentation.html"
+    };
     private static final String[] OPERATOR_OR_ADMIN = {"/clientes/**"};
-    private static final String[] ADMIN = {"/usuarios/**", "/roles/**"};
+    private static final String[] ADMIN = {
+            "/usuarios/**"};
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -78,12 +88,12 @@ public class SecurityConfig{
         if (Arrays.asList(environment.getActiveProfiles()).contains("test"))
             http.headers(headers -> headers.frameOptions().disable());
 
+
         http
                 .cors(withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(PUBLIC).permitAll()
-                        .requestMatchers(HttpMethod.GET, OPERATOR_OR_ADMIN).permitAll()
                         .requestMatchers(OPERATOR_OR_ADMIN).hasAnyRole("OPERATOR", "ADMIN")
                         .requestMatchers(ADMIN).hasRole("ADMIN")
                         .anyRequest().authenticated()
