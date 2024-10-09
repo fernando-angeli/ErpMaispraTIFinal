@@ -2,6 +2,7 @@ package com.erp.maisPraTi.dto;
 
 import com.erp.maisPraTi.enums.SupplierStatus;
 import com.erp.maisPraTi.enums.TypePfOrPj;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.Email;
@@ -57,7 +58,9 @@ public class SupplierDto {
     @Enumerated(EnumType.STRING)
     private SupplierStatus status;
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private LocalDateTime createdAt;
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private LocalDateTime updatedAt;
 }
