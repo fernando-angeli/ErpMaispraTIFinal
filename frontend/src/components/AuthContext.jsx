@@ -3,7 +3,10 @@ import React, { createContext, useState, useContext } from 'react';
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [JwtToken, setJwtToken] = useState(null);
+  const [JwtToken, setJwtToken] = useState(() => {
+    return localStorage.getItem('token'); 
+  });
+
   const [isAuthenticated, setIsAuthenticated] = useState(() => {
     return localStorage.getItem('isAuthenticated') === 'true';
   });
@@ -12,11 +15,13 @@ export const AuthProvider = ({ children }) => {
     setIsAuthenticated(true);
     localStorage.setItem('isAuthenticated', 'true');
     setJwtToken(token);
+    localStorage.setItem('token', token);
   };
 
   const logout = () => {
     setIsAuthenticated(false);
     localStorage.removeItem('isAuthenticated');
+    localStorage.removeItem('token');
     setJwtToken(null);
   };
 
