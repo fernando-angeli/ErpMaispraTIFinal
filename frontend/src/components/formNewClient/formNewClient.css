@@ -7,6 +7,7 @@
 div.containerForm {
     width: 70%;
     margin: 0 auto; 
+    margin-bottom:2em ;
 }
 
 h2.tabTitle {
@@ -99,6 +100,14 @@ form.formNewClient .divButtons {
 .labelRadio {
     cursor: pointer !important;
     
+}
+
+.divButtons {
+    grid-column: 2/3;
+    display: flex;
+    justify-content: end;
+    gap: 1em;
+    margin:none;
 }
 
 /* ------------- PLACEHODER COLOR ------------- */
