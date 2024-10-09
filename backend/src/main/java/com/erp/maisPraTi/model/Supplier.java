@@ -1,7 +1,6 @@
 package com.erp.maisPraTi.model;
 
-import com.erp.maisPraTi.enums.ClientStatus;
-import com.erp.maisPraTi.enums.Gender;
+import com.erp.maisPraTi.enums.SupplierStatus;
 import com.erp.maisPraTi.enums.TypePfOrPj;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -10,16 +9,15 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "tb_clients")
+@Table(name = "tb_suppliers")
 @Entity
-public class Client {
+public class Supplier {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,14 +28,11 @@ public class Client {
     @Enumerated(EnumType.STRING)
     private TypePfOrPj typePfOrPj;
 
-    @Enumerated(EnumType.STRING)
-    private Gender gender;
-
     @Column(unique = true)
     private String cpfCnpj;
 
     @Column(unique = true)
-    private String rgIe;
+    private String stateRegistration;  // Inscrição Estadual
 
     private String phoneNumber;
     private String email;
@@ -48,16 +43,14 @@ public class Client {
     private String city;
     private String state;
     private String country;
-    private LocalDate birthDate;
     private BigDecimal creditLimit;
 
     @Column(columnDefinition = "TEXT")
     private String notes;
 
     @Enumerated(EnumType.STRING)
-    private ClientStatus status;
+    private SupplierStatus status;
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-
 }

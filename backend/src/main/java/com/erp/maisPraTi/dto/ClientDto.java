@@ -36,7 +36,7 @@ public class ClientDto {
 
     private String cpfCnpj;
 
-    private String rgOrIe;
+    private String rgIe;
 
     private String phoneNumber;
 

@@ -1,0 +1,686 @@
+{
+	"info": {
+		"_postman_id": "c7e7a92c-f1b3-4eb2-a34b-ce0789cc262f",
+		"name": "ERP+praTi",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "13795035"
+	},
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code >= 200 && pm.response.code < 300) {\r",
+									"    var token = pm.response.text();\r",
+									"    pm.environment.set(\"token\", token);\r",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"marcelo@hotmail.com\",\r\n    \"password\": \"12345\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/auth",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"auth"
+							],
+							"query": [
+								{
+									"key": "email",
+									"value": "fernando@hotmail.com",
+									"disabled": true
+								},
+								{
+									"key": "password",
+									"value": "senha123",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Clients",
+			"item": [
+				{
+					"name": "Client insert PF",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"fullName\": \"Marcelo\",\r\n    \"typePfOrPj\": \"PF\",\r\n    \"gender\": \"MASCULINO\",\r\n    \"cpfCnpj\": \"685.341.320-20\",\r\n    \"rgIe\": \"125-554\",\r\n    \"phoneNumber\": \"513543-4811\",\r\n    \"email\": \"marcelo_mnicolai@gmail.com\", \r\n    \"address\": \"Rua Casemiro Alves\", \r\n    \"number\": \"S/N\", \r\n    \"district\": \"Centro\",\r\n    \"zipCode\": \"95.650-000\",\r\n    \"city\": \"Cachoeirinha\", \r\n    \"state\": \"RS\",\r\n    \"country\": \"Brasil\", \r\n    \"birthDate\": \"1982-03-29\",\r\n    \"creditLimit\": 50000.00, \r\n    \"notes\" : \"Gremistão e bom pagador.\", \r\n    \"status\" : \"ativo\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/clientes",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"clientes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Client insert PJ",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"fullName\": \"Oraganizações Tabajara\",\r\n    \"typePfOrPj\": \"PJ\",\r\n    \"cpfCnpj\": \"16.310.788/0001-72\",\r\n    \"rgIe\": \"125-55sds4\",\r\n    \"phoneNumber\": \"513543-4811\",\r\n    \"email\": \"marcelo_mnicolai@gmail.com\", \r\n    \"address\": \"Rua Casemiro Alves\", \r\n    \"number\": \"S/N\", \r\n    \"district\": \"Centro\",\r\n    \"zipCode\": \"95.650-000\",\r\n    \"city\": \"Cachoeirinha\", \r\n    \"state\": \"RS\",\r\n    \"country\": \"Brasil\", \r\n    \"birthDate\": \"1982-03-29\",\r\n    \"creditLimit\": 50000.00, \r\n    \"notes\" : \"Gremistão e bom pagador.\", \r\n    \"status\" : \"ativo\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/clientes",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"clientes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Busca por id",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/clientes/2",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"clientes",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar todos",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/clientes",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"clientes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Atualizar",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n     \"fullName\": \"Marcelo update\",\r\n    \"typePfOrPj\": \"PF\",\r\n    \"gender\": \"MASCULINO\",\r\n    \"cpfCnpj\": \"123.456.789-01\",\r\n    \"rgOrIe\": \"125-554\",\r\n    \"phoneNumber\": \"513543-4811\",\r\n    \"email\": \"johndoe@com.com\", \r\n    \"address\": \"Rua Casemiro Alves\", \r\n    \"number\": \"S/N\", \r\n    \"district\": \"Centro\",\r\n    \"zipCode\": \"95.650-000\",\r\n    \"city\": \"Cachoeirinha\", \r\n    \"state\": \"RS\",\r\n    \"country\": \"Brasil\", \r\n    \"birthDate\": \"1982-03-29\",\r\n    \"creditLimit\": 50000.00, \r\n    \"notes\" : \"Gremistáo e bom pagador.\", \r\n    \"status\" : \"ativo\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/clientes/2",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"clientes",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/clientes/2",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"clientes",
+								"2"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Roles",
+			"item": [
+				{
+					"name": "Inserir",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"authority\": \"ADMIN\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/roles",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"roles"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Busca por id",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/roles/3",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"roles",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar todos",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/roles",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"roles"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Atualizar",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n     \"authority\": \"ROLE_SUPERVISOR\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/roles/3",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"roles",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/roles/1",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"roles",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "InsertUser",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstName\": \"Luiz Fernando\",\r\n    \"lastName\": \"Angeli\",\r\n    \"email\": \"fernando@gmail.com\",\r\n    \"password\" : \"senha123\",\r\n    \"roles\": [\r\n                {\r\n                    \"id\": 1\r\n                },\r\n                {\r\n                    \"id\": 2\r\n                }\r\n\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/usuarios",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"usuarios"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Atualizar usuario",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstName\": \"Luiz Fernando\",\r\n    \"lastName\": \"Angeli\",\r\n    \"email\": \"fernando@gmail.com\",\r\n    \"password\" : \"senha123\",\r\n    \"roles\": [\r\n                {\r\n                    \"id\": 1\r\n                }\r\n\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/usuarios/3",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"usuarios",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar todos usuários",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/usuarios",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"usuarios"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar por id",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/usuarios/1",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"usuarios",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete by userId",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/usuarios/3",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"usuarios",
+								"3"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

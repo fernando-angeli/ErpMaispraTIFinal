@@ -1,13 +1,16 @@
 package com.erp.maisPraTi.security;
 
+import com.erp.maisPraTi.security.exceptions.StandardErrorAuth;
 import com.erp.maisPraTi.service.UserService;
 import com.erp.maisPraTi.service.exceptions.JwtTokenException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -42,13 +45,11 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             try {
                 email = jwtTokenProvider.extractUsername(jwtToken);
             } catch (ExpiredJwtException e) {
-                throw new JwtTokenException("O token expirou");
+                handleException(response, "Expired token", "Token expirado", HttpServletResponse.SC_BAD_REQUEST);
             }
             catch (IllegalArgumentException e) {
-                throw new JwtTokenException("Não foi possível obter o JWT Token");
+                handleException(response, "Token error", "Token inválido ou ausente", HttpServletResponse.SC_BAD_REQUEST);
             }
-        } else {
-            logger.warn("JWT Token não encontrado no header ou com prefixo incorreto.");
         }
 
         // Valida o token e carrega o usuário
@@ -62,5 +63,18 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             }
         }
         chain.doFilter(request, response);
+    }
+
+    private void handleException(HttpServletResponse response, String errorDescription, String message, Integer status) throws IOException {
+        StandardErrorAuth error = new StandardErrorAuth();
+        error.setStatus(status);
+        error.setError(HttpStatus.valueOf(status).getReasonPhrase());
+        error.setMessage(message);
+
+        response.setStatus(status);
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+
+        new ObjectMapper().writeValue(response.getWriter(), error);
     }
 }

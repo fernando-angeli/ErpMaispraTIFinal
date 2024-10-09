@@ -40,6 +40,8 @@ public class JwtTokenProvider {
     public String generateToken(Authentication authentication) {
         User userPrincipal = (User) authentication.getPrincipal();
         Map<String, Object> claims = new HashMap<>();
+        claims.put("firstName", userPrincipal.getFirstName());
+        claims.put("lastName", userPrincipal.getLastName());
         claims.put("roles", getRoles(userPrincipal));
         return Jwts.builder()
                 .setClaims(claims)
