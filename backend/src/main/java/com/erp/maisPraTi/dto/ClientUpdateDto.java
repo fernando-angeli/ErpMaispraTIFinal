@@ -33,7 +33,7 @@ public class ClientUpdateDto {
 
     private String cpfCnpj;
 
-    private String rgOrIe;
+    private String rgIe;
 
     private String phoneNumber;
 

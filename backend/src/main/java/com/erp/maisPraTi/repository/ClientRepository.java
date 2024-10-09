@@ -9,4 +9,6 @@ public interface ClientRepository extends JpaRepository<Client, Long> {
 
     Client findByCpfCnpj(String cpfCnpj);
 
+    boolean existsByCpfCnpj(String cpfCnpj);
+    boolean existsByRgIe(String rgIe);
 }
