@@ -3,6 +3,9 @@ package com.erp.maisPraTi.controller;
 import com.erp.maisPraTi.dto.ClientDto;
 import com.erp.maisPraTi.dto.ClientUpdateDto;
 import com.erp.maisPraTi.service.ClientService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -22,6 +25,11 @@ public class ClientController {
     @Autowired
     private ClientService clientService;
 
+    @Operation(summary = "Cria um novo cliente")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Cliente criado com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Dados inválidos")
+    })
     @PostMapping
     public ResponseEntity<ClientDto> insert (@Valid @RequestBody ClientDto clientDto){
         ClientDto newClientDto = clientService.insert(clientDto);
@@ -33,24 +41,45 @@ public class ClientController {
         return ResponseEntity.created(uri).body(newClientDto);
     }
 
+    @Operation(summary = "Obtém um cliente por ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Cliente encontrado"),
+            @ApiResponse(responseCode = "404", description = "Cliente não encontrado")
+    })
     @GetMapping("/{id}")
     public ResponseEntity<Optional<ClientDto>> findById(@PathVariable Long id){
         Optional<ClientDto> clientDto = clientService.findById(id);
         return ResponseEntity.ok().body(clientDto);
     }
 
+    @Operation(summary = "Obtém uma lista páginada de clientes")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Cliente encontrado"),
+            @ApiResponse(responseCode = "404", description = "Cliente não encontrado")
+    })
     @GetMapping
     public ResponseEntity<Page<ClientDto>> findAll(Pageable pageable){
         Page<ClientDto> clients = clientService.findAll(pageable);
         return ResponseEntity.ok().body(clients);
     }
 
+    @Operation(summary = "Atualiza um cliente informando o ID e os dados por parâmetro")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Cliente encontrado"),
+            @ApiResponse(responseCode = "404", description = "Cliente não encontrado")
+    })
     @PutMapping("/{id}")
     public ResponseEntity<ClientDto> update(@PathVariable Long id, @RequestBody ClientUpdateDto clientUpdateDto){
         ClientDto clientUpdatedDto = clientService.update(id, clientUpdateDto);
         return ResponseEntity.ok().body(clientUpdatedDto);
     }
 
+    @Operation(summary = "Deleta um cliente informando o ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Cliente deletado"),
+            @ApiResponse(responseCode = "404", description = "Cliente não encontrado"),
+            @ApiResponse(responseCode = "409", description = "Para manter integridade do BD não permite a exclusão")
+    })
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id){
         clientService.delete(id);
