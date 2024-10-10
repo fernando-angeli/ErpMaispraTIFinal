@@ -1,10 +1,13 @@
+import { jwtDecode } from "jwt-decode";
+import { useAuth } from '../components/AuthContext';
 
 function HomePage() {
+ const { JwtToken } = useAuth()
+const decoded = jwtDecode(JwtToken);
 
-  
     return (
         <>
-            <h1 style={{padding:"1em"}}>Boa noite, Emerson!</h1>
+            <h1 style={{padding:"1em"}}>Boa noite, {decoded.firstName}</h1>
         </>
     )
 }

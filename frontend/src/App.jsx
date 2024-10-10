@@ -3,7 +3,7 @@ import './assets/css/texts.css'
 import './assets/css/buttons.css'
 import './assets/css/inputs.css'
 
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 
 import Header from './components/header/header'

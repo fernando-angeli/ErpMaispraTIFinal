@@ -2,6 +2,9 @@ import { useState } from 'react'
 import './formNewClient.css'
 import { CgAdd } from "react-icons/cg";
 import { CgRemove } from "react-icons/cg";
+import axios from 'axios';
+import { useAuth } from '../AuthContext';
+import Viacep from '../Viacep/Viacep'
 function FormNewClient() {
     const [ResponsiveCliente, setResponsiveCliente] = useState(true)
     const [CPForCNPJ, setOption] = useState("cpf")
@@ -21,7 +24,7 @@ function FormNewClient() {
         }
     }
 
-    const handleReset = () => { // TALVEZ DE PARA OTIMIZAR
+    const handleReset = () => { 
         let form = document.getElementById("formNewClient")
         let elements = form.getElementsByClassName("isInvalid")
         
@@ -37,28 +40,62 @@ function FormNewClient() {
         setNewClientCPForCNPJ("")
     }
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault()
 
-        console.log(newClientName)
-        console.log(newClientEmail)
-        console.log(newClientAddress)
-        console.log(newClientPhone)
-        console.log(CPForCNPJ)
-        console.log(newClientCPForCNPJ)
+        if(CPForCNPJ =='cpf'){
+                setOption('PF')
+            }else if(CPForCNPJ =='cpf'){
+                setOption('PJ')
+            }
 
-        setNewClientName("")
-        setNewClientEmail("")
-        setNewClientAddress("")
-        setNewClientPhone("")
-        setNewClientCPForCNPJ("")
-    }
+        try {
+            const { JwtToken } = useAuth(); 
+            const newClientData = {
+              fullName: newClientName,
+              typePfOrPj: CPForCNPJ, 
+              gender: "MASC", 
+              cpfCnpj: newClientCPForCNPJ,
+              rgIe: "RG12345",
+              phoneNumber: newClientPhone,
+              email: newClientEmail,
+              address: newClientAddress,
+              number: "123",
+              district: "Centro",
+              zipCode: "95.650-000",
+              city: "Cachoeirinha",
+              state: "RS",
+              country: "Brasil",
+              birthDate: "1990-01-01", 
+              creditLimit: 10000.00, 
+              notes: "Cliente VIP",
+              status: "ativo",
+            };
+        
+            const response = await axios.post(`http://localhost:8080/clientes`, newClientData, {
+              headers: {
+                Authorization: `Bearer ${JwtToken}`,
+                'Content-Type': 'application/json',
+              }
+            });
+            setNewClientName("");
+            setNewClientEmail("");
+            setNewClientAddress("");
+            setNewClientPhone("");
+            setNewClientCPForCNPJ("");
+            alert('Cliente adicionado com sucesso!');
+          } catch (err) {
+            console.error(err);
+            alert('Erro ao adicionar cliente!');
+          }
+      
+    } // fazendo
 
     const resposiveClienteShow = () => {
         setResponsiveCliente(!ResponsiveCliente);
     };
 
-    
+    console.log(Viacep('95601334')) // viacep ja funcionando
     return (
         <div className='containerForm'>
             <h2 className='tabTitle'>Adicionar Cliente 

@@ -35,27 +35,24 @@ const Login = () => {
     }
   };
 
-const handleCheckEmail = (email) =>{
-  const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
-  if (emailRegex.test(email)) {
-    setError(null)
+  const handleCheckEmail = (email) => {
+    const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
     setLoginEmail(email);
-} else {
-    setError('Formato de Email Invalido!')
-}
-
-}
-
-const handleCheckPass = (pass) =>{
-  const PassRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
-  if (!PassRegex.test(pass)) { // como a senha de teste é 12345, esta desativado
-    setError(null)
-    setLoginPassword(pass);
-} else {
-    setError('A senha deve ter 1 Letra maiscula, 1 maiscula e 8 caracteres!')
-}
-
-}
+    if (emailRegex.test(email)) {
+      setError(null);
+    } else {
+      setError('Formato de Email Inválido!');
+    }
+  };
+  const handleCheckPass = (pass) => {
+    const passRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
+    setLoginPassword(pass); 
+    if (passRegex.test(pass)) {
+      setError(null);
+    } else {
+      setError('A senha deve ter 1 Letra Maiúscula, 1 Minúscula, 1 Número e no mínimo 8 caracteres!');
+    }
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -71,8 +68,6 @@ const handleCheckPass = (pass) =>{
       navigate('/home')
     } catch (err) {
       setError(err.response.data.message+".")
-      
-      // pode deixar assim?
       setLoginPassword("")
     }
   };
