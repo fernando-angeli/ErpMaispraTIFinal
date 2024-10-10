@@ -29,6 +29,12 @@ function FormNewClient() {
             elements = form.getElementsByClassName("isInvalid")
             elements[0].classList.remove("isInvalid")
         }
+
+        setNewClientName("")
+        setNewClientEmail("")
+        setNewClientAddress("")
+        setNewClientPhone("")
+        setNewClientCPForCNPJ("")
     }
 
     const handleSubmit = (event) => {
@@ -96,11 +102,11 @@ function FormNewClient() {
                     <div className='radiosCPForCNPJ'>
                         <label htmlFor="cpf" className='labelRadiosCpfCnpj'>
                             <input type="radio" value={0}  name="cpfCnpj" id="cpf" className='inputRadioCpfCnpj'
-                            onChange={() => setOption("cpf")} checked />
+                            onClick={() => setOption("cpf")} defaultChecked/>
                             <label className='text labelRadio' htmlFor='cpf'>CPF</label>
                         </label>
                         <label htmlFor="cnpj" className='labelRadiosCpfCnpj'>
-                            <input type="radio" value={0} name="cpfCnpj" id="cnpj" className='inputRadioCpfCnpj' onChange={() => setOption("cnpj")}/>
+                            <input type="radio" value={0} name="cpfCnpj" id="cnpj" className='inputRadioCpfCnpj' onClick={() => setOption("cnpj")}/>
                             <label className='text labelRadio' htmlFor='cnpj'>CNPJ</label>
                         </label>
 

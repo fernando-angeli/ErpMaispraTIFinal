@@ -22,13 +22,13 @@ function App() {
     <>
       <Router>
         <ProtectedRoute isLoggedIn={isAuthenticated}>
-        <Header isLoggedIn={isAuthenticated}/>
+          <Header isLoggedIn={isAuthenticated}/>
           <NavigationMenu/>
         </ProtectedRoute>
         <Routes>
         {!isLogged && (
-        <Route path='/login' element={<Login />} />
-      )}
+          <Route path='/login' element={<Login />} />
+        )}
           <Route path='/cliente' element={
             <ProtectedRoute isLoggedIn={isLogged}>
               <AddClientPage/>

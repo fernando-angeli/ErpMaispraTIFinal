@@ -45,7 +45,7 @@ div.radiosCPForCNPJ {
     align-items: center;
 } 
 
-form.formNewClient .divButtons {
+.divButtons {
     grid-column: 2/3;
     display: flex;
     justify-content: end;
@@ -118,11 +118,11 @@ form.formNewClient .divButtons {
 }
 :-moz-placeholder { /* Firefox 18- */
     color: var(--text-40);  
- }
+}
  
 ::-moz-placeholder {  /* Firefox 19+ */
     color: var(--text-40);  
- }
+}
  
 :-ms-input-placeholder {  
     color: var(--text-40);  
@@ -208,6 +208,4 @@ form.formNewClient .divButtons {
         margin: 0 .25em 0 0;
         padding:0;
     }
-
-
 }
