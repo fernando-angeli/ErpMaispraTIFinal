@@ -3,7 +3,7 @@ function Login() {
   
     return (
         <>
-            |<LoginPage></LoginPage>
+            <LoginPage></LoginPage>
         </>
     )
 }
