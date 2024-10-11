@@ -51,15 +51,18 @@ const [clients, setClients] = useState();
     <div className='contentListClients'>
        <div className='ListClients'>
         <div className='header'>
-          <h3><BiSolidUser size={75}/>Lista de Clientes</h3>
+          <div className="title">
+            <BiSolidUser className="userIcon" size={75}/>
+            <h3>Lista de Clientes</h3>
+          </div>
             <section>
                 <label className="searchClient">
                     <input type='text' placeholder='Buscar cliente...' required />
                     <a><BiSearch size={35}/></a>
                 </label>
-                    <label className="checkbox">
-                        <input type='checkbox' name='active' /> Ativo
-                        <input type='checkbox' name='inactive' /> Inativo
+                    <label className="labelCheckboxes">
+                        <input type='checkbox' name='active' /> <span className="text">Ativos</span>
+                        <input type='checkbox' name='inactive' /> <span className="text">Inativos</span>
                     </label>
             </section>
         </div>

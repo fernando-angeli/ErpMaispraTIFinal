@@ -8,11 +8,24 @@ import Viacep from '../Viacep/Viacep'
 function FormNewClient() {
     const [ResponsiveCliente, setResponsiveCliente] = useState(true)
     const [CPForCNPJ, setOption] = useState("cpf")
+
     const [newClientName, setNewClientName] = useState("")
     const [newClientEmail, setNewClientEmail] = useState("")
     const [newClientAddress, setNewClientAddress] = useState("")
     const [newClientPhone, setNewClientPhone] = useState("")
     const [newClientCPForCNPJ, setNewClientCPForCNPJ] = useState("")
+    const [newClientAddressNumber, setNewClientAddressNumber] = useState("")
+    const [newClientDistrict, setNewClientDistrict] = useState("")
+    const [newClientCity, setNewClientCity] = useState("")
+    const [newClientCEP, setNewClientCEP] = useState("")
+
+    let cityList = [
+        {id: 1, city: 'city 1'},
+        {id: 2, city: 'city 2'},
+        {id: 3, city: 'city 3'},
+        {id: 4, city: 'city 4'}
+    ]
+
 
     const isInvalid = (e) => {
         e.target.className = "isInvalid inputText"
@@ -22,6 +35,14 @@ function FormNewClient() {
         if (e.target.value && e.target.className != "inputText") {
             e.target.className = "inputText"
         }
+    }
+    const selectIsValid = (e) => {
+        if (e.target.value && e.target.className != "selectCity") {
+            e.target.className = "selectCity"
+        }
+    }
+    const selectIsInvalid = (e) => {
+        e.target.className = "isInvalid selectCity"
     }
 
     const handleReset = () => { 
@@ -38,6 +59,10 @@ function FormNewClient() {
         setNewClientAddress("")
         setNewClientPhone("")
         setNewClientCPForCNPJ("")
+        setNewClientAddressNumber("")
+        setNewClientDistrict("")
+        setNewClientCity("")
+        setNewClientCEP("")
     }
 
     const handleSubmit = async (event) => {
@@ -78,11 +103,15 @@ function FormNewClient() {
                 'Content-Type': 'application/json',
               }
             });
-            setNewClientName("");
-            setNewClientEmail("");
-            setNewClientAddress("");
-            setNewClientPhone("");
-            setNewClientCPForCNPJ("");
+            setNewClientName("")
+            setNewClientEmail("")
+            setNewClientAddress("")
+            setNewClientPhone("")
+            setNewClientCPForCNPJ("")
+            setNewClientAddressNumber("")
+            setNewClientDistrict("")
+            setNewClientCity("")
+            setNewClientCEP("")
             alert('Cliente adicionado com sucesso!');
           } catch (err) {
             console.error(err);
@@ -119,14 +148,6 @@ function FormNewClient() {
                         }}/>
                 </label>
 
-                <label htmlFor="newClientAddress" className='inputLabel' id='labelNewClientAddress'>
-                    <span className='inputDescription'>Endereço:</span> 
-                    <input type="text" placeholder='Digite o endereço do cliente' className='inputText' name='endereco' id='newClientAddress' value={newClientAddress} required onInvalid={(e) => isInvalid(e)} onChange={(e) => {
-                        setNewClientAddress(e.target.value)
-                        isValid(e)
-                        }}/>
-                </label>
-
                 <label htmlFor="newClientPhone" className='inputLabel' id='labelNewClientPhone'>
                     <span className='inputDescription'>Telefone:</span> 
                     <input type="tel" placeholder='Digite o telefone do cliente' className='inputText' name='telefone' id='newClientPhone' value={newClientPhone} required onInvalid={(e) => isInvalid(e)} onChange={(e) => {
@@ -153,6 +174,57 @@ function FormNewClient() {
                         isValid(e)
                         }}/>
                 </label>
+
+                <div className='line'>
+                    <label htmlFor="newClientAddress" className='inputLabel' id='labelNewClientAddress'>
+                        <span className='inputDescription'>Logradouro:</span> 
+                        <input type="text" placeholder='Digite o endereço do cliente' className='inputText' name='logradouro' id='newClientAddress' value={newClientAddress} required onInvalid={(e) => isInvalid(e)} onChange={(e) => {
+                            setNewClientAddress(e.target.value)
+                            isValid(e)
+                            }}/>
+                    </label>
+
+                    <label htmlFor="newClientAddressNumber" className='inputLabel' id='labelNewClientAddressNumber'>
+                        <span className='inputDescription'>Número:</span> 
+                        <input type="text" placeholder='0000' className='inputText' name='numero' id='newClientAddressNumber' value={newClientAddressNumber} required onInvalid={(e) => isInvalid(e)} onChange={(e) => {
+                            setNewClientAddressNumber(e.target.value)
+                            isValid(e)
+                            }}/>
+                    </label>
+                </div>
+
+                <div className='line'>
+                    <label htmlFor="newClientDistrict" className='inputLabel' id='labelNewClientDistrict'>
+                        <span className='inputDescription'>Bairro:</span> 
+                        <input type="text" placeholder='Digite o bairro do cliente' className='inputText' name='bairro' id='newClientDistrict' value={newClientDistrict} required onInvalid={(e) => isInvalid(e)} onChange={(e) => {
+                            setNewClientDistrict(e.target.value)
+                            isValid(e)
+                            }}/>
+                    </label>
+
+                    <label htmlFor="newClientCity" className='inputLabel' id='labelNewClientCity'>
+                        <span className='inputDescription'>Cidade:</span> 
+                        <select name="cidade" id="newClientCity" placeholder='Selecione a cidade' value={newClientCity} className='selectCity' onInvalid={(e) => selectIsInvalid(e)} required onChange={(e) => {
+                            setNewClientCity(e.target.value)
+                            selectIsValid(e)
+                            }}>
+                            <option value="" selected hidden>Selecione...</option>
+                            {cityList.map((item, index) => (
+                                <option value={item.city}>{item.city}</option>
+                            ))}
+                        </select>
+                    </label>
+                            
+                    <label htmlFor="newClientCEP" className='inputLabel' id='labelNewClientCEP'>
+                        <span className='inputDescription'>CEP:</span> 
+                        <input type="text" placeholder='00000-000' className='inputText' name='CEP' id='newClientCEP' value={newClientCEP} required onInvalid={(e) => isInvalid(e)} onChange={(e) => {
+                            setNewClientCEP(e.target.value)
+                            isValid(e)
+                            }}/>
+                    </label>
+                </div>
+
+
 
                 <div className="divButtons">
                     <button type="submit" className='primaryNormal'>Salvar</button>
