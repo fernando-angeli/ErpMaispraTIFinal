@@ -20,12 +20,15 @@ function FormNewClient() {
     const [newClientCEP, setNewClientCEP] = useState("")
 
     let cityList = [
-        {id: 1, city: 'city 1'},
-        {id: 2, city: 'city 2'},
-        {id: 3, city: 'city 3'},
-        {id: 4, city: 'city 4'}
+        {id: 1, city: newClientCity},
     ]
 
+    const getCep = async (cep)  =>  {
+        const adress = await Viacep(cep)
+        setNewClientCity(adress.cidade)
+        setNewClientAddress(adress.logradouro)
+        setNewClientDistrict(adress.bairro)
+    }
 
     const isInvalid = (e) => {
         e.target.className = "isInvalid inputText"
@@ -124,7 +127,6 @@ function FormNewClient() {
         setResponsiveCliente(!ResponsiveCliente);
     };
 
-    console.log(Viacep('95601334')) // viacep ja funcionando
     return (
         <div className='containerForm'>
             <h2 className='tabTitle'>Adicionar Cliente 
@@ -217,7 +219,7 @@ function FormNewClient() {
                             
                     <label htmlFor="newClientCEP" className='inputLabel' id='labelNewClientCEP'>
                         <span className='inputDescription'>CEP:</span> 
-                        <input type="text" placeholder='00000-000' className='inputText' name='CEP' id='newClientCEP' value={newClientCEP} required onInvalid={(e) => isInvalid(e)} onChange={(e) => {
+                        <input type="text" placeholder='00000-000' className='inputText' name='CEP' id='newClientCEP' value={newClientCEP} required onInvalid={(e) => isInvalid(e)} onBeforeInput={getCep(newClientCEP)} onChange={(e) => {
                             setNewClientCEP(e.target.value)
                             isValid(e)
                             }}/>
@@ -228,7 +230,7 @@ function FormNewClient() {
 
                 <div className="divButtons">
                     <button type="submit" className='primaryNormal'>Salvar</button>
-                    <button type="reset" className='primaryLight'>Cancelar</button>
+                    <button type="reset" className='primaryLight' onClick={()=>handleReset()}>Cancelar</button>
                 </div>
 
             </form>

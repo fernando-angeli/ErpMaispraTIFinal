@@ -3,11 +3,9 @@ import axios from 'axios';
 export default async function Viacep(cep) {
   try {
     const response = await axios.get(`https://viacep.com.br/ws/${cep}/json/`);
-    const { bairro, localidade: cidade, uf: estado } = response.data;
-    console.log('Bairro:', bairro);
-    console.log('Cidade:', cidade);
-    console.log('Estado:', estado);
+    const {logradouro, bairro, localidade: cidade, uf: estado } = response.data;
     return {
+      logradouro,
       bairro,
       cidade,
       estado,
