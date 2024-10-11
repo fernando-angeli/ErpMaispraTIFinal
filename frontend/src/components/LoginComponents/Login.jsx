@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import './Login.css'
-import ErpLogo from '../../assets/icons/artboard.png'
+import ErpLogo from '../../assets/icons/artboard.svg'
 
 import { useAuth } from '../AuthContext.jsx';
 import { useNavigate } from 'react-router-dom';

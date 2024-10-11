@@ -86,6 +86,7 @@ p.pForgotPass {
         margin: 0 auto;
     }
     .contentLogin img{
+        padding: 2em;
         height: 13rem;
     
     }
