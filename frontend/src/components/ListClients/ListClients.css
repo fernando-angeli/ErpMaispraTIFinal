@@ -3,32 +3,43 @@
     height: auto;
     margin: 0 auto; 
     border-radius: 1em;
-    border: 1px solid var(--primary-dark);
+    border: 2px solid var(--text-100, #2A153B);
 }
 
 
 .header{
-    padding: 1em;
     display: flex;
     justify-content: space-between;
     flex-direction: row;
     align-items: center;
-     margin-bottom: 1em ;
+    margin-block: 1.7rem 1.3rem;
+    margin-inline: 2.2rem;
+}
+.header .title {
+    color: var(--text-100, #2A153B);
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    column-gap: 0.7rem;
 }
 .header section{
     display: flex;
     align-items: center;
     gap: 10px;
 }
-.header hr{
-    color: var(--primary-dark);
+.ListClients hr{
+    height: 2px;
+    width: 95%;
+    background: var(--text-100, #2A153B);
+    margin: 0 auto;
+    opacity: 100%;
 }
 .searchClient{
     height: 2em;
     width: 50%;
     display: flex;
     align-items: center;
-    padding-inline: 15px;
+    padding-inline: 5px;
     padding-block: 17px;
     width: 100%;
     border-radius: 15px;
@@ -39,12 +50,16 @@
     height: 90%;
     border: none;
 }
-.checkbox{
+.labelCheckboxes{
     height: 100%;
     display: flex;
     align-items: center;
     gap: 0.5em;
     font-size: 1.3em;
+}
+
+.labelCheckboxes input {
+    
 }
 
 .ListClientsTable{
