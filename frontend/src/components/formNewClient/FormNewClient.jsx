@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import './formNewClient.css'
+import '../../assets/css/radioOrCheckbox.css'
 import { CgAdd } from "react-icons/cg";
 import { CgRemove } from "react-icons/cg";
 import axios from 'axios';
@@ -70,6 +71,17 @@ function FormNewClient() {
 
     const handleSubmit = async (event) => {
         event.preventDefault()
+
+        // console.log(newClientName)
+        // console.log(newClientEmail)
+        // console.log(newClientPhone)
+        // console.log(newClientCPForCNPJ)
+        // console.log(newClientAddress)
+        // console.log(newClientAddressNumber)
+        // console.log(newClientDistrict)
+        // console.log(newClientCity)
+        // console.log(newClientCEP)
+        
 
         if(CPForCNPJ =='cpf'){
                 setOption('PF')
@@ -159,14 +171,14 @@ function FormNewClient() {
                 </label>
 
                 <label htmlFor="newClientCPForCNPJ" className='inputLabel' id='labelNewClientCPF/CNPJ'>
-                    <div className='radiosCPForCNPJ'>
+                    <div className='divRadios'>
                         <label htmlFor="cpf" className='labelRadiosCpfCnpj'>
-                            <input type="radio" value={0}  name="cpfCnpj" id="cpf" className='inputRadioCpfCnpj'
+                            <input type="radio" value={0}  name="cpfCnpj" id="cpf" className='inputRadio'
                             onClick={() => setOption("cpf")} defaultChecked/>
                             <label className='text labelRadio' htmlFor='cpf'>CPF</label>
                         </label>
                         <label htmlFor="cnpj" className='labelRadiosCpfCnpj'>
-                            <input type="radio" value={0} name="cpfCnpj" id="cnpj" className='inputRadioCpfCnpj' onClick={() => setOption("cnpj")}/>
+                            <input type="radio" value={0} name="cpfCnpj" id="cnpj" className='inputRadio' onClick={() => setOption("cnpj")}/>
                             <label className='text labelRadio' htmlFor='cnpj'>CNPJ</label>
                         </label>
 

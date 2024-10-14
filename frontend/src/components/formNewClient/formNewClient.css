@@ -33,6 +33,7 @@ form.hiddenformNewClient {
     display: flex;
     gap: inherit;
     /* flex-direction: column; */
+    /* COLOCAR O FLEX-DIRECTION: COLUMN; PARA FORMATAR O MOBILE */
 }
 #labelNewClientAddress {
     flex-grow: 1;
@@ -98,16 +99,7 @@ form.hiddenformNewClient {
 label.labelRadiosCpfCnpj {
     display: flex;
     align-items: center;
-    
-
 }
-
-div.radiosCPForCNPJ {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 15px;
-    align-items: center;
-} 
 
 .divButtons {
     grid-column: 2/3;
@@ -116,56 +108,13 @@ div.radiosCPForCNPJ {
     gap: 15px;
     margin-top: 15px;
 
-   
+    
 }
 
 .isInvalid {
     border-color: var(--system-danger);
     background-color: #fff2f2;
 }
-
-
-/* ------------- PERSONALIZED RADIO ------------- */
-
-
-
-
-.inputRadioCpfCnpj {
-    display: none;
-    transition-duration: 2s;
-}
-
-.inputRadioCpfCnpj + label:before {
-    width: 27px;
-    height: 27px;
-    border-radius: 8px;
-    border: 1px solid var(--primary-dark);
-    
-    content: "\00a0";
-    display: inline-block;
-    
-    margin: 0 .25em 0 0;
-    padding:0;
-    
-    
-    
-}   
-.inputRadioCpfCnpj:checked + label:before {
-    background: var(--primary-dark);
-    color: #FFF;
-    content: "\2713";
-    text-align: center;
-    
-}   
-.inputRadioCpfCnpj:checked + label:after {
-    font-weight: bold;
-}   
-
-.labelRadio {
-    cursor: pointer !important;
-    
-}
-
 .divButtons {
     grid-column: 2/3;
     display: flex;
@@ -173,6 +122,10 @@ div.radiosCPForCNPJ {
     gap: 1em;
     margin:none;
 }
+
+
+
+
 
 /* ------------- PLACEHODER COLOR ------------- */
 
@@ -230,12 +183,7 @@ div.radiosCPForCNPJ {
         margin-bottom: 0.36em;
     }
     
-    div.radiosCPForCNPJ {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 15px;
-        align-items: center;
-    } 
+    
     
     .divButtons {
         grid-column: 2/3;
@@ -254,13 +202,13 @@ div.radiosCPForCNPJ {
     
     /* ------------- PERSONALIZED RADIO ------------- */
     
-    .inputRadioCpfCnpj {
+    .inputRadio {
         padding: 1em;
         display: none;
         transition-duration: 2s;
     }
     
-    .inputRadioCpfCnpj + label:before {
+    .inputRadio + label:before {
         width: 27px;
         height: 27px;
         border-radius: 8px;

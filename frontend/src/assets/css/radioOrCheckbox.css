@@ -1,0 +1,48 @@
+.inputRadio {
+    display: none;
+    transition-duration: 2s;
+}
+
+.inputRadio + label:before {
+    width: 27px;
+    height: 27px;
+    border-radius: 8px;
+    border: 1px solid var(--primary-dark);
+    
+    content: "\00a0";
+    display: inline-block;
+    
+    margin: 0 .25em 0 0;
+    padding:0;
+    
+    
+    
+}   
+.inputRadio:checked + label:before {
+    background: var(--primary-dark);
+    color: #FFF;
+    content: "\2713";
+    text-align: center;
+    
+}   
+.inputRadio:checked + label:after {
+    font-weight: bold;
+}   
+
+.labelCheckbox * {
+    cursor: pointer;
+}
+
+.labelRadio {
+    cursor: pointer !important;
+    display: block;
+    
+}
+
+div.divRadios {
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: 15px;
+    align-items: center;
+    
+} 
