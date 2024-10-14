@@ -2,7 +2,7 @@ package com.erp.maisPraTi.enums;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 
-public enum ClientStatus {
+public enum PartyStatus {
 
     ACTIVE("ativo"),
     INACTIVE("inativo"),
@@ -10,7 +10,7 @@ public enum ClientStatus {
 
     private final String status;
 
-    ClientStatus(String status){
+    PartyStatus(String status){
         this.status = status;
     }
 

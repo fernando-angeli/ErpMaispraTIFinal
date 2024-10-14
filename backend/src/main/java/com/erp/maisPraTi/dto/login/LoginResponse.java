@@ -1,4 +1,4 @@
-package com.erp.maisPraTi.dto;
+package com.erp.maisPraTi.dto.login;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,5 +10,4 @@ import lombok.NoArgsConstructor;
 public class LoginResponse {
 
     private String token;
-
 }

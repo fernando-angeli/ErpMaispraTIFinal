@@ -1,6 +1,6 @@
 package com.erp.maisPraTi.model;
 
-import com.erp.maisPraTi.enums.ClientStatus;
+import com.erp.maisPraTi.enums.PartyStatus;
 import com.erp.maisPraTi.enums.Gender;
 import com.erp.maisPraTi.enums.TypePfOrPj;
 import jakarta.persistence.*;
@@ -55,7 +55,7 @@ public class Client {
     private String notes;
 
     @Enumerated(EnumType.STRING)
-    private ClientStatus status;
+    private PartyStatus status;
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

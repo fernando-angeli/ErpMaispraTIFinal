@@ -1,6 +1,7 @@
 package com.erp.maisPraTi.controller.exceptions;
 
 import com.erp.maisPraTi.service.exceptions.DatabaseException;
+import com.erp.maisPraTi.service.exceptions.InvalidValueException;
 import com.erp.maisPraTi.service.exceptions.ResourceNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
@@ -62,6 +63,18 @@ public class ResourceExceptionHandler {
         error.setTimestamp(Instant.now());
         error.setStatus(status.value());
         error.setError("Authentication error");
+        error.setMessage(e.getMessage());
+        error.setPath(request.getRequestURI());
+        return ResponseEntity.status(status).body(error);
+    }
+
+    @ExceptionHandler(InvalidValueException.class)
+    public ResponseEntity<StandardError> invalidValue(InvalidValueException e, HttpServletRequest request){
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        StandardError error = new StandardError();
+        error.setTimestamp(Instant.now());
+        error.setStatus(status.value());
+        error.setError("Invalid value");
         error.setMessage(e.getMessage());
         error.setPath(request.getRequestURI());
         return ResponseEntity.status(status).body(error);

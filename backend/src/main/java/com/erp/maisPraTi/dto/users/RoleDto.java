@@ -1,19 +1,17 @@
-package com.erp.maisPraTi.dto;
+package com.erp.maisPraTi.dto.users;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class RoleDto {
 
-    private long id;
+    private Long id;
+
     @NotBlank(message = "O campo nome é obrigatório.")
     private String authority;
-
 }
