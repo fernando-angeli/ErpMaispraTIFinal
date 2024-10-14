@@ -1,8 +1,8 @@
 package com.erp.maisPraTi.service;
 
-import com.erp.maisPraTi.dto.RoleDto;
-import com.erp.maisPraTi.dto.UserDto;
-import com.erp.maisPraTi.dto.UserUpdateDto;
+import com.erp.maisPraTi.dto.users.RoleDto;
+import com.erp.maisPraTi.dto.users.UserDto;
+import com.erp.maisPraTi.dto.users.UserUpdateDto;
 import com.erp.maisPraTi.model.Role;
 import com.erp.maisPraTi.model.User;
 import com.erp.maisPraTi.repository.UserRepository;
@@ -17,9 +17,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import static com.erp.maisPraTi.util.EntityMapper.convertToDto;
 import static com.erp.maisPraTi.util.EntityMapper.convertToEntity;
@@ -86,7 +87,7 @@ public class UserService implements UserDetailsService {
         }
     }
 
-    private void insertOrUpdateRoles(Set<RoleDto> roleDtos, User user) {
+    private void insertOrUpdateRoles(List<RoleDto> roleDtos, User user) {
         user.getRoles().clear();
         roleDtos.forEach(roleDto -> {
             Role role = convertToEntity(roleService.findById(roleDto.getId()), Role.class);
@@ -108,5 +109,4 @@ public class UserService implements UserDetailsService {
         }
         return user;
     }
-
 }

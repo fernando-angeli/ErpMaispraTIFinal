@@ -1,6 +1,6 @@
 package com.erp.maisPraTi.service;
 
-import com.erp.maisPraTi.dto.RoleDto;
+import com.erp.maisPraTi.dto.users.RoleDto;
 import com.erp.maisPraTi.model.Role;
 import com.erp.maisPraTi.repository.RoleRepository;
 import com.erp.maisPraTi.service.exceptions.ResourceNotFoundException;

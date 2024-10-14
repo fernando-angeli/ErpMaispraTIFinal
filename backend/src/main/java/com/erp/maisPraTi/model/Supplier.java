@@ -10,6 +10,8 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -32,7 +34,7 @@ public class Supplier {
     private String cpfCnpj;
 
     @Column(unique = true)
-    private String stateRegistration;  // Inscrição Estadual
+    private String rgIe;
 
     private String phoneNumber;
     private String email;
@@ -53,4 +55,7 @@ public class Supplier {
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+
+    @ManyToMany(mappedBy = "suppliers", fetch = FetchType.LAZY)
+    private List<Product> productList = new ArrayList<>();
 }

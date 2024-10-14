@@ -1,7 +1,7 @@
 package com.erp.maisPraTi.controller;
 
-import com.erp.maisPraTi.dto.UserDto;
-import com.erp.maisPraTi.dto.UserUpdateDto;
+import com.erp.maisPraTi.dto.users.UserDto;
+import com.erp.maisPraTi.dto.users.UserUpdateDto;
 import com.erp.maisPraTi.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

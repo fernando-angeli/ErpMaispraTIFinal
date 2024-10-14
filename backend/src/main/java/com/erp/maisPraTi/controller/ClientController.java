@@ -1,7 +1,7 @@
 package com.erp.maisPraTi.controller;
 
-import com.erp.maisPraTi.dto.ClientDto;
-import com.erp.maisPraTi.dto.ClientUpdateDto;
+import com.erp.maisPraTi.dto.partyDto.clients.ClientDto;
+import com.erp.maisPraTi.dto.partyDto.clients.ClientUpdateDto;
 import com.erp.maisPraTi.service.ClientService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -69,7 +69,7 @@ public class ClientController {
             @ApiResponse(responseCode = "404", description = "Cliente não encontrado")
     })
     @PutMapping("/{id}")
-    public ResponseEntity<ClientDto> update(@PathVariable Long id, @RequestBody ClientUpdateDto clientUpdateDto){
+    public ResponseEntity<ClientDto> update(@PathVariable Long id, @Valid @RequestBody ClientUpdateDto clientUpdateDto){
         ClientDto clientUpdatedDto = clientService.update(id, clientUpdateDto);
         return ResponseEntity.ok().body(clientUpdatedDto);
     }

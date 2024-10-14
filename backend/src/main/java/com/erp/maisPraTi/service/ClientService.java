@@ -1,7 +1,7 @@
 package com.erp.maisPraTi.service;
 
-import com.erp.maisPraTi.dto.ClientDto;
-import com.erp.maisPraTi.dto.ClientUpdateDto;
+import com.erp.maisPraTi.dto.partyDto.clients.ClientDto;
+import com.erp.maisPraTi.dto.partyDto.clients.ClientUpdateDto;
 import com.erp.maisPraTi.enums.TypePfOrPj;
 import com.erp.maisPraTi.model.Client;
 import com.erp.maisPraTi.repository.ClientRepository;
@@ -52,14 +52,14 @@ public class ClientService {
         verifyExistsId(id);
         try {
             Client client = clientRepository.getReferenceById(id);
+            if(!client.getCpfCnpj().equals(clientUpdateDto.getCpfCnpj()))
+                verifyExistsDocuments(clientUpdateDto.getCpfCnpj(), clientUpdateDto.getRgIe(), clientUpdateDto.getTypePfOrPj());
             convertToEntity(clientUpdateDto, client);
             client.setUpdatedAt(LocalDateTime.now());
             client = clientRepository.save(client);
             return convertToDto(client, ClientDto.class);
         } catch (DataIntegrityViolationException e) {
             throw new DatabaseException("Não foi possível fazer a alteração neste cliente.");
-        } catch (Exception e) {
-            throw new DatabaseException("Erro inesperado ao tentar atualizar cliente.");
         }
     }
 

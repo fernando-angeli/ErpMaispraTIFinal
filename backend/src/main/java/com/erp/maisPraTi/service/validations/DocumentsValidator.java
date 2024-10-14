@@ -1,6 +1,6 @@
 package com.erp.maisPraTi.service.validations;
 
-import com.erp.maisPraTi.dto.ClientDto;
+import com.erp.maisPraTi.dto.partyDto.PartyDto;
 import com.erp.maisPraTi.service.exceptions.DatabaseException;
 import com.erp.maisPraTi.util.CNPJValidator;
 import com.erp.maisPraTi.util.CPFValidator;
@@ -10,20 +10,20 @@ import jakarta.validation.ConstraintValidatorContext;
 import static com.erp.maisPraTi.enums.TypePfOrPj.PF;
 import static com.erp.maisPraTi.enums.TypePfOrPj.PJ;
 
-public class ClientInsertValidator implements ConstraintValidator<ClientInserValid, ClientDto>{
+public class DocumentsValidator implements ConstraintValidator<DocumentsValid, PartyDto>{
 
     @Override
-    public void initialize(ClientInserValid constraintAnnotation) {
+    public void initialize(DocumentsValid constraintAnnotation) {
         ConstraintValidator.super.initialize(constraintAnnotation);
     }
 
     @Override
-    public boolean isValid(ClientDto clientDto, ConstraintValidatorContext constraintValidatorContext) {
+    public boolean isValid(PartyDto partyDto, ConstraintValidatorContext constraintValidatorContext) {
 
-        if(clientDto.getTypePfOrPj().equals(PF) && !CPFValidator.validarCPF(clientDto.getCpfCnpj()))
+        if(partyDto.getTypePfOrPj().equals(PF) && !CPFValidator.validarCPF(partyDto.getCpfCnpj()))
             throw new DatabaseException("CPF inválido.");
 
-        if (clientDto.getTypePfOrPj().equals(PJ) && !CNPJValidator.validarCNPJ(clientDto.getCpfCnpj()))
+        if (partyDto.getTypePfOrPj().equals(PJ) && !CNPJValidator.validarCNPJ(partyDto.getCpfCnpj()))
             throw new DatabaseException("CNPJ inválido.");
 
         return true;

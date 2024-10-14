@@ -1,7 +1,7 @@
 package com.erp.maisPraTi.controller;
 
-import com.erp.maisPraTi.dto.SupplierDto;
-import com.erp.maisPraTi.dto.SupplierUpdateDto;
+import com.erp.maisPraTi.dto.partyDto.suppliers.SupplierDto;
+import com.erp.maisPraTi.dto.partyDto.suppliers.SupplierUpdateDto;
 import com.erp.maisPraTi.service.SupplierService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -69,7 +69,7 @@ public class SupplierController {
             @ApiResponse(responseCode = "404", description = "Fornecedor não encontrado")
     })
     @PutMapping("/{id}")
-    public ResponseEntity<SupplierDto> update(@PathVariable Long id, @RequestBody SupplierUpdateDto supplierUpdateDto) {
+    public ResponseEntity<SupplierDto> update(@PathVariable Long id, @Valid @RequestBody SupplierUpdateDto supplierUpdateDto) {
         SupplierDto supplierUpdatedDto = supplierService.update(id, supplierUpdateDto);
         return ResponseEntity.ok().body(supplierUpdatedDto);
     }

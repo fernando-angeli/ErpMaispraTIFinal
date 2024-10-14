@@ -68,7 +68,11 @@ public class SecurityConfig{
             "/swagger-resources/**",
             "/documentation.html"
     };
-    private static final String[] OPERATOR_OR_ADMIN = {"/clientes/**"};
+    private static final String[] OPERATOR_OR_ADMIN = {
+            "/clientes/**",
+            "/fornecedores/**",
+            "/produtos/**"
+    };
     private static final String[] ADMIN = {
             "/usuarios/**"};
 
