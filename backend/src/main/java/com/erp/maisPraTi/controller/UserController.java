@@ -1,6 +1,7 @@
 package com.erp.maisPraTi.controller;
 
 import com.erp.maisPraTi.dto.users.UserDto;
+import com.erp.maisPraTi.dto.users.UserInsertDto;
 import com.erp.maisPraTi.dto.users.UserUpdateDto;
 import com.erp.maisPraTi.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -17,7 +18,7 @@ import java.net.URI;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/usuarios")
+@RequestMapping("/api/usuarios")
 public class UserController {
 
     @Autowired
@@ -29,8 +30,8 @@ public class UserController {
             @ApiResponse(responseCode = "400", description = "Dados inválidos")
     })
     @PostMapping
-    public ResponseEntity<UserDto> insert(@RequestBody UserDto userDto){
-        UserDto newUserDto = userService.insert(userDto);
+    public ResponseEntity<UserDto> insert(@RequestBody UserInsertDto userInsertDto){
+        UserDto newUserDto = userService.insert(userInsertDto);
         URI uri = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{id}")

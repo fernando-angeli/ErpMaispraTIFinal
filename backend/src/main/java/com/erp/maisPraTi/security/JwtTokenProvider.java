@@ -2,13 +2,11 @@ package com.erp.maisPraTi.security;
 
 import com.erp.maisPraTi.model.Role;
 import com.erp.maisPraTi.model.User;
-import io.jsonwebtoken.security.Keys;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
@@ -29,8 +27,6 @@ public class JwtTokenProvider {
 
     @Value("${jwt.expiration}")
     private Long jwtExpiration;
-
-    private static Logger logger = LoggerFactory.getLogger(JwtTokenProvider.class);
 
     //Metodo para gerar uma chave secreta do tipo SecretKey a partir da string do jwtSecret
     private SecretKey getSigningKey() {

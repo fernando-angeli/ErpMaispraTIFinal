@@ -1,6 +1,7 @@
 package com.erp.maisPraTi.dto.partyDto.suppliers;
 
 import com.erp.maisPraTi.dto.partyDto.PartyDto;
+import com.erp.maisPraTi.model.Product;
 import com.erp.maisPraTi.service.validations.DocumentsValid;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,6 +17,6 @@ import java.util.List;
 @NoArgsConstructor
 public class SupplierUpdateDto extends PartyDto {
 
-    private List<Long> productIds;
+    private List<Product> products;
 
 }

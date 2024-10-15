@@ -1,21 +1,15 @@
 package com.erp.maisPraTi.config;
 
 import com.erp.maisPraTi.security.JwtRequestFilter;
-import com.erp.maisPraTi.service.UserService;
-import com.erp.maisPraTi.service.exceptions.AccessDeniedException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.core.env.Environment;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -26,7 +20,6 @@ import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -47,34 +40,15 @@ public class SecurityConfig{
     @Value("${jwt.secret}")
     private String jwtSecret;
 
-    @Autowired
-    private Environment environment;
+    private final Environment environment;
+    private final JwtRequestFilter jwtRequestFilter;
+    private final CustomAccessDeniedHandler customAccessDeniedHandler;
 
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private JwtRequestFilter jwtRequestFilter;
-
-    @Autowired
-    private CustomAccessDeniedHandler customAccessDeniedHandler;
-
-    private static final String[] PUBLIC = {
-            "/auth/**",
-            "/h2-console/**",
-            "/v3/api-docs/**",
-            "/api-docs/**",
-            "/swagger-ui/**",
-            "/swagger-resources/**",
-            "/documentation.html"
-    };
-    private static final String[] OPERATOR_OR_ADMIN = {
-            "/clientes/**",
-            "/fornecedores/**",
-            "/produtos/**"
-    };
-    private static final String[] ADMIN = {
-            "/usuarios/**"};
+    public SecurityConfig(Environment environment, JwtRequestFilter jwtRequestFilter, CustomAccessDeniedHandler customAccessDeniedHandler) {
+        this.environment = environment;
+        this.jwtRequestFilter = jwtRequestFilter;
+        this.customAccessDeniedHandler = customAccessDeniedHandler;
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -86,12 +60,28 @@ public class SecurityConfig{
         return authenticationConfiguration.getAuthenticationManager();
     }
 
+    private static final String[] PUBLIC = {
+            "/api/login/**",
+            "/api/h2-console/**",
+            "/api/v3/docs/**",
+            "/api/docs/**",
+            "/api/swagger-ui/**",
+            "/api/swagger-resources/**",
+            "/api/documentation.html"
+    };
+    private static final String[] OPERATOR_OR_ADMIN = {
+            "/api/clientes/**",
+            "/api/fornecedores/**",
+            "/api/produtos/**"
+    };
+    private static final String[] ADMIN = {
+            "/api/usuarios/**"};
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         // Libera o H2 quando o perfil ativo é o de "test"
         if (Arrays.asList(environment.getActiveProfiles()).contains("test"))
             http.headers(headers -> headers.frameOptions().disable());
-
 
         http
                 .cors(withDefaults())
