@@ -2,6 +2,7 @@ package com.erp.maisPraTi.service;
 
 import com.erp.maisPraTi.dto.users.RoleDto;
 import com.erp.maisPraTi.dto.users.UserDto;
+import com.erp.maisPraTi.dto.users.UserInsertDto;
 import com.erp.maisPraTi.dto.users.UserUpdateDto;
 import com.erp.maisPraTi.model.Role;
 import com.erp.maisPraTi.model.User;
@@ -12,9 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,7 +25,10 @@ import static com.erp.maisPraTi.util.EntityMapper.convertToDto;
 import static com.erp.maisPraTi.util.EntityMapper.convertToEntity;
 
 @Service
-public class UserService implements UserDetailsService {
+public class UserService {
+
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
     private UserRepository userRepository;
@@ -35,11 +37,14 @@ public class UserService implements UserDetailsService {
     private RoleService roleService;
 
     @Transactional
-    public UserDto insert(UserDto userDto) {
-        User newUser = convertToEntity(userDto, User.class);
+    public UserDto insert(UserInsertDto userInsertDto) {
+        if(userRepository.findByEmail(userInsertDto.getEmail()) != null)
+            throw new DatabaseException("E-mail já utilizado.");
+        User newUser = convertToEntity(userInsertDto, User.class);
         newUser.setCreatedAt(LocalDateTime.now());
         newUser.setUpdatedAt(LocalDateTime.now());
-        insertOrUpdateRoles(userDto.getRoles(), newUser);
+        updateRoles(userInsertDto.getRoles(), newUser);
+        newUser.setPassword(passwordEncoder.encode(userInsertDto.getPassword()));
         newUser = userRepository.save(newUser);
         return convertToDto(newUser, UserDto.class);
     }
@@ -65,7 +70,8 @@ public class UserService implements UserDetailsService {
             user.getRoles().clear();
             convertToEntity(userUpdateDto, user);
             user.setUpdatedAt(LocalDateTime.now());
-            insertOrUpdateRoles(userUpdateDto.getRoles(), user);
+            updateRoles(userUpdateDto.getRoles(), user);
+            user.setPassword(passwordEncoder.encode(userUpdateDto.getPassword()));
             user = userRepository.save(user);
             return convertToDto(user, UserDto.class);
         } catch (DataIntegrityViolationException e){
@@ -87,7 +93,7 @@ public class UserService implements UserDetailsService {
         }
     }
 
-    private void insertOrUpdateRoles(List<RoleDto> roleDtos, User user) {
+    private void updateRoles(List<RoleDto> roleDtos, User user) {
         user.getRoles().clear();
         roleDtos.forEach(roleDto -> {
             Role role = convertToEntity(roleService.findById(roleDto.getId()), Role.class);
@@ -101,12 +107,4 @@ public class UserService implements UserDetailsService {
         }
     }
 
-    @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        User user = userRepository.findByEmail(email);
-        if(user == null) {
-            throw new UsernameNotFoundException("Usuário não encontrado: " + email);
-        }
-        return user;
-    }
 }

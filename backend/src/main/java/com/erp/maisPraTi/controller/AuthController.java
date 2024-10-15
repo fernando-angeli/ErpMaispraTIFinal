@@ -1,43 +1,26 @@
 package com.erp.maisPraTi.controller;
 
 import com.erp.maisPraTi.dto.login.LoginRequest;
-import com.erp.maisPraTi.security.JwtTokenProvider;
-import com.erp.maisPraTi.service.UserService;
-import com.erp.maisPraTi.service.exceptions.AuthenticationUserException;
+import com.erp.maisPraTi.dto.login.LoginResponse;
+import com.erp.maisPraTi.service.AuthService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping
+@RequestMapping("/api")
 public class AuthController {
 
-    private final AuthenticationManager authenticationManager;
-    private final JwtTokenProvider jwtTokenProvider;
-    private final UserService userService;
-    private final BCryptPasswordEncoder passwordEncoder;
+    @Autowired
+    private AuthService service;
 
-    public AuthController(AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider, UserService userService, BCryptPasswordEncoder passwordEncoder) {
-        this.authenticationManager = authenticationManager;
-        this.jwtTokenProvider = jwtTokenProvider;
-        this.userService = userService;
-        this.passwordEncoder = passwordEncoder;
-    }
-
-    @PostMapping("auth")
-    public ResponseEntity<String> login (@RequestBody LoginRequest loginRequest){
-        try {
-            Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword())
-            );
-            String token = jwtTokenProvider.generateToken(authentication);
-            return ResponseEntity.ok().body(token);
-        } catch (AuthenticationUserException error) {
-            throw new AuthenticationUserException("Credenciais inválidas.");
-        }
+    @PostMapping("/login")
+    public ResponseEntity<String> login (@RequestBody LoginRequest request){
+        LoginResponse response = service.login(request);
+        return ResponseEntity.ok().body(response.getToken());
     }
 
 }

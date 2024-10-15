@@ -1,8 +1,7 @@
 package com.erp.maisPraTi.security;
 
 import com.erp.maisPraTi.security.exceptions.StandardErrorAuth;
-import com.erp.maisPraTi.service.UserService;
-import com.erp.maisPraTi.service.exceptions.JwtTokenException;
+import com.erp.maisPraTi.service.UserDetailsServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
@@ -27,7 +26,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     private JwtTokenProvider jwtTokenProvider;
 
     @Autowired
-    private UserService userService;
+    private UserDetailsServiceImpl userService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
