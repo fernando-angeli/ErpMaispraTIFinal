@@ -1,139 +1,138 @@
-import { useState } from 'react'
-import './formNewClient.css'
-import '../../assets/css/radioOrCheckbox.css'
-import { CgAdd } from "react-icons/cg";
-import { CgRemove } from "react-icons/cg";
+import { useState, useEffect } from 'react';
+import './formNewClient.css';
+import '../../assets/css/radioOrCheckbox.css';
+import { CgAdd, CgRemove } from "react-icons/cg";
 import axios from 'axios';
 import { useAuth } from '../AuthContext';
-import Viacep from '../Viacep/Viacep'
+import Viacep from '../Viacep/Viacep';
+
 function FormNewClient() {
-    const [ResponsiveCliente, setResponsiveCliente] = useState(true)
-    const [CPForCNPJ, setOption] = useState("cpf")
+    const [ResponsiveCliente, setResponsiveCliente] = useState(true);
+    const [CPForCNPJ, setOption] = useState("cpf");
+    const [newClientName, setNewClientName] = useState("");
+    const [newClientEmail, setNewClientEmail] = useState("");
+    const [newClientAddress, setNewClientAddress] = useState("");
+    const [newClientPhone, setNewClientPhone] = useState("");
+    const [newClientCPForCNPJ, setNewClientCPForCNPJ] = useState("");
+    const [newClientAddressNumber, setNewClientAddressNumber] = useState("");
+    const [newClientDistrict, setNewClientDistrict] = useState("");
+    const [newClientCity, setNewClientCity] = useState("");
+    const [newClientCEP, setNewClientCEP] = useState("");
+    const [newClientState, setNewClientState] = useState("");
+    const [newClientBirthDate, setNewClientBirthDate] = useState(''); 
+    const [newClientNotes, setNewClientNotes] = useState(''); 
+    const [newClientStatus, setNewClientStatus] = useState(''); 
 
-    const [newClientName, setNewClientName] = useState("")
-    const [newClientEmail, setNewClientEmail] = useState("")
-    const [newClientAddress, setNewClientAddress] = useState("")
-    const [newClientPhone, setNewClientPhone] = useState("")
-    const [newClientCPForCNPJ, setNewClientCPForCNPJ] = useState("")
-    const [newClientAddressNumber, setNewClientAddressNumber] = useState("")
-    const [newClientDistrict, setNewClientDistrict] = useState("")
-    const [newClientCity, setNewClientCity] = useState("")
-    const [newClientCEP, setNewClientCEP] = useState("")
+    const [Error, setError] = useState();
+    const [Success, setSuccess] = useState();
 
-    let cityList = [
-        {id: 1, city: newClientCity},
-    ]
+    const { JwtToken } = useAuth(); 
 
-    const getCep = async (cep)  =>  {
-        const adress = await Viacep(cep)
-        setNewClientCity(adress.cidade)
-        setNewClientAddress(adress.logradouro)
-        setNewClientDistrict(adress.bairro)
-    }
+    const cityList = [
+        { id: 1, city: newClientCity },
+    ];
+
+    const getCep = async (cep) => {
+        try {
+            const adress = await Viacep(cep);
+            setNewClientCity(adress.cidade);
+            setNewClientAddress(adress.logradouro);
+            setNewClientDistrict(adress.bairro);
+            setNewClientState(adress.estado);
+        } catch (error) {
+            console.error("Erro ao buscar o CEP:", error);
+            alert('CEP inválido ou não encontrado.');
+        }
+    };
+
+    useEffect(() => {
+        if (newClientCEP.length == 8) {
+            getCep(newClientCEP);
+        }
+    }, [newClientCEP]);
 
     const isInvalid = (e) => {
-        e.target.className = "isInvalid inputText"
-    }
+        e.target.className = "isInvalid inputText";
+    };
 
     const isValid = (e) => {
-        if (e.target.value && e.target.className != "inputText") {
-            e.target.className = "inputText"
+        if (e.target.value && e.target.className !== "inputText") {
+            e.target.className = "inputText";
         }
-    }
+    };
+
     const selectIsValid = (e) => {
-        if (e.target.value && e.target.className != "selectCity") {
-            e.target.className = "selectCity"
+        if (e.target.value && e.target.className !== "selectCity") {
+            e.target.className = "selectCity";
         }
-    }
+    };
+
     const selectIsInvalid = (e) => {
-        e.target.className = "isInvalid selectCity"
-    }
+        e.target.className = "isInvalid selectCity";
+    };
 
-    const handleReset = () => { 
-        let form = document.getElementById("formNewClient")
-        let elements = form.getElementsByClassName("isInvalid")
-        
-        while(elements.length > 0) {
-            elements = form.getElementsByClassName("isInvalid")
-            elements[0].classList.remove("isInvalid")
+    const handleReset = () => {
+        let form = document.getElementById("formNewClient");
+        let elements = form.getElementsByClassName("isInvalid");
+
+        while (elements.length > 0) {
+            elements[0].classList.remove("isInvalid");
         }
 
-        setNewClientName("")
-        setNewClientEmail("")
-        setNewClientAddress("")
-        setNewClientPhone("")
-        setNewClientCPForCNPJ("")
-        setNewClientAddressNumber("")
-        setNewClientDistrict("")
-        setNewClientCity("")
-        setNewClientCEP("")
-    }
-
+        setNewClientName("");
+        setNewClientEmail("");
+        setNewClientAddress("");
+        setNewClientPhone("");
+        setNewClientCPForCNPJ("");
+        setNewClientAddressNumber("");
+        setNewClientDistrict("");
+        setNewClientCity("");
+        setNewClientCEP("");
+        setNewClientState("");
+    };
     const handleSubmit = async (event) => {
-        event.preventDefault()
-
-        // console.log(newClientName)
-        // console.log(newClientEmail)
-        // console.log(newClientPhone)
-        // console.log(newClientCPForCNPJ)
-        // console.log(newClientAddress)
-        // console.log(newClientAddressNumber)
-        // console.log(newClientDistrict)
-        // console.log(newClientCity)
-        // console.log(newClientCEP)
-        
-
-        if(CPForCNPJ =='cpf'){
-                setOption('PF')
-            }else if(CPForCNPJ =='cpf'){
-                setOption('PJ')
-            }
+        event.preventDefault();
+        const newClientData = {
+            fullName: newClientName,
+            typePfOrPj: CPForCNPJ === "cpf" ? "PF" : "PJ", 
+            gender: "NAO INFORMADO", 
+            cpfCnpj: newClientCPForCNPJ,
+            rgIe: "RG12345",
+            phoneNumber: newClientPhone,
+            email: newClientEmail,
+            address: newClientAddress,
+            number: newClientAddressNumber,
+            district: newClientDistrict,
+            zipCode: newClientCEP,
+            city: newClientCity,
+            state: newClientState,
+            country: "Brasil",
+            birthDate: newClientBirthDate, 
+            creditLimit: 100.00, 
+            notes: newClientNotes,
+            status: "ativo",
+        };
 
         try {
-            const { JwtToken } = useAuth(); 
-            const newClientData = {
-              fullName: newClientName,
-              typePfOrPj: CPForCNPJ, 
-              gender: "MASC", 
-              cpfCnpj: newClientCPForCNPJ,
-              rgIe: "RG12345",
-              phoneNumber: newClientPhone,
-              email: newClientEmail,
-              address: newClientAddress,
-              number: "123",
-              district: "Centro",
-              zipCode: "95.650-000",
-              city: "Cachoeirinha",
-              state: "RS",
-              country: "Brasil",
-              birthDate: "1990-01-01", 
-              creditLimit: 10000.00, 
-              notes: "Cliente VIP",
-              status: "ativo",
-            };
-        
             const response = await axios.post(`http://localhost:8080/clientes`, newClientData, {
-              headers: {
-                Authorization: `Bearer ${JwtToken}`,
-                'Content-Type': 'application/json',
-              }
+                headers: {
+                    Authorization: `Bearer ${JwtToken}`,
+                    'Content-Type': 'application/json',
+                }
             });
-            setNewClientName("")
-            setNewClientEmail("")
-            setNewClientAddress("")
-            setNewClientPhone("")
-            setNewClientCPForCNPJ("")
-            setNewClientAddressNumber("")
-            setNewClientDistrict("")
-            setNewClientCity("")
-            setNewClientCEP("")
-            alert('Cliente adicionado com sucesso!');
-          } catch (err) {
+            handleReset();
+            setSuccess('Cliente adicionado com sucesso!');
+            setError(null);
+        } catch (err) {
             console.error(err);
-            alert('Erro ao adicionar cliente!');
-          }
-      
-    } // fazendo
+            if (err.response && err.response.data) {
+                setError(`${err.response.data.message}`);
+            } else {
+                setError('Erro ao adicionar cliente! Tente novamente.');
+                setSuccess(null);
+            }
+        }
+    };
 
     const resposiveClienteShow = () => {
         setResponsiveCliente(!ResponsiveCliente);
@@ -207,7 +206,7 @@ function FormNewClient() {
                     </label>
                 </div>
 
-                <div className='line'>
+                <div className='line2'>
                     <label htmlFor="newClientDistrict" className='inputLabel' id='labelNewClientDistrict'>
                         <span className='inputDescription'>Bairro:</span> 
                         <input type="text" placeholder='Digite o bairro do cliente' className='inputText' name='bairro' id='newClientDistrict' value={newClientDistrict} required onInvalid={(e) => isInvalid(e)} onChange={(e) => {
@@ -223,7 +222,7 @@ function FormNewClient() {
                             selectIsValid(e)
                             }}>
                             <option value="" selected hidden>Selecione...</option>
-                            {cityList.map((item, index) => (
+                            {cityList.map((item, item) => (
                                 <option value={item.city}>{item.city}</option>
                             ))}
                         </select>
@@ -231,22 +230,53 @@ function FormNewClient() {
                             
                     <label htmlFor="newClientCEP" className='inputLabel' id='labelNewClientCEP'>
                         <span className='inputDescription'>CEP:</span> 
-                        <input type="text" placeholder='00000-000' className='inputText' name='CEP' id='newClientCEP' value={newClientCEP} required onInvalid={(e) => isInvalid(e)} onBeforeInput={getCep(newClientCEP)} onChange={(e) => {
+                        <input type="text" placeholder='00000-000' className='inputText' name='CEP' id='newClientCEP' value={newClientCEP} required onInvalid={(e) => isInvalid(e)}  onChange={(e) => {
                             setNewClientCEP(e.target.value)
                             isValid(e)
                             }}/>
                     </label>
+                    
+        <label htmlFor="newClientBirthDate" className='inputLabel' id='labelNewClientBirthDate'>
+            <span className='inputDescription'>Data de Nascimento:</span> 
+            <input type="date" className='inputText' name='dataNascimento' id='newClientBirthDate' value={newClientBirthDate} required onInvalid={(e) => isInvalid(e)} onChange={(e) => {
+                setNewClientBirthDate(e.target.value);
+                isValid(e);
+            }}/>
+        </label>
+
+        <label htmlFor="newClientNotes" className='inputLabel' id='labelNewClientNotes'>
+            <span className='inputDescription'>Notas:</span> 
+            <textarea placeholder='Digite notas sobre o cliente' className='inputText' name='notas' id='newClientNotes' value={newClientNotes} onChange={(e) => {
+                setNewClientNotes(e.target.value);
+                isValid(e)
+            }} />
+        </label>
+
+        <label htmlFor="newClientStatus" className='inputLabel' id='labelNewClientStatus'>
+            <span className='inputDescription'>Status:</span> 
+            <input type="checkbox" className='inputCheckbox' name='status' id='newClientStatus' checked={newClientStatus} onChange={(e) => {
+                setNewClientStatus(e.target.checked);
+            }}/>
+            <label className='text labelCheckbox' htmlFor='newClientStatus'>Ativo</label>
+            <input type="checkbox" className='inputCheckbox' name='status' id='newClientStatus' checked={newClientStatus} onChange={(e) => {
+                setNewClientStatus(e.target.checked);
+            }}/>
+            <label className='text labelCheckbox' htmlFor='newClientStatus'>Inativo</label>
+        </label>
+        
                 </div>
-
-
-
+                    <p style={{color:'red'}}>{Error && Error}</p>
+                    <p style={{color:'green'}}>{Success && Success}</p>
                 <div className="divButtons">
-                    <button type="submit" className='primaryNormal'>Salvar</button>
+                    <button type="submit" className='primaryNormal' onClick={handleSubmit}>Salvar</button>
                     <button type="reset" className='primaryLight' onClick={()=>handleReset()}>Cancelar</button>
                 </div>
 
             </form>
+            
         </div>
     )
 }
+
+
 export default FormNewClient
