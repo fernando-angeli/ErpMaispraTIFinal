@@ -1,4 +1,4 @@
-package com.erp.maisPraTi.dto;
+package com.erp.maisPraTi.dto.users;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -6,8 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -23,6 +22,6 @@ public class UserUpdateDto {
     @Email(message="E-mail é obrigatório.")
     private String email;
 
-    Set<RoleDto> roles;
+    private List<RoleDto> roles;
 
 }

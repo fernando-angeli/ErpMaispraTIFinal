@@ -1,4 +1,4 @@
-package com.erp.maisPraTi.dto;
+package com.erp.maisPraTi.dto.users;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Column;
@@ -8,8 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -29,6 +28,6 @@ public class UserDto {
     @Email(message="E-mail é obrigatório.")
     private String email;
 
-    Set<RoleDto> roles;
+    private List<RoleDto> roles;
 
 }

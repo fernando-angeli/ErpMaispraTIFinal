@@ -1,6 +1,6 @@
 package com.erp.maisPraTi.controller;
 
-import com.erp.maisPraTi.dto.LoginRequest;
+import com.erp.maisPraTi.dto.login.LoginRequest;
 import com.erp.maisPraTi.security.JwtTokenProvider;
 import com.erp.maisPraTi.service.UserService;
 import com.erp.maisPraTi.service.exceptions.AuthenticationUserException;

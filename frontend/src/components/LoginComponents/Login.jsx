@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import './Login.css'
-import ErpLogo from '../../assets/icons/artboard.png'
+import ErpLogo from '../../assets/icons/artboard.svg'
 
 import { useAuth } from '../AuthContext.jsx';
 import { useNavigate } from 'react-router-dom';
@@ -35,27 +35,24 @@ const Login = () => {
     }
   };
 
-const handleCheckEmail = (email) =>{
-  const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
-  if (emailRegex.test(email)) {
-    setError(null)
+  const handleCheckEmail = (email) => {
+    const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
     setLoginEmail(email);
-} else {
-    setError('Formato de Email Invalido!')
-}
-
-}
-
-const handleCheckPass = (pass) =>{
-  const PassRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
-  if (!PassRegex.test(pass)) { // como a senha de teste é 12345, esta desativado
-    setError(null)
-    setLoginPassword(pass);
-} else {
-    setError('A senha deve ter 1 Letra maiscula, 1 maiscula e 8 caracteres!')
-}
-
-}
+    if (emailRegex.test(email)) {
+      setError(null);
+    } else {
+      setError('Formato de Email Inválido!');
+    }
+  };
+  const handleCheckPass = (pass) => {
+    const passRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
+    setLoginPassword(pass); 
+    if (passRegex.test(pass)) {
+      setError(null);
+    } else {
+      setError('A senha deve ter 1 Letra Maiúscula, 1 Minúscula, 1 Número e no mínimo 8 caracteres!');
+    }
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -71,6 +68,7 @@ const handleCheckPass = (pass) =>{
       navigate('/home')
     } catch (err) {
       setError(err.response.data.message+".")
+      setLoginPassword("")
     }
   };
 
@@ -81,10 +79,10 @@ const handleCheckPass = (pass) =>{
       </div>
 
       <div className='LoginBox'>
-      <h4>Faça seu Login</h4>
+        <h4>Faça seu login</h4>
         <form className='formLogin' onSubmit={handleSubmit} onReset={handleReset}>
           <label htmlFor='LoginEmail' className='inputLabel' id='labelNewLoginEmail'>
-            <span className='inputDescription'>Email</span>
+            <span className='inputDescription'>E-mail:</span> 
             <input type='email' placeholder='Digite seu Email' className='inputText'  name='email' value={LoginEmail}
               required
               onInvalid={(e) => isInvalid(e)}
@@ -96,7 +94,7 @@ const handleCheckPass = (pass) =>{
           </label>
 
           <label htmlFor='LoginPassword' className='inputLabel' id='labelLoginPassword'>
-            <span className='inputDescription'>Senha</span>
+            <span className='inputDescription'>Senha:</span>
             <input
               type='password' placeholder='Digite sua senha'  className='inputText'  name='password' value={LoginPassword}
               required
@@ -109,14 +107,14 @@ const handleCheckPass = (pass) =>{
           </label>
 
           <div className='divButtons'>
-            <button type='submit' className='primaryNormal' onClick={handleSubmit}>
+            <button type='submit' className='primaryNormal loginButton' onClick={handleSubmit}>
               Login
             </button>
           </div>
         </form>
-        <p class='error'>{Error && Error}</p>
-        <p class='sucess'>{Error2 && Error2}</p>
-        <p><a href=''>Esqueceu sua senha?</a></p>
+        <p className='error'>{Error && Error}</p>
+        <p className='sucess'>{Error2 && Error2}</p>
+        <p className='pForgotPass'><a href='' className='forgotPass'>Esqueceu sua senha?</a></p>
       </div>
     </div>
   );

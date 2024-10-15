@@ -27,81 +27,100 @@ form.hiddenformNewClient {
     display: none;
 }
 
-label#labelNewClientAddress {
+
+.line {
     grid-column: 1/3;
+    display: flex;
+    gap: inherit;
+
 }
+.line2 {
+    grid-column: 1/3;
+    display: flex;
+    gap: 1em;
+
+}
+
+#labelNewClientAddress {
+    flex-grow: 1;
+    flex-shrink: 1;
+    flex-basis: 60%;
+}
+#labelNewClientAddressNumber {
+    flex-grow: 0;
+    flex-shrink: 2;
+    flex-basis: 20%;
+}
+
+.selectCity {
+    padding-inline: 15px;
+    padding-block: 17px;
+    width: 100%;
+    border-radius: 15px;
+    border: 1px solid var(--primary-dark);
+    outline: 0;
+    
+
+    /* Text */
+    color: var(--text-100);
+    font-family: Lato;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 150%; /* 24px */
+    text-align: left;
+    cursor: pointer;
+}
+
+/* select:invalid {
+    color: var(--text-40);
+} */
+
+.selectCity {
+    -webkit-appearance: none; /* Remove a aparência padrão no Chrome/Safari */
+    -moz-appearance: none; /* Remove a aparência padrão no Firefox */
+    appearance: none; /* Remove a aparência padrão */
+    background: url(../../assets/icons/selectArrow.svg) no-repeat right center;
+    background-position: calc(100% - 1rem);
+    background-size: 2rem;
+}
+
+#labelNewClientDistrict {
+    flex-grow: 2;
+    flex-shrink: 1;
+    flex-basis: 25rem 0;
+}
+#labelNewClientCity {
+    flex-grow: 2;
+    flex-shrink: 1;
+    flex-basis: 25rem 0;
+}
+#labelNewClientCEP {
+    flex-grow: 1;
+    flex-shrink: 1;
+    flex-basis: 20rem 0;
+}
+
 
 label.labelRadiosCpfCnpj {
     display: flex;
     align-items: center;
-    
-
 }
 
-div.radiosCPForCNPJ {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 15px;
-    align-items: center;
-} 
-
-form.formNewClient .divButtons {
+.divButtons {
     grid-column: 2/3;
     display: flex;
     justify-content: end;
     gap: 15px;
     margin-top: 15px;
 
-   
+    
 }
 
 .isInvalid {
     border-color: var(--system-danger);
     background-color: #fff2f2;
 }
-
-
-/* ------------- PERSONALIZED RADIO ------------- */
-
-
-
-
-.inputRadioCpfCnpj {
-    display: none;
-    transition-duration: 2s;
-}
-
-.inputRadioCpfCnpj + label:before {
-    width: 27px;
-    height: 27px;
-    border-radius: 8px;
-    border: 1px solid var(--primary-dark);
-    
-    content: "\00a0";
-    display: inline-block;
-    
-    margin: 0 .25em 0 0;
-    padding:0;
-    
-    
-    
-}   
-.inputRadioCpfCnpj:checked + label:before {
-    background: var(--primary-dark);
-    color: #FFF;
-    content: "\2713";
-    text-align: center;
-    
-}   
-.inputRadioCpfCnpj:checked + label:after {
-    font-weight: bold;
-}   
-
-.labelRadio {
-    cursor: pointer !important;
-    
-}
-
 .divButtons {
     grid-column: 2/3;
     display: flex;
@@ -109,6 +128,10 @@ form.formNewClient .divButtons {
     gap: 1em;
     margin:none;
 }
+
+
+
+
 
 /* ------------- PLACEHODER COLOR ------------- */
 
@@ -118,11 +141,11 @@ form.formNewClient .divButtons {
 }
 :-moz-placeholder { /* Firefox 18- */
     color: var(--text-40);  
- }
+}
  
 ::-moz-placeholder {  /* Firefox 19+ */
     color: var(--text-40);  
- }
+}
  
 :-ms-input-placeholder {  
     color: var(--text-40);  
@@ -166,12 +189,7 @@ form.formNewClient .divButtons {
         margin-bottom: 0.36em;
     }
     
-    div.radiosCPForCNPJ {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 15px;
-        align-items: center;
-    } 
+    
     
     .divButtons {
         grid-column: 2/3;
@@ -190,13 +208,13 @@ form.formNewClient .divButtons {
     
     /* ------------- PERSONALIZED RADIO ------------- */
     
-    .inputRadioCpfCnpj {
+    .inputRadio {
         padding: 1em;
         display: none;
         transition-duration: 2s;
     }
     
-    .inputRadioCpfCnpj + label:before {
+    .inputRadio + label:before {
         width: 27px;
         height: 27px;
         border-radius: 8px;
@@ -209,5 +227,12 @@ form.formNewClient .divButtons {
         padding:0;
     }
 
+    .line {
+        grid-column: 1/3;
+        display: flex;
+        gap: inherit;
+        flex-direction: column; 
+        /* COLOCAR O FLEX-DIRECTION: COLUMN; PARA FORMATAR O MOBILE */
+    }
 
 }
