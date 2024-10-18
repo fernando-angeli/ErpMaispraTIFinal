@@ -7,8 +7,8 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 const Login = () => {
-  const [LoginEmail, setLoginEmail] = useState();
-  const [LoginPassword, setLoginPassword] = useState();
+  const [LoginEmail, setLoginEmail] = useState("");
+  const [LoginPassword, setLoginPassword] = useState("");
   const [Error, setError] = useState();
   const [Error2, setError2] = useState();
   const { login } = useAuth();
@@ -57,7 +57,7 @@ const Login = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const response = await axios.post('http://localhost:8080/auth', {
+      const response = await axios.post('http://localhost:8080/api/login', {
         email: LoginEmail,
         password: LoginPassword,
       });      

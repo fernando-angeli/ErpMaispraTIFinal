@@ -18,7 +18,7 @@ const ListClients = () => {
 
   const handleShowClients = async () => {
     try {
-      const response = await axios.get(`http://localhost:8080/clientes`, {
+      const response = await axios.get(`http://localhost:8080/api/clientes`, {
         headers: {
           Authorization: `Bearer ${JwtToken}`,
         }
@@ -37,7 +37,7 @@ const ListClients = () => {
 
   const deleteClient = async (id) => {
     try {
-      const response = await axios.delete(`http://localhost:8080/clientes/${id}`, {
+      const response = await axios.delete(`http://localhost:8080/api/clientes/${id}`, {
         headers: {
           Authorization: `Bearer ${JwtToken}`,
         }

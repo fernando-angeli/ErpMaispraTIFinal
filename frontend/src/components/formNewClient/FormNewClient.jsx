@@ -19,14 +19,14 @@ function FormNewClient() {
     const [newClientCity, setNewClientCity] = useState("");
     const [newClientCEP, setNewClientCEP] = useState("");
     const [newClientState, setNewClientState] = useState("");
-    const [newClientBirthDate, setNewClientBirthDate] = useState(''); 
-    const [newClientNotes, setNewClientNotes] = useState(''); 
-    const [newClientStatus, setNewClientStatus] = useState(''); 
+    const [newClientBirthDate, setNewClientBirthDate] = useState('');
+    const [newClientNotes, setNewClientNotes] = useState('');
+    const [newClientStatus, setNewClientStatus] = useState('');
 
     const [Error, setError] = useState();
     const [Success, setSuccess] = useState();
 
-    const { JwtToken } = useAuth(); 
+    const { JwtToken } = useAuth();
 
     const cityList = [
         { id: 1, city: newClientCity },
@@ -94,8 +94,8 @@ function FormNewClient() {
         event.preventDefault();
         const newClientData = {
             fullName: newClientName,
-            typePfOrPj: CPForCNPJ === "cpf" ? "PF" : "PJ", 
-            gender: "NAO INFORMADO", 
+            typePfOrPj: CPForCNPJ === "cpf" ? "PF" : "PJ",
+            gender: "NAO INFORMADO",
             cpfCnpj: newClientCPForCNPJ,
             rgIe: "RG12345",
             phoneNumber: newClientPhone,
@@ -107,8 +107,8 @@ function FormNewClient() {
             city: newClientCity,
             state: newClientState,
             country: "Brasil",
-            birthDate: newClientBirthDate, 
-            creditLimit: 100.00, 
+            birthDate: newClientBirthDate,
+            creditLimit: 100.00,
             notes: newClientNotes,
             status: "ativo",
         };
@@ -140,140 +140,161 @@ function FormNewClient() {
 
     return (
         <div className='containerForm'>
-            <h2 className='tabTitle'>Adicionar Cliente 
-            <a  className="hide-desktop" onClick={resposiveClienteShow}> {!ResponsiveCliente ? <CgAdd size={45}/> : <CgRemove size={45}/> }</a>
-                </h2>
-            <form className={ResponsiveCliente ? 'visibleformNewClient' : 'hiddenformNewClient'}  id='formNewClient' onSubmit={handleSubmit} onReset={handleReset} >
+            <h2 className='tabTitle'>Adicionar Cliente
+                <a className="hide-desktop" onClick={resposiveClienteShow}> {!ResponsiveCliente ? <CgAdd size={45} /> : <CgRemove size={45} />}</a>
+            </h2>
+            <form className={ResponsiveCliente ? 'visibleformNewClient' : 'hiddenformNewClient'} id='formNewClient' onSubmit={handleSubmit} onReset={handleReset} >
 
                 <label htmlFor="newClientName" className='inputLabel' id='labelNewClientName'>
-                    <span className='inputDescription'>Nome:</span> 
+                    <span className='inputDescription'>Nome:</span>
                     <input type="text" placeholder='Digite o nome do cliente' className='inputText' name='nome' id='newClientName' value={newClientName} required onInvalid={(e) => isInvalid(e)} onChange={(e) => {
                         setNewClientName(e.target.value)
                         isValid(e)
-                        }}/>
+                    }} />
                 </label>
 
                 <label htmlFor="newClientEmail" className='inputLabel' id='labelNewClientEmail'>
-                    <span className='inputDescription'>E-mail:</span> 
+                    <span className='inputDescription'>E-mail:</span>
                     <input type="email" placeholder='Digite o e-mail do cliente' className='inputText' name='email' id='newClientEmail' value={newClientEmail} required onInvalid={(e) => isInvalid(e)} onChange={(e) => {
                         setNewClientEmail(e.target.value)
                         isValid(e)
-                        }}/>
+                    }} />
                 </label>
+                <div className="line2">
 
-                <label htmlFor="newClientPhone" className='inputLabel' id='labelNewClientPhone'>
-                    <span className='inputDescription'>Telefone:</span> 
-                    <input type="tel" placeholder='Digite o telefone do cliente' className='inputText' name='telefone' id='newClientPhone' value={newClientPhone} required onInvalid={(e) => isInvalid(e)} onChange={(e) => {
-                        setNewClientPhone(e.target.value)
-                        isValid(e)
-                        }}/>
-                </label>
+                    <label htmlFor="newClientBirthDate" className='inputLabel' id='labelNewClientBirthDate'>
+                        <span className='inputDescription'>Data de Nascimento:</span>
+                        <input type="date" className='inputText' name='dataNascimento' id='newClientBirthDate' value={newClientBirthDate} required onInvalid={(e) => isInvalid(e)} onChange={(e) => {
+                            setNewClientBirthDate(e.target.value);
+                            isValid(e);
+                        }} />
+                    </label>
 
-                <label htmlFor="newClientCPForCNPJ" className='inputLabel' id='labelNewClientCPF/CNPJ'>
-                    <div className='divRadios'>
-                        <label htmlFor="cpf" className='labelRadiosCpfCnpj'>
-                            <input type="radio" value={0}  name="cpfCnpj" id="cpf" className='inputRadio'
-                            onClick={() => setOption("cpf")} defaultChecked/>
-                            <label className='text labelRadio' htmlFor='cpf'>CPF</label>
-                        </label>
-                        <label htmlFor="cnpj" className='labelRadiosCpfCnpj'>
-                            <input type="radio" value={0} name="cpfCnpj" id="cnpj" className='inputRadio' onClick={() => setOption("cnpj")}/>
-                            <label className='text labelRadio' htmlFor='cnpj'>CNPJ</label>
-                        </label>
+                    <label htmlFor="newClientPhone" className='inputLabel' id='labelNewClientPhone'>
+                        <span className='inputDescription'>Telefone:</span>
+                        <input type="tel" placeholder='Digite o telefone do cliente' className='inputText' name='telefone' id='newClientPhone' value={newClientPhone} required onInvalid={(e) => isInvalid(e)} onChange={(e) => {
+                            setNewClientPhone(e.target.value)
+                            isValid(e)
+                        }} />
+                    </label>
 
-                    </div> 
-                    <input type="text" placeholder='Digite o CPF/CNPJ do cliente' className='inputText' name='cpf/cnpj' id='newClientCPForCNPJ' value={newClientCPForCNPJ} required onInvalid={(e) => isInvalid(e)} onChange={(e) => {
-                        setNewClientCPForCNPJ(e.target.value)
-                        isValid(e)
-                        }}/>
-                </label>
 
-                <div className='line'>
+                    <label htmlFor="newClientCPForCNPJ" className='inputLabel' id='labelNewClientCPFCNPJ'>
+                        <div className='divRadios'>
+                            <label htmlFor="cpf" className='labelRadiosCpfCnpj'>
+                                <input type="radio" value={0} name="cpfCnpj" id="cpf" className='inputRadio'
+                                    onClick={() => setOption("cpf")} defaultChecked />
+                                <label className='text labelRadio' htmlFor='cpf'>CPF</label>
+                            </label>
+                            <label htmlFor="cnpj" className='labelRadiosCpfCnpj'>
+                                <input type="radio" value={0} name="cpfCnpj" id="cnpj" className='inputRadio' onClick={() => setOption("cnpj")} />
+                                <label className='text labelRadio' htmlFor='cnpj'>CNPJ</label>
+                            </label>
+
+                        </div>
+                        <input type="text" placeholder='Digite o CPF/CNPJ do cliente' className='inputText' name='cpf/cnpj' id='newClientCPForCNPJ' value={newClientCPForCNPJ} required onInvalid={(e) => isInvalid(e)} onChange={(e) => {
+                            setNewClientCPForCNPJ(e.target.value)
+                            isValid(e)
+                        }} />
+                    </label>
+
+                </div>
+
+
+                <div className='line3'>
                     <label htmlFor="newClientAddress" className='inputLabel' id='labelNewClientAddress'>
-                        <span className='inputDescription'>Logradouro:</span> 
+                        <span className='inputDescription'>Logradouro:</span>
                         <input type="text" placeholder='Digite o endereço do cliente' className='inputText' name='logradouro' id='newClientAddress' value={newClientAddress} required onInvalid={(e) => isInvalid(e)} onChange={(e) => {
                             setNewClientAddress(e.target.value)
                             isValid(e)
-                            }}/>
+                        }} />
                     </label>
 
                     <label htmlFor="newClientAddressNumber" className='inputLabel' id='labelNewClientAddressNumber'>
-                        <span className='inputDescription'>Número:</span> 
+                        <span className='inputDescription'>Número:</span>
                         <input type="text" placeholder='0000' className='inputText' name='numero' id='newClientAddressNumber' value={newClientAddressNumber} required onInvalid={(e) => isInvalid(e)} onChange={(e) => {
                             setNewClientAddressNumber(e.target.value)
                             isValid(e)
-                            }}/>
+                        }} />
                     </label>
                 </div>
 
-                <div className='line2'>
+                <div className='line4'>
                     <label htmlFor="newClientDistrict" className='inputLabel' id='labelNewClientDistrict'>
-                        <span className='inputDescription'>Bairro:</span> 
+                        <span className='inputDescription'>Bairro:</span>
                         <input type="text" placeholder='Digite o bairro do cliente' className='inputText' name='bairro' id='newClientDistrict' value={newClientDistrict} required onInvalid={(e) => isInvalid(e)} onChange={(e) => {
                             setNewClientDistrict(e.target.value)
                             isValid(e)
-                            }}/>
+                        }} />
                     </label>
 
                     <label htmlFor="newClientCity" className='inputLabel' id='labelNewClientCity'>
-                        <span className='inputDescription'>Cidade:</span> 
+                        <span className='inputDescription'>Cidade:</span>
                         <select name="cidade" id="newClientCity" placeholder='Selecione a cidade' value={newClientCity} className='selectCity' onInvalid={(e) => selectIsInvalid(e)} required onChange={(e) => {
                             setNewClientCity(e.target.value)
                             selectIsValid(e)
-                            }}>
+                        }}>
                             <option value="" selected hidden>Selecione...</option>
-                            {cityList.map((item, item) => (
-                                <option value={item.city}>{item.city}</option>
+                            {cityList.map((item, index) => (
+                                <option key={index} value={item.city}>{item.city}</option>
                             ))}
                         </select>
                     </label>
-                            
+
                     <label htmlFor="newClientCEP" className='inputLabel' id='labelNewClientCEP'>
-                        <span className='inputDescription'>CEP:</span> 
-                        <input type="text" placeholder='00000-000' className='inputText' name='CEP' id='newClientCEP' value={newClientCEP} required onInvalid={(e) => isInvalid(e)}  onChange={(e) => {
+                        <span className='inputDescription'>CEP:</span>
+                        <input type="text" placeholder='00000-000' className='inputText' name='CEP' id='newClientCEP' value={newClientCEP} required onInvalid={(e) => isInvalid(e)} onChange={(e) => {
                             setNewClientCEP(e.target.value)
                             isValid(e)
-                            }}/>
+                        }} />
                     </label>
-                    
-        <label htmlFor="newClientBirthDate" className='inputLabel' id='labelNewClientBirthDate'>
-            <span className='inputDescription'>Data de Nascimento:</span> 
-            <input type="date" className='inputText' name='dataNascimento' id='newClientBirthDate' value={newClientBirthDate} required onInvalid={(e) => isInvalid(e)} onChange={(e) => {
-                setNewClientBirthDate(e.target.value);
-                isValid(e);
-            }}/>
-        </label>
 
-        <label htmlFor="newClientNotes" className='inputLabel' id='labelNewClientNotes'>
-            <span className='inputDescription'>Notas:</span> 
-            <textarea placeholder='Digite notas sobre o cliente' className='inputText' name='notas' id='newClientNotes' value={newClientNotes} onChange={(e) => {
-                setNewClientNotes(e.target.value);
-                isValid(e)
-            }} />
-        </label>
+                </div>
 
-        <label htmlFor="newClientStatus" className='inputLabel' id='labelNewClientStatus'>
-            <span className='inputDescription'>Status:</span> 
-            <input type="checkbox" className='inputCheckbox' name='status' id='newClientStatus' checked={newClientStatus} onChange={(e) => {
-                setNewClientStatus(e.target.checked);
-            }}/>
-            <label className='text labelCheckbox' htmlFor='newClientStatus'>Ativo</label>
-            <input type="checkbox" className='inputCheckbox' name='status' id='newClientStatus' checked={newClientStatus} onChange={(e) => {
-                setNewClientStatus(e.target.checked);
-            }}/>
-            <label className='text labelCheckbox' htmlFor='newClientStatus'>Inativo</label>
-        </label>
-        
+                <div className="line5">
+                    <label htmlFor="newClientNotes" className='inputLabel' id='labelNewClientNotes'>
+                        <span className='inputDescription'>Notas:</span>
+                        <textarea placeholder='Digite notas sobre o cliente' className='' name='notas' id='newClientNotes' value={newClientNotes} onChange={(e) => {
+                            setNewClientNotes(e.target.value);
+                            isValid(e)
+                        }} />
+                    </label>
+
+                    <label htmlFor="newClientStatus" className='inputLabel' id='labelNewClientStatus'>
+                        <span className='inputDescription' >Status:</span>
+                        <div className='divRadios'>
+
+                            <label htmlFor="ativo" className='labelRadiosAtivoInativo'>
+                                <input type="radio" value={0} name="ativoInativo" id="ativo" className='inputRadio'
+                                    onClick={() => setNewClientStatus("ativo")} defaultChecked />
+                                <label className='text labelRadio' htmlFor='ativo'>Ativo</label>
+                            </label>
+
+                            <label htmlFor="inativo" className='labelRadiosAtivoInativo'>
+                                <input type="radio" value={0} name="ativoInativo" id="inativo" className='inputRadio' onClick={() => setNewClientStatus("inativo")} />
+                                <label className='text labelRadio' htmlFor='inativo'>Inativo</label>
+                            </label>
+
+                        </div>
+                    </label>
+
+                    <div className="errorsOrSuccess">
+                        <p style={{ color: 'red' }}>{Error && Error}</p>
+                        <p style={{ color: 'green' }}>{Success && Success}</p>
+                    </div>
+                    <div className="divButtons">
+                        <button type="submit" className='primaryNormal' onClick={handleSubmit}>Salvar</button>
+                        <button type="reset" className='primaryLight' onClick={() => handleReset()}>Cancelar</button>
+                    </div>
                 </div>
-                    <p style={{color:'red'}}>{Error && Error}</p>
-                    <p style={{color:'green'}}>{Success && Success}</p>
-                <div className="divButtons">
-                    <button type="submit" className='primaryNormal' onClick={handleSubmit}>Salvar</button>
-                    <button type="reset" className='primaryLight' onClick={()=>handleReset()}>Cancelar</button>
-                </div>
+
+
+
+
+
 
             </form>
-            
+
         </div>
     )
 }
