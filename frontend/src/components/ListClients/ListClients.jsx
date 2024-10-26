@@ -6,7 +6,6 @@ import axios from 'axios'
 import { useEffect, useState } from "react";
 import { useAuth } from '../AuthContext.jsx';
 import './ListClients.css'
-import '../../assets/css/radioOrCheckbox.css'
 
 
 const ListClients = () => {
