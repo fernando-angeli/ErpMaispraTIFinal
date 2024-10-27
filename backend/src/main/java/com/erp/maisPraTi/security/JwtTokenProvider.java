@@ -1,7 +1,6 @@
 package com.erp.maisPraTi.security;
 
-import com.erp.maisPraTi.model.Role;
-import com.erp.maisPraTi.model.User;
+import com.erp.maisPraTi.model.CustomUserDetails;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -12,10 +11,7 @@ import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -34,24 +30,31 @@ public class JwtTokenProvider {
     }
 
     public String generateToken(Authentication authentication) {
-        User userPrincipal = (User) authentication.getPrincipal();
+        CustomUserDetails userPrincipal = (CustomUserDetails) authentication.getPrincipal();
+
         Map<String, Object> claims = new HashMap<>();
         claims.put("firstName", userPrincipal.getFirstName());
         claims.put("lastName", userPrincipal.getLastName());
         claims.put("roles", getRoles(userPrincipal));
-        return Jwts.builder()
+
+        return createToken(claims, userPrincipal.getUsername());
+    }
+
+    private String createToken(Map<String, Object> claims, String subject){
+        return Jwts
+                .builder()
                 .setClaims(claims)
-                .setSubject(userPrincipal.getEmail())
+                .setSubject(subject)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + jwtExpiration))
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
 
-    private static Set<String> getRoles(User user){
-        return user.getRoles().stream()
-                .map(Role::getAuthority)
-                .collect(Collectors.toSet());
+    private List<Map<String, String>> getRoles(CustomUserDetails user) {
+        return user.getAuthorities().stream()
+                .map(role -> Collections.singletonMap("authority", role.getAuthority()))
+                .collect(Collectors.toList());
     }
 
     public boolean validateToken(String token, String email){
