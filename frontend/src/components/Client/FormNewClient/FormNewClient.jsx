@@ -11,6 +11,8 @@ import TextareaField from "../../TextareaField/TextareaField";
 import ListClients from "../ListClients/ListClients";
 
 function FormNewClient(dataClient) {
+  
+
   const [ResponsiveCliente, setResponsiveCliente] = useState(true);
   const [PostToUpdate, SetPostToUpdade] = useState(true)
 
@@ -98,6 +100,7 @@ function FormNewClient(dataClient) {
     setNewClientNotes("")
 
     SetPostToUpdade(true)
+    setError(null)
     };
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -134,7 +137,7 @@ function FormNewClient(dataClient) {
       );
       handleReset();
       setSuccess("Cliente adicionado com sucesso!");
-      setError(null);
+      
     } catch (err) {
       console.error(err);
       if (err.response && err.response.data) {
@@ -210,7 +213,9 @@ function FormNewClient(dataClient) {
         }
       );
       handleReset();
+      alert("Cliente Atualizado com sucesso!")
       setSuccess("Cliente Atualizado com sucesso!");
+      window.location.reload()
       setError(null);
       SetPostToUpdade(true)
       
