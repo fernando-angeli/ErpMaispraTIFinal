@@ -13,6 +13,9 @@
   margin-left: 15px;
   margin-block: 10px;
 }
+.inputFieldNoLabel {
+  margin-block: 0px;
+}
 
 label.inputLabel {
   display: flex;

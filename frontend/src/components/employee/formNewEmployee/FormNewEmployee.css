@@ -5,7 +5,7 @@
 }
 
 div.containerForm {
-  width: 70%;
+  width: 80%;
   margin: 0 auto;
   margin-bottom: 2em;
 }
@@ -31,29 +31,14 @@ form.hiddenformNewEmployee {
   display: flex;
   gap: inherit;
 }
-.line5 {
-  display: grid;
-  grid-template-rows: auto;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
-}
-.roleAndStatus {
-  grid-column: 1/3;
-  display: flex;
-  justify-content: start;
-  align-items: end;
-  gap: 2rem;
-}
-.divButtons {
-  grid-column: 3/5;
-  display: flex;
-  justify-content: end;
-  gap: 1em;
+.fieldName {
+  flex-basis: calc(60% + 19px);
 }
 
-/* line2 */
-.line2 {
-  display: flex;
+.fieldEmail {
+  flex-basis: calc(40% - 19px);
 }
+
 .fieldDate {
   flex-basis: 25%;
   flex-grow: 0.5;
@@ -82,9 +67,7 @@ form.hiddenformNewEmployee {
 
 /* line 4 e 5 */
 .fieldDistrict {
-  flex-grow: 2;
-  flex-shrink: 1;
-  flex-basis: 25rem 0;
+  flex-basis: 25%;
 }
 
 .selectCity,
@@ -122,20 +105,52 @@ selectRole {
 }
 
 .divSelectCity {
-  flex-grow: 2;
-  flex-shrink: 1;
-  flex-basis: 25rem 0;
+  flex-basis: 25%;
 }
 .fieldCep {
-  flex-grow: 1;
-  flex-shrink: 1;
-  flex-basis: 20rem 0;
+  flex-basis: 50%;
 }
 
 .divSelectRole {
   flex-grow: 2;
   flex-shrink: 1;
   flex-basis: 25rem 0;
+}
+.line5 {
+  display: grid;
+  grid-template-rows: auto;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+}
+.roleAndStatus {
+  grid-column: 1/3;
+  display: flex;
+  justify-content: start;
+  align-items: end;
+  gap: 2rem;
+}
+.divButtons {
+  grid-column: 3/5;
+  display: flex;
+  justify-content: end;
+  gap: 1em;
+}
+.line5 {
+  display: grid;
+  grid-template-rows: auto;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+}
+.roleAndStatus {
+  grid-column: 1/3;
+  display: flex;
+  justify-content: start;
+  align-items: end;
+  gap: 2rem;
+}
+.divButtons {
+  grid-column: 3/5;
+  display: flex;
+  justify-content: end;
+  gap: 1em;
 }
 
 #labelNewEmployeeStatus {

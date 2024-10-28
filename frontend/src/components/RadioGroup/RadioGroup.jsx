@@ -1,8 +1,8 @@
 import "./RadioGroup.css";
-const RadioGroup = ({ label, name, options, onChange, defaultValue }) => (
+const RadioGroup = ({ label, name,clasnameDiv, options, onChange, defaultValue }) => (
   <label className="inputLabel">
     <span className="inputDescription">{label}</span>
-    <div className="divRadios">
+    <div className={`divRadios ${clasnameDiv}`}>
       {options.map((option, index) => (
         <div key={index} className="labelRadiosCpfCnpj">
           <input

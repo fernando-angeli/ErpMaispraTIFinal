@@ -1,13 +1,13 @@
-import FormNewClient from "../../components/formNewClient/FormNewClient";
-import ListClients from "../../components/ListClients/ListClients";
+import FormNewClient from "../../components/Client/FormNewClient/FormNewClient";
+import ListClients from "../../components/Client/ListClients/ListClients";
 
 function AddClientPage() {
-    return (
-        <>
-            <FormNewClient/>
-            <ListClients></ListClients>
-        </>
-    )
+  return (
+    <>
+      <FormNewClient />
+      <ListClients></ListClients>
+    </>
+  );
 }
 
-export default AddClientPage
+export default AddClientPage;
