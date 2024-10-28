@@ -26,7 +26,7 @@ function FormNewClient(dataClient) {
   const [newClientState, setNewClientState] = useState("");
   const [newClientBirthDate, setNewClientBirthDate] = useState("");
   const [newClientNotes, setNewClientNotes] = useState("");
-  const [newClientStatus, setNewClientStatus] = useState("");
+  const [newClientStatus, setNewClientStatus] = useState('ativo');
   const [UpdateClientId, setUpdateClientId] = useState();
   const [Error, setError] = useState();
   const [Success, setSuccess] = useState();
@@ -179,7 +179,7 @@ function FormNewClient(dataClient) {
       typePfOrPj: CPForCNPJ === "cpf" ? "PF" : "PJ",
       gender: "NAO INFORMADO",
       cpfCnpj: newClientCPForCNPJ,
-      rgIe: "RG12345",
+      rgIe: "RG1234523",
       phoneNumber: newClientPhone,
       email: newClientEmail,
       address: newClientAddress,
@@ -210,6 +210,7 @@ function FormNewClient(dataClient) {
       setSuccess("Cliente Atualizado com sucesso!");
       setError(null);
       SetPostToUpdade(true)
+      window.location.reload();
     } catch (err) {
       console.error(err);
       if (err.response && err.response.data) {
