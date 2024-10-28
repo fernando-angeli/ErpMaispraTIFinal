@@ -165,31 +165,35 @@ function FormNewEmployee() {
         onSubmit={handleSubmit}
         onReset={handleReset}
       >
-        <InputField
-          label={"Nome:"}
-          placeholder={"Digite o nome do usuário"}
-          name={"nome"}
-          idInput={"newEmployeeName"}
-          value={newEmployeeName}
-          onChange={(e) => {
-            setNewEmployeeName(e.target.value);
-            isValid(e);
-          }}
-          onInvalid={(e) => isInvalid(e)}
-        />
-        <InputField
-          label={"E-mail:"}
-          placeholder={"Digite o e-mail do usuário"}
-          name={"email"}
-          idInput={"newEmployeeEmail"}
-          type={"email"}
-          value={newEmployeeEmail}
-          onChange={(e) => {
-            setNewEmployeeEmail(e.target.value);
-            isValid(e);
-          }}
-          onInvalid={(e) => isInvalid(e)}
-        />
+        <div className="line1 line">
+          <InputField
+            label={"Nome:"}
+            placeholder={"Digite o nome do usuário"}
+            name={"nome"}
+            idInput={"newEmployeeName"}
+            classNameDiv={"fieldName"}
+            value={newEmployeeName}
+            onChange={(e) => {
+              setNewEmployeeName(e.target.value);
+              isValid(e);
+            }}
+            onInvalid={(e) => isInvalid(e)}
+          />
+          <InputField
+            label={"E-mail:"}
+            placeholder={"Digite o e-mail do usuário"}
+            name={"email"}
+            idInput={"newEmployeeEmail"}
+            classNameDiv="fieldEmail"
+            type={"email"}
+            value={newEmployeeEmail}
+            onChange={(e) => {
+              setNewEmployeeEmail(e.target.value);
+              isValid(e);
+            }}
+            onInvalid={(e) => isInvalid(e)}
+          />
+        </div>
         <div className="line2 line">
           <InputField
             label={"Data de Nascimento:"}

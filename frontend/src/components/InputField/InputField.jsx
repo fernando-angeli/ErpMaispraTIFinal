@@ -15,7 +15,7 @@ function InputField({
   return (
     <div className={classNameDiv}>
       <label htmlFor={idInput} className="inputLabel">
-        <span className="inputDescription">{label}</span>
+        <span className={`inputDescription ${classNameDiv=="inputFieldNoLabel"?"inputFieldNoLabel":""}`}>{label}</span>
         <input
           type={type}
           placeholder={placeholder}
