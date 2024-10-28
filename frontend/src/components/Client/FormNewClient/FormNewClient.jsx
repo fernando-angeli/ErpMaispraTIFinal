@@ -8,7 +8,7 @@ import InputField from "../../InputField/InputField";
 import RadioGroup from "../../RadioGroup/RadioGroup";
 import SelectField from "../../SelectField/SelectField";
 import TextareaField from "../../TextareaField/TextareaField";
-import ListClients from "../ListClients/ListClients";
+
 
 function FormNewClient(dataClient) {
   
@@ -213,12 +213,10 @@ function FormNewClient(dataClient) {
         }
       );
       handleReset();
-      alert("Cliente Atualizado com sucesso!")
       setSuccess("Cliente Atualizado com sucesso!");
       window.location.reload()
       setError(null);
       SetPostToUpdade(true)
-      
     } catch (err) {
       console.error(err);
       if (err.response && err.response.data) {
