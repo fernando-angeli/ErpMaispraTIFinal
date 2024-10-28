@@ -1,27 +1,15 @@
 package com.erp.maisPraTi.dto.users;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
+@EqualsAndHashCode(callSuper = true)
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserUpdateDto {
+public class UserUpdateDto extends UserDto{
 
-    @NotBlank(message = "Campo obrigatório.")
-    private String firstName;
-
-    @NotBlank(message = "Campo obrigatório.")
-    private String lastName;
-
-    @Email(message="E-mail é obrigatório.")
-    private String email;
-
-    private List<RoleDto> roles;
-
+    private String password;
 }
