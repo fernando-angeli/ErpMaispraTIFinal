@@ -12,7 +12,7 @@ import { useAuth } from "../AuthContext";
 function NavigationMenu() {
   const { JwtToken } = useAuth();
   let decoded = jwtDecode(JwtToken);
-  const userProfile = decoded.roles[0];
+  const userProfile = decoded.roles[0].authority;
   let options = [
     {
       icon: newClientIcon,
@@ -65,8 +65,9 @@ function NavigationMenu() {
       url: "/funcionario",
     },
   ];
-
+  console.log(userProfile)
   return (
+    
     <OptionsNavigationMenu
       arrayOptions={userProfile === "ROLE_OPERATOR" ? optionsAdmin : options}
       className="responsive"

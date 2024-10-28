@@ -6,10 +6,12 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useAuth } from "../../AuthContext.jsx";
 import "./ListClients.css";
+import FormNewClient from '../FormNewClient/FormNewClient.jsx'
 
 const ListClients = () => {
   const { JwtToken } = useAuth();
   const [clients, setClients] = useState();
+  const [clientUpdate, setClientsUpdate] = useState(null);
   const [ativos, setAtivos] = useState(true);
   const [inativos, setInativos] = useState(true);
 
@@ -29,7 +31,7 @@ const ListClients = () => {
 
   useEffect(() => {
     handleShowClients();
-  }, [clients]);
+  }, []);
 
   const deleteClient = async (id) => {
     try {
@@ -42,13 +44,22 @@ const ListClients = () => {
         }
       );
       alert("Cliente id" + id + " Deletado!");
+      handleShowClients();
     } catch (err) {
       console.log(err);
       alert("Erro ao deletar");
     }
   };
 
+  const ToFormUpdateClient = (data) => {
+    setClientsUpdate(data)
+  };
+
+// estou chamando form cliente dentro de list pra poder jogar os dados nele pra update!!!!
   return (
+    
+    <> 
+    <FormNewClient dataClient={clientUpdate}/> 
     <div className="contentListClients">
       <div className="ListClients">
         <div className="headerListClients">
@@ -119,7 +130,7 @@ const ListClients = () => {
                     <td>{client.phoneNumber}</td>
                     <td>{client.cpfCnpj}</td>
                     <td>
-                      <a href="#">
+                      <a href="#" onClick={() => ToFormUpdateClient(client)}>
                         <BiEdit className="editLine" size={30} />
                       </a>
                       <a href="#" onClick={() => deleteClient(client.id)}>
@@ -142,6 +153,7 @@ const ListClients = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 

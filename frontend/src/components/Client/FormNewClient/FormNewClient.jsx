@@ -9,8 +9,10 @@ import RadioGroup from "../../RadioGroup/RadioGroup";
 import SelectField from "../../SelectField/SelectField";
 import TextareaField from "../../TextareaField/TextareaField";
 
-function FormNewClient() {
+function FormNewClient(dataClient) {
   const [ResponsiveCliente, setResponsiveCliente] = useState(true);
+  const [PostToUpdate, SetPostToUpdade] = useState(true)
+
   const [CPForCNPJ, setOption] = useState("cpf");
   const [newClientName, setNewClientName] = useState("");
   const [newClientEmail, setNewClientEmail] = useState("");
@@ -25,13 +27,14 @@ function FormNewClient() {
   const [newClientBirthDate, setNewClientBirthDate] = useState("");
   const [newClientNotes, setNewClientNotes] = useState("");
   const [newClientStatus, setNewClientStatus] = useState("");
-
+  const [UpdateClientId, setUpdateClientId] = useState();
   const [Error, setError] = useState();
   const [Success, setSuccess] = useState();
 
   const { JwtToken } = useAuth();
 
   const cityList = [{ id: 1, city: newClientCity }];
+
   const cpfCnpjOptions = [
     { value: "cpf", label: "CPF" },
     { value: "cnpj", label: "CNPJ" },
@@ -98,7 +101,9 @@ function FormNewClient() {
     setNewClientCity("");
     setNewClientCEP("");
     setNewClientState("");
-  };
+    setNewClientBirthDate('');
+    setNewClientNotes("")
+    };
   const handleSubmit = async (event) => {
     event.preventDefault();
     const newClientData = {
@@ -119,12 +124,11 @@ function FormNewClient() {
       birthDate: newClientBirthDate,
       creditLimit: 100.0,
       notes: newClientNotes,
-      status: "ativo",
+      status: newClientStatus,
     };
-
     try {
       const response = await axios.post(
-        `http://localhost:8080/clientes`,
+        `http://localhost:8080/api/clientes`,
         newClientData,
         {
           headers: {
@@ -150,6 +154,81 @@ function FormNewClient() {
   const resposiveClienteShow = () => {
     setResponsiveCliente(!ResponsiveCliente);
   };
+
+ const SetValuestoUpdate = (values) => {
+  setUpdateClientId(values.id)
+  setNewClientName(values.fullName);
+  setNewClientEmail(values.email);
+  setNewClientAddress(values.address);
+  setNewClientDistrict(values.district)
+  setNewClientPhone(values.phoneNumber);
+  setNewClientCPForCNPJ(values.cpfCnpj);
+  setNewClientAddressNumber(values.number);
+  setNewClientCEP(values.zipCode.replace(/\D/g, ''))
+  setNewClientCity(values.city)
+  setOption(values.typePfOrPj.toLowerCase());
+  setNewClientBirthDate(values.birthDate)
+  setNewClientState(values.state);
+  setNewClientNotes(values.notes)
+  };
+
+  const handleUpdate = async (event) => {
+    event.preventDefault();
+    const newClientData = {
+      fullName: newClientName,
+      typePfOrPj: CPForCNPJ === "cpf" ? "PF" : "PJ",
+      gender: "NAO INFORMADO",
+      cpfCnpj: newClientCPForCNPJ,
+      rgIe: "RG12345",
+      phoneNumber: newClientPhone,
+      email: newClientEmail,
+      address: newClientAddress,
+      number: newClientAddressNumber,
+      district: newClientDistrict,
+      zipCode: newClientCEP,
+      city: newClientCity,
+      state: newClientState,
+      country: "Brasil",
+      birthDate: newClientBirthDate,
+      creditLimit: 100.0,
+      notes: newClientNotes,
+      status: newClientStatus,
+    };
+
+    try {
+      const response = await axios.put(
+        `http://localhost:8080/api/clientes/${UpdateClientId}`,
+        newClientData,
+        {
+          headers: {
+            Authorization: `Bearer ${JwtToken}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      handleReset();
+      setSuccess("Cliente Atualizado com sucesso!");
+      setError(null);
+      SetPostToUpdade(true)
+    } catch (err) {
+      console.error(err);
+      if (err.response && err.response.data) {
+        setError(`${err.response.data.message}`);
+      } else {
+        setError("Erro ao atualizar cliente! Tente novamente.");
+        setSuccess(null);
+      }
+    }
+  };
+
+  useEffect(() => {
+  if(dataClient.dataClient){
+    console.log(dataClient.dataClient)
+    SetValuestoUpdate(dataClient.dataClient);
+    SetPostToUpdade(false)
+  }
+}, [dataClient]);
+
 
   return (
     <div className="containerForm">
@@ -256,7 +335,7 @@ function FormNewClient() {
           <InputField
             label={"Logradouro:"}
             name={"logradouro"}
-            placeholder={"Digite o endereço do usuário"}
+            placeholder={"Digite o endereço do cliente"}
             idInput={"newClientAddress"}
             classNameDiv={"fieldAddress"}
             type={"text"}
@@ -274,7 +353,7 @@ function FormNewClient() {
             idInput={"newClientAddressNumber"}
             classNameDiv={"fieldAddressNumber"}
             type={"text"}
-            value={newClientAddress}
+            value={newClientAddressNumber}
             onChange={(e) => {
               setNewClientAddressNumber(e.target.value);
               isValid(e);
@@ -287,7 +366,7 @@ function FormNewClient() {
           <InputField
             label={"Bairro:"}
             name={"bairro"}
-            placeholder={"Digite o bairro do usuário"}
+            placeholder={"Digite o bairro do cliente"}
             idInput={"newClientDistrict"}
             classNameDiv="fieldDistrict"
             type={"text"}
@@ -299,7 +378,7 @@ function FormNewClient() {
             onInvalid={(e) => isInvalid(e)}
           />
 
-          <SelectField
+          <InputField
             label={"Cidade:"}
             name={"cidade"}
             id={"newClientCity"}
@@ -373,9 +452,9 @@ function FormNewClient() {
               <button
                 type="submit"
                 className="primaryNormal"
-                onClick={handleSubmit}
+                onClick={PostToUpdate ? handleSubmit :  handleUpdate}
               >
-                Salvar
+                {PostToUpdate ? "Salvar" : "Atualizar"}
               </button>
               <button
                 type="reset"
