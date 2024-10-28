@@ -8,8 +8,11 @@ import InputField from "../../InputField/InputField";
 import RadioGroup from "../../RadioGroup/RadioGroup";
 import SelectField from "../../SelectField/SelectField";
 import TextareaField from "../../TextareaField/TextareaField";
+import ListClients from "../ListClients/ListClients";
 
 function FormNewClient(dataClient) {
+  
+
   const [ResponsiveCliente, setResponsiveCliente] = useState(true);
   const [PostToUpdate, SetPostToUpdade] = useState(true)
 
@@ -26,7 +29,7 @@ function FormNewClient(dataClient) {
   const [newClientState, setNewClientState] = useState("");
   const [newClientBirthDate, setNewClientBirthDate] = useState("");
   const [newClientNotes, setNewClientNotes] = useState("");
-  const [newClientStatus, setNewClientStatus] = useState('ativo');
+  const [newClientStatus, setNewClientStatus] = useState("");
   const [UpdateClientId, setUpdateClientId] = useState();
   const [Error, setError] = useState();
   const [Success, setSuccess] = useState();
@@ -64,24 +67,16 @@ function FormNewClient(dataClient) {
   }, [newClientCEP]);
 
   const isInvalid = (e) => {
-    e.target.className = "isInvalid inputText";
+    e.target.classList.add("isInvalid");
   };
 
   const isValid = (e) => {
-    if (e.target.value && e.target.className !== "inputText") {
-      e.target.className = "inputText";
+    if (e.target.value && e.target.className.indexOf("isInvalid") != -1) {
+      console.log(e.target.className)
+      e.target.classList.remove("isInvalid");
     }
   };
 
-  const selectIsValid = (e) => {
-    if (e.target.value && e.target.className !== "selectCity") {
-      e.target.className = "selectCity";
-    }
-  };
-
-  const selectIsInvalid = (e) => {
-    e.target.className = "isInvalid selectCity";
-  };
 
   const handleReset = () => {
     let form = document.getElementById("formNewClient");
@@ -103,6 +98,9 @@ function FormNewClient(dataClient) {
     setNewClientState("");
     setNewClientBirthDate('');
     setNewClientNotes("")
+
+    SetPostToUpdade(true)
+    setError(null)
     };
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -139,7 +137,7 @@ function FormNewClient(dataClient) {
       );
       handleReset();
       setSuccess("Cliente adicionado com sucesso!");
-      setError(null);
+      
     } catch (err) {
       console.error(err);
       if (err.response && err.response.data) {
@@ -156,20 +154,27 @@ function FormNewClient(dataClient) {
   };
 
  const SetValuestoUpdate = (values) => {
-  setUpdateClientId(values.id)
-  setNewClientName(values.fullName);
-  setNewClientEmail(values.email);
-  setNewClientAddress(values.address);
-  setNewClientDistrict(values.district)
-  setNewClientPhone(values.phoneNumber);
-  setNewClientCPForCNPJ(values.cpfCnpj);
-  setNewClientAddressNumber(values.number);
-  setNewClientCEP(values.zipCode.replace(/\D/g, ''))
-  setNewClientCity(values.city)
-  setOption(values.typePfOrPj.toLowerCase());
-  setNewClientBirthDate(values.birthDate)
-  setNewClientState(values.state);
-  setNewClientNotes(values.notes)
+   setUpdateClientId(values.id)
+   setNewClientName(values.fullName);
+   setNewClientEmail(values.email);
+   setNewClientAddress(values.address);
+   setNewClientDistrict(values.district)
+   setNewClientPhone(values.phoneNumber);
+   setNewClientCPForCNPJ(values.cpfCnpj);
+   setNewClientAddressNumber(values.number);
+   setNewClientCEP(values.zipCode.replace(/\D/g, ''))
+   setNewClientCity(values.city)
+   setOption(values.typePfOrPj.toLowerCase());
+   setNewClientBirthDate(values.birthDate)
+   setNewClientState(values.state);
+   setNewClientNotes(values.notes)
+   
+   setOption(values.typePfOrPj == "PF" ? "cpf" : "cnpj")
+   setNewClientStatus(values.status)
+   document.getElementById(values.typePfOrPj == "PF" ? "cpf" : "cnpj").checked = true;
+   document.getElementById(values.status).checked = true;
+
+   
   };
 
   const handleUpdate = async (event) => {
@@ -179,7 +184,7 @@ function FormNewClient(dataClient) {
       typePfOrPj: CPForCNPJ === "cpf" ? "PF" : "PJ",
       gender: "NAO INFORMADO",
       cpfCnpj: newClientCPForCNPJ,
-      rgIe: "RG1234523",
+      rgIe: "RG12345",
       phoneNumber: newClientPhone,
       email: newClientEmail,
       address: newClientAddress,
@@ -193,8 +198,9 @@ function FormNewClient(dataClient) {
       creditLimit: 100.0,
       notes: newClientNotes,
       status: newClientStatus,
-    };
-
+    }
+    ;
+    
     try {
       const response = await axios.put(
         `http://localhost:8080/api/clientes/${UpdateClientId}`,
@@ -207,10 +213,12 @@ function FormNewClient(dataClient) {
         }
       );
       handleReset();
+      alert("Cliente Atualizado com sucesso!")
       setSuccess("Cliente Atualizado com sucesso!");
+      window.location.reload()
       setError(null);
       SetPostToUpdade(true)
-      window.location.reload();
+      
     } catch (err) {
       console.error(err);
       if (err.response && err.response.data) {
@@ -386,10 +394,10 @@ function FormNewClient(dataClient) {
             classnameDiv={"divSelectCity"}
             classNameSelect={"selectCity"}
             value={newClientCity}
-            onInvalid={(e) => selectIsInvalid(e)}
+            onInvalid={(e) => isInvalid(e)}
             onChange={(e) => {
               setNewClientCity(e.target.value);
-              selectIsValid(e);
+              isValid(e);
             }}
             arrayOptions={cityList}
           />
