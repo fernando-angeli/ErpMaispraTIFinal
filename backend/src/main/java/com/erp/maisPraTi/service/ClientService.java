@@ -26,7 +26,8 @@ public class ClientService {
 
     @Transactional
     public ClientDto insert(ClientDto dto) {
-        verifyExistsDocuments(dto.getCpfCnpj(), dto.getRgIe(), dto.getTypePfOrPj());
+        verifyExistsDocuments(dto.getCpfCnpj(), dto.getStateRegistration(), dto.getTypePfOrPj());
+        dto.setStateRegistration(stateRegistrationNormalize(dto.getStateRegistration()));
         Client client = new Client();
         client = convertToDto(dto, Client.class);
         client.setCreatedAt(LocalDateTime.now());
@@ -53,7 +54,8 @@ public class ClientService {
         try {
             Client client = clientRepository.getReferenceById(id);
             if(!client.getCpfCnpj().equals(clientUpdateDto.getCpfCnpj()))
-                verifyExistsDocuments(clientUpdateDto.getCpfCnpj(), clientUpdateDto.getRgIe(), clientUpdateDto.getTypePfOrPj());
+                verifyExistsDocuments(clientUpdateDto.getCpfCnpj(), clientUpdateDto.getStateRegistration(), clientUpdateDto.getTypePfOrPj());
+            clientUpdateDto.setStateRegistration(stateRegistrationNormalize(clientUpdateDto.getStateRegistration()));
             convertToEntity(clientUpdateDto, client);
             client.setUpdatedAt(LocalDateTime.now());
             client = clientRepository.save(client);
@@ -81,13 +83,15 @@ public class ClientService {
         }
     }
 
-    private void verifyExistsDocuments(String cpfCnpj, String rgIe, TypePfOrPj typePfOrPj) {
+    private void verifyExistsDocuments(String cpfCnpj, String stateRegistration, TypePfOrPj typePfOrPj) {
         if(clientRepository.existsByCpfCnpj(cpfCnpj))
             throw new DatabaseException(typePfOrPj.equals(TypePfOrPj.PJ) ? "CNPJ já cadastrado no sistema." : "CPF já cadastrado no sistema.");
-        if(clientRepository.existsByRgIe(rgIe))
-            throw new DatabaseException(typePfOrPj.equals(TypePfOrPj.PJ) ? "Inscrição estadual já cadastrada no sistema." : "RG já cadastrado no sistema.");
+        if(typePfOrPj.equals(TypePfOrPj.PJ) && clientRepository.existsByStateRegistration(stateRegistration) && !stateRegistration.equalsIgnoreCase("isento"))
+            throw new DatabaseException("Inscrição estadual já cadastrada no sistema.");
+    }
+
+    private String stateRegistrationNormalize(String stateRegistration){
+        return stateRegistration != null ? stateRegistration.toLowerCase() : null;
     }
 
 }
-
-

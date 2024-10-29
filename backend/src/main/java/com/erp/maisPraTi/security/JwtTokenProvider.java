@@ -1,6 +1,6 @@
 package com.erp.maisPraTi.security;
 
-import com.erp.maisPraTi.model.CustomUserDetails;
+import com.erp.maisPraTi.security.model.CustomUserDetails;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

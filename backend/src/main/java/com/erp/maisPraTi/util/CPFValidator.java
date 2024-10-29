@@ -2,7 +2,7 @@ package com.erp.maisPraTi.util;
 
 public class CPFValidator {
 
-    public static boolean validarCPF(String cpf) {
+    public static boolean validateCpf(String cpf) {
         cpf = cpf.replace(".", "").replace("-", "");
 
         if (cpf.length() != 11 || cpf.matches("(\\d)\\1*")) {

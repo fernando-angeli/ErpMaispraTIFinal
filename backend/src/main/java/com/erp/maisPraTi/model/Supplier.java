@@ -33,18 +33,26 @@ public class Supplier {
     @Column(unique = true)
     private String cpfCnpj;
 
-    @Column(unique = true)
-    private String rgIe;
+    private String stateRegistration;
 
     private String phoneNumber;
+
     private String email;
+
     private String address;
+
     private String number;
+
     private String district;
+
     private String zipCode;
+
     private String city;
+
     private String state;
+
     private String country;
+
     private BigDecimal creditLimit;
 
     @Column(columnDefinition = "TEXT")
@@ -54,6 +62,7 @@ public class Supplier {
     private SupplierStatus status;
 
     private LocalDateTime createdAt;
+
     private LocalDateTime updatedAt;
 
     @ManyToMany(mappedBy = "suppliers", fetch = FetchType.LAZY)

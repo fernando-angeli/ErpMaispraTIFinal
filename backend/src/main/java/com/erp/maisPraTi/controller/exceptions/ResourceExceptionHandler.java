@@ -1,6 +1,7 @@
 package com.erp.maisPraTi.controller.exceptions;
 
 import com.erp.maisPraTi.service.exceptions.DatabaseException;
+import com.erp.maisPraTi.service.exceptions.InvalidDocumentException;
 import com.erp.maisPraTi.service.exceptions.InvalidValueException;
 import com.erp.maisPraTi.service.exceptions.ResourceNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -75,6 +76,18 @@ public class ResourceExceptionHandler {
         error.setTimestamp(Instant.now());
         error.setStatus(status.value());
         error.setError("Invalid value");
+        error.setMessage(e.getMessage());
+        error.setPath(request.getRequestURI());
+        return ResponseEntity.status(status).body(error);
+    }
+
+    @ExceptionHandler(InvalidDocumentException.class)
+    public ResponseEntity<StandardError> invalidDocuments(InvalidDocumentException e, HttpServletRequest request){
+        HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
+        StandardError error = new StandardError();
+        error.setTimestamp(Instant.now());
+        error.setStatus(status.value());
+        error.setError("Document invalid");
         error.setMessage(e.getMessage());
         error.setPath(request.getRequestURI());
         return ResponseEntity.status(status).body(error);
