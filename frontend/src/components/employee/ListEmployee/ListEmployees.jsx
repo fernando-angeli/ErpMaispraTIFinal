@@ -15,12 +15,13 @@ const ListEmployees = () => {
 
   const handleShowEmployees = async () => {
     try {
-      const response = await axios.get(`http://localhost:8080/api/emploees`, {
+      const response = await axios.get(`http://localhost:8080/api/usuarios`, {
         headers: {
           Authorization: `Bearer ${JwtToken}`,
         },
       });
       setEmployees(response.data.content);
+      console.log(employees)
     } catch (err) {
       console.log(err);
       alert("Erro ao puxar usuário!");
@@ -29,12 +30,12 @@ const ListEmployees = () => {
 
   useEffect(() => {
     handleShowEmployees();
-  }, [employees]);
+  }, []);
 
   const deleteEmployee = async (id) => {
     try {
       const response = await axios.delete(
-        `http://localhost:8080/api/employees/${id}`,
+        `http://localhost:8080/api/users/${id}`,
         {
           headers: {
             Authorization: `Bearer ${JwtToken}`,
@@ -114,7 +115,7 @@ const ListEmployees = () => {
               {employees &&
                 employees.map((employee) => (
                   <tr key={employee.id}>
-                    <td>{employee.fullName}</td>
+                    <td>{employee.firstName+" "+employee.lastName}</td>
                     <td>{employee.email}</td>
                     <td>{employee.phoneNumber}</td>
                     <td>{employee.cpfCnpj}</td>

@@ -12,8 +12,10 @@ const ListClients = () => {
   const { JwtToken } = useAuth();
   const [clients, setClients] = useState();
   const [clientUpdate, setClientsUpdate] = useState(null);
-  const [ativos, setAtivos] = useState(true);
-  const [inativos, setInativos] = useState(true);
+  const [showAtivos, setShowAtivos] = useState(true);
+  const [showInativos, setShowInativos] = useState(true);
+  const [searchClients, setsearchClients] = useState("");
+
 
   const handleShowClients = async () => {
     try {
@@ -55,6 +57,14 @@ const ListClients = () => {
     setClientsUpdate(data)
   };
 
+  const filteredClients = clients?.filter((client) => {
+    const matchesStatus = (showAtivos && client.status === "ativo") 
+    || (showInativos && client.status === "inativo"); // se ambos forem true e ativo ou inativo, ele filtra de acorco com o check
+    const matchesSearch = client.fullName.toLowerCase().includes(searchClients.toLowerCase()); // Filtro por nome, ele busca por nome e acresenta o filtro
+    return matchesStatus && matchesSearch;
+  }) || [];
+
+
 // estou chamando form cliente dentro de list pra poder jogar os dados nele pra update!!!!
   return (
     
@@ -69,7 +79,7 @@ const ListClients = () => {
           </div>
           <section>
             <label className="searchClient">
-              <input type="text" placeholder="Buscar cliente..." required />
+              <input type="text" placeholder="Buscar cliente..." required onChange={(e)=> setsearchClients(e.target.value)}/>
               <a>
                 <BiSearch size={35} />
               </a>
@@ -82,7 +92,7 @@ const ListClients = () => {
                   name="ativos/inativos"
                   id="ativos"
                   className="inputRadio inputCheckbox"
-                  onClick={() => setAtivos(!ativos)}
+                  onClick={() => setShowAtivos(!showAtivos)}
                   defaultChecked
                 />
                 <label className="text labelRadio" htmlFor="ativos">
@@ -97,7 +107,7 @@ const ListClients = () => {
                   name="ativos/inativos"
                   id="inativos"
                   className="inputRadio inputCheckbox"
-                  onClick={() => setInativos(!inativos)}
+                  onClick={() => setShowInativos(!showInativos)}
                   defaultChecked
                 />
                 <label className="text labelRadio" htmlFor="inativos">
@@ -122,8 +132,7 @@ const ListClients = () => {
             </thead>
 
             <tbody>
-              {clients &&
-                clients.map((client) => (
+                {filteredClients.map((client) => (
                   <tr key={client.id}>
                     <td>{client.fullName}</td>
                     <td>{client.email}</td>
@@ -139,7 +148,8 @@ const ListClients = () => {
                     </td>
                   </tr>
                 ))}
-            </tbody>
+              </tbody>
+
           </table>
         </div>
         <div className="pagination">

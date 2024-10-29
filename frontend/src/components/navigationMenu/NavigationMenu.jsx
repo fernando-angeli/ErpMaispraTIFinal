@@ -65,13 +65,13 @@ function NavigationMenu() {
       url: "/funcionario",
     },
   ];
-  console.log(userProfile)
+
   return (
     
     <OptionsNavigationMenu
-      arrayOptions={userProfile === "ROLE_OPERATOR" ? optionsAdmin : options}
-      className="responsive"
-    />
+    arrayOptions={userProfile === "ROLE_OPERATOR" || userProfile === "ROLE_ADMIN" ? optionsAdmin : options}
+    className="responsive"
+  />
   );
 }
 
