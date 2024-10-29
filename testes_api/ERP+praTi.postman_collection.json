@@ -31,7 +31,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"marcelo@hotmail.com\",\r\n    \"password\": \"12345\"\r\n}",
+							"raw": "{\r\n    \"email\": \"fernando3@gmail.com\",\r\n    \"password\": \"senha123\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -39,12 +39,12 @@
 							}
 						},
 						"url": {
-							"raw": "{{host}}/auth",
+							"raw": "{{host}}/login",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
-								"auth"
+								"login"
 							],
 							"query": [
 								{
@@ -65,7 +65,7 @@
 			]
 		},
 		{
-			"name": "Clients",
+			"name": "Clientes",
 			"item": [
 				{
 					"name": "Client insert PF",
@@ -84,7 +84,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"fullName\": \"Marcelo\",\r\n    \"typePfOrPj\": \"PF\",\r\n    \"gender\": \"MASCULINO\",\r\n    \"cpfCnpj\": \"685.341.320-20\",\r\n    \"rgIe\": \"125-554\",\r\n    \"phoneNumber\": \"513543-4811\",\r\n    \"email\": \"marcelo_mnicolai@gmail.com\", \r\n    \"address\": \"Rua Casemiro Alves\", \r\n    \"number\": \"S/N\", \r\n    \"district\": \"Centro\",\r\n    \"zipCode\": \"95.650-000\",\r\n    \"city\": \"Cachoeirinha\", \r\n    \"state\": \"RS\",\r\n    \"country\": \"Brasil\", \r\n    \"birthDate\": \"1982-03-29\",\r\n    \"creditLimit\": 50000.00, \r\n    \"notes\" : \"Gremistão e bom pagador.\", \r\n    \"status\" : \"ativo\"\r\n}",
+							"raw": "{\r\n    \"fullName\": \"Marcelo D2\",\r\n    \"typePfOrPj\": \"PF\",\r\n    \"gender\": \"MASCULINO\",\r\n    \"cpfCnpj\": \"373.858.040-98\",\r\n    \"phoneNumber\": \"513543-4811\",\r\n    \"email\": \"marcelo_mnicolai@gmail.com\", \r\n    \"address\": \"Rua Casemiro Alves\", \r\n    \"number\": \"S/N\", \r\n    \"district\": \"Centro\",\r\n    \"zipCode\": \"95.650-000\",\r\n    \"city\": \"Cachoeirinha\", \r\n    \"state\": \"RS\",\r\n    \"country\": \"Brasil\", \r\n    \"birthDate\": \"1982-03-29\",\r\n    \"creditLimit\": 50000.00, \r\n    \"notes\" : \"Gremistão e bom pagador.\", \r\n    \"status\" : \"ativo\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -120,7 +120,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"fullName\": \"Oraganizações Tabajara\",\r\n    \"typePfOrPj\": \"PJ\",\r\n    \"cpfCnpj\": \"16.310.788/0001-72\",\r\n    \"rgIe\": \"125-55sds4\",\r\n    \"phoneNumber\": \"513543-4811\",\r\n    \"email\": \"marcelo_mnicolai@gmail.com\", \r\n    \"address\": \"Rua Casemiro Alves\", \r\n    \"number\": \"S/N\", \r\n    \"district\": \"Centro\",\r\n    \"zipCode\": \"95.650-000\",\r\n    \"city\": \"Cachoeirinha\", \r\n    \"state\": \"RS\",\r\n    \"country\": \"Brasil\", \r\n    \"birthDate\": \"1982-03-29\",\r\n    \"creditLimit\": 50000.00, \r\n    \"notes\" : \"Gremistão e bom pagador.\", \r\n    \"status\" : \"ativo\"\r\n}",
+							"raw": "{\r\n    \"fullName\": \"Oraganizações Tabajara\",\r\n    \"typePfOrPj\": \"PJ\",\r\n    \"cpfCnpj\": \"56.211.501/0001-71\",\r\n    \"stateRegistration\": \"241/0044225\",\r\n    \"phoneNumber\": \"513543-4811\",\r\n    \"email\": \"marcelo_mnicolai@gmail.com\", \r\n    \"address\": \"Rua Casemiro Alves\", \r\n    \"number\": \"S/N\", \r\n    \"district\": \"Centro\",\r\n    \"zipCode\": \"95.650-000\",\r\n    \"city\": \"Cachoeirinha\", \r\n    \"state\": \"RS\",\r\n    \"country\": \"Brasil\", \r\n    \"birthDate\": \"1982-03-29\",\r\n    \"creditLimit\": 50000.00, \r\n    \"notes\" : \"Gremistão e bom pagador.\", \r\n    \"status\" : \"ativo\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -167,13 +167,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{host}}/clientes/2",
+							"raw": "{{host}}/clientes/4",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
 								"clientes",
-								"2"
+								"4"
 							]
 						}
 					},
@@ -219,6 +219,55 @@
 					"response": []
 				},
 				{
+					"name": "Busca paginada",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/clientes?size=4&number=1",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"clientes"
+							],
+							"query": [
+								{
+									"key": "size",
+									"value": "4"
+								},
+								{
+									"key": "number",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Atualizar",
 					"request": {
 						"auth": {
@@ -235,7 +284,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n     \"fullName\": \"Marcelo update\",\r\n    \"typePfOrPj\": \"PF\",\r\n    \"gender\": \"MASCULINO\",\r\n    \"cpfCnpj\": \"123.456.789-01\",\r\n    \"rgOrIe\": \"125-554\",\r\n    \"phoneNumber\": \"513543-4811\",\r\n    \"email\": \"johndoe@com.com\", \r\n    \"address\": \"Rua Casemiro Alves\", \r\n    \"number\": \"S/N\", \r\n    \"district\": \"Centro\",\r\n    \"zipCode\": \"95.650-000\",\r\n    \"city\": \"Cachoeirinha\", \r\n    \"state\": \"RS\",\r\n    \"country\": \"Brasil\", \r\n    \"birthDate\": \"1982-03-29\",\r\n    \"creditLimit\": 50000.00, \r\n    \"notes\" : \"Gremistáo e bom pagador.\", \r\n    \"status\" : \"ativo\"\r\n}",
+							"raw": "{\r\n    \"fullName\": \"Marcelo Update\",\r\n    \"typePfOrPj\": \"PF\",\r\n    \"gender\": \"MASCULINO\",\r\n    \"cpfCnpj\": \"373.858.040-98\",\r\n    \"rgIe\": \"125-55SDS4as\",\r\n    \"phoneNumber\": \"513543-4811\",\r\n    \"email\": \"marcelo_mnicolai@gmail.com\", \r\n    \"address\": \"Rua Casemiro Alves\", \r\n    \"number\": \"S/N\", \r\n    \"district\": \"Centro\",\r\n    \"zipCode\": \"95.650-000\",\r\n    \"city\": \"Cachoeirinha\", \r\n    \"state\": \"RS\",\r\n    \"country\": \"Brasil\", \r\n    \"birthDate\": \"1982-03-29\",\r\n    \"creditLimit\": 50000.00, \r\n    \"notes\" : \"Gremistão e bom pagador.\", \r\n    \"status\" : \"ativo\"\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -243,13 +292,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{host}}/clientes/2",
+							"raw": "{{host}}/clientes/6",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
 								"clientes",
-								"2"
+								"6"
 							]
 						}
 					},
@@ -280,13 +329,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{host}}/clientes/2",
+							"raw": "{{host}}/clientes/9",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
 								"clientes",
-								"2"
+								"9"
 							]
 						}
 					},
@@ -295,10 +344,10 @@
 			]
 		},
 		{
-			"name": "Roles",
+			"name": "Fornecedores",
 			"item": [
 				{
-					"name": "Inserir",
+					"name": "Inserir PF",
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -314,7 +363,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"authority\": \"ADMIN\"\r\n}",
+							"raw": "{\r\n    \"fullName\": \"Marcelo\",\r\n    \"typePfOrPj\": \"PF\",\r\n    \"gender\": \"MASCULINO\",\r\n    \"cpfCnpj\": \"321.161.100-25\",\r\n    \"phoneNumber\": \"5135556858\",\r\n    \"email\": \"marcelo_mnicolai@gmail.com\", \r\n    \"address\": \"Rua Casemiro Alves\", \r\n    \"number\": \"S/N\", \r\n    \"district\": \"Centro\",\r\n    \"zipCode\": \"95.650-000\",\r\n    \"city\": \"Cachoeirinha\", \r\n    \"state\": \"RS\",\r\n    \"country\": \"Brasil\", \r\n    \"birthDate\": \"1982-03-29\",\r\n    \"creditLimit\": 50000.00, \r\n    \"notes\" : \"Gremistão e bom pagador.\", \r\n    \"status\" : \"ativo\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -322,12 +371,48 @@
 							}
 						},
 						"url": {
-							"raw": "{{host}}/roles",
+							"raw": "{{host}}/fornecedores",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
-								"roles"
+								"fornecedores"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Inserir PJ",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"fullName\": \"Oraganizações Tabajara\",\r\n    \"typePfOrPj\": \"PJ\",\r\n    \"cpfCnpj\": \"16.310.788/0001-72\",\r\n    \"phoneNumber\": \"513543-4811\",\r\n    \"email\": \"marcelo_mnicolai@gmail.com\", \r\n    \"address\": \"Rua Casemiro Alves\", \r\n    \"number\": \"S/N\", \r\n    \"district\": \"Centro\",\r\n    \"zipCode\": \"95.650-000\",\r\n    \"city\": \"Cachoeirinha\", \r\n    \"state\": \"RS\",\r\n    \"country\": \"Brasil\", \r\n    \"birthDate\": \"1982-03-29\",\r\n    \"creditLimit\": 50000.00, \r\n    \"notes\" : \"Gremistão e bom pagador.\", \r\n    \"status\" : \"ativo\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/fornecedores",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"fornecedores"
 							]
 						}
 					},
@@ -361,13 +446,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{host}}/roles/3",
+							"raw": "{{host}}/fornecedores/6",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
-								"roles",
-								"3"
+								"fornecedores",
+								"6"
 							]
 						}
 					},
@@ -401,12 +486,12 @@
 							}
 						},
 						"url": {
-							"raw": "{{host}}/roles",
+							"raw": "{{host}}/fornecedores",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
-								"roles"
+								"fornecedores"
 							]
 						}
 					},
@@ -429,7 +514,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n     \"authority\": \"ROLE_SUPERVISOR\"\r\n}",
+							"raw": "{\r\n     \"fullName\": \"Marcelo update\",\r\n    \"typePfOrPj\": \"PF\",\r\n    \"gender\": \"MASCULINO\",\r\n    \"cpfCnpj\": \"321.161.100-2asd5\",\r\n    \"rgIe\": \"125-55\",\r\n    \"phoneNumber\": \"513543-4811\",\r\n    \"email\": \"johndoe@com.com\", \r\n    \"address\": \"Rua Casemiro Alves\", \r\n    \"number\": \"S/N\", \r\n    \"district\": \"Centro\",\r\n    \"zipCode\": \"95.650-000\",\r\n    \"city\": \"Cachoeirinha\", \r\n    \"state\": \"RS\",\r\n    \"country\": \"Brasil\", \r\n    \"birthDate\": \"1982-03-29\",\r\n    \"creditLimit\": 50000.00, \r\n    \"notes\" : \"Gremistáo e bom pagador.\", \r\n    \"status\" : \"ativo\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -437,13 +522,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{host}}/roles/3",
+							"raw": "{{host}}/fornecedores/7",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
-								"roles",
-								"3"
+								"fornecedores",
+								"7"
 							]
 						}
 					},
@@ -474,12 +559,206 @@
 							}
 						},
 						"url": {
-							"raw": "{{host}}/roles/1",
+							"raw": "{{host}}/fornecedores/3",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
-								"roles",
+								"fornecedores",
+								"3"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Produtos",
+			"item": [
+				{
+					"name": "Inserir produto",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"supplierCode\": \"C600-HK\",  \r\n  \"name\": \"Cerveja garrafa 600ml\",\r\n  \"description\": \"Heineken - retornável\",\r\n  \"unitOfMeasure\": \"Unidade\",\r\n  \"price\": 1.00,\r\n  \"stock\": 5,\r\n    \"suppliers\": [\r\n        {\r\n            \"id\": 1\r\n        },\r\n        {\r\n            \"id\":2\r\n        }\r\n]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/produtos",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"produtos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Busca por id",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/produtos/1",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"produtos",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar todos",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/produtos",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"produtos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Atualizar",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"supplierCode\": \"C600-HK\",  \r\n  \"name\": \"Cerveja garrafa 600ml\",\r\n  \"description\": \"Heineken - retornável\",\r\n  \"unitOfMeasure\": \"Unidade\",\r\n  \"price\": 1.75,\r\n  \"stock\": 6,\r\n    \"suppliers\": [\r\n            {\r\n                \"id\": 1\r\n            }\r\n]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/produtos/1",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"produtos",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/produtos/1",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"produtos",
 								"1"
 							]
 						}
@@ -489,7 +768,7 @@
 			]
 		},
 		{
-			"name": "Users",
+			"name": "Usuarios",
 			"item": [
 				{
 					"name": "InsertUser",
@@ -508,7 +787,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"firstName\": \"Luiz Fernando\",\r\n    \"lastName\": \"Angeli\",\r\n    \"email\": \"fernando@gmail.com\",\r\n    \"password\" : \"senha123\",\r\n    \"roles\": [\r\n                {\r\n                    \"id\": 1\r\n                },\r\n                {\r\n                    \"id\": 2\r\n                }\r\n\r\n    ]\r\n}",
+							"raw": "{\r\n    \"firstName\": \"Luiz Fernando\",\r\n    \"lastName\": \"Angeli\",\r\n    \"email\": \"fernando3@gmail.com\",\r\n    \"password\" : \"senha123\",\r\n    \"roles\": [\r\n                {\r\n                    \"id\": 1\r\n                }\r\n    ]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -544,7 +823,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"firstName\": \"Luiz Fernando\",\r\n    \"lastName\": \"Angeli\",\r\n    \"email\": \"fernando@gmail.com\",\r\n    \"password\" : \"senha123\",\r\n    \"roles\": [\r\n                {\r\n                    \"id\": 1\r\n                }\r\n\r\n    ]\r\n}",
+							"raw": "{\r\n    \"firstName\": \"Luiz Fernando\",\r\n    \"lastName\": \"Angeli\",\r\n    \"email\": \"fernando@gmail.com\",\r\n    \"password\" : \"senha13\",\r\n    \"roles\": [\r\n                {\r\n                    \"id\": 1\r\n                }\r\n\r\n    ]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -552,13 +831,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{host}}/usuarios/3",
+							"raw": "{{host}}/usuarios/4",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
 								"usuarios",
-								"3"
+								"4"
 							]
 						}
 					},
@@ -631,13 +910,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{host}}/usuarios/1",
+							"raw": "{{host}}/usuarios/4",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
 								"usuarios",
-								"1"
+								"4"
 							]
 						}
 					},

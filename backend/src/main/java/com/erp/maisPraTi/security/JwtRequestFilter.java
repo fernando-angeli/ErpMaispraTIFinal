@@ -1,8 +1,8 @@
 package com.erp.maisPraTi.security;
 
-import com.erp.maisPraTi.model.CustomUserDetails;
+import com.erp.maisPraTi.security.model.CustomUserDetails;
 import com.erp.maisPraTi.security.exceptions.StandardErrorAuth;
-import com.erp.maisPraTi.service.UserDetailsServiceImpl;
+import com.erp.maisPraTi.security.service.UserDetailsServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;

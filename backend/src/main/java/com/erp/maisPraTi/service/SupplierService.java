@@ -8,12 +8,12 @@ import com.erp.maisPraTi.model.Supplier;
 import com.erp.maisPraTi.repository.SupplierRepository;
 import com.erp.maisPraTi.service.exceptions.DatabaseException;
 import com.erp.maisPraTi.service.exceptions.ResourceNotFoundException;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -29,7 +29,7 @@ public class SupplierService {
 
     @Transactional
     public SupplierDto insert(SupplierDto dto) {
-        verifyExistsDocuments(dto.getCpfCnpj(), dto.getRgIe(), dto.getTypePfOrPj());
+        verifyExistsDocuments(dto.getCpfCnpj(), dto.getStateRegistration(), dto.getTypePfOrPj());
         Supplier supplier = new Supplier();
         supplier = convertToEntity(dto, Supplier.class);
         supplier.setCreatedAt(LocalDateTime.now());
@@ -63,7 +63,7 @@ public class SupplierService {
         try {
             Supplier supplier = supplierRepository.getReferenceById(id);
             if(!supplier.getCpfCnpj().equals(supplierUpdateDto.getCpfCnpj()))
-                verifyExistsDocuments(supplierUpdateDto.getCpfCnpj(), supplierUpdateDto.getRgIe(), supplierUpdateDto.getTypePfOrPj());
+                verifyExistsDocuments(supplierUpdateDto.getCpfCnpj(), supplierUpdateDto.getStateRegistration(), supplierUpdateDto.getTypePfOrPj());
             convertToEntity(supplierUpdateDto, supplier);
             supplier.setUpdatedAt(LocalDateTime.now());
             supplier = supplierRepository.save(supplier);
@@ -91,12 +91,11 @@ public class SupplierService {
         }
     }
 
-    private void verifyExistsDocuments(String cpfCnpj, String rgIe, TypePfOrPj typePfOrPj) {
+    private void verifyExistsDocuments(String cpfCnpj, String stateRegistration, TypePfOrPj typePfOrPj) {
         if(supplierRepository.existsByCpfCnpj(cpfCnpj))
             throw new DatabaseException(typePfOrPj.equals(TypePfOrPj.PJ) ? "CNPJ já cadastrado no sistema." : "CPF já cadastrado no sistema.");
-        if(supplierRepository.existsByRgIe(rgIe))
-            throw new DatabaseException(typePfOrPj.equals(TypePfOrPj.PJ) ? "Inscrição estadual já cadastrada no sistema." : "RG já cadastrado no sistema.");
+        if(typePfOrPj.equals(TypePfOrPj.PJ) && supplierRepository.existsByStateRegistration(stateRegistration) && !stateRegistration.equalsIgnoreCase("isento"))
+            throw new DatabaseException("Inscrição estadual já cadastrada no sistema.");
     }
-
 
 }
