@@ -31,6 +31,7 @@ public class SupplierService {
     public SupplierDto insert(SupplierDto dto) {
         verifyExistsDocuments(dto.getCpfCnpj(), dto.getStateRegistration(), dto.getTypePfOrPj());
         Supplier supplier = new Supplier();
+        dto.setStateRegistration(stateRegistrationNormalize(dto.getStateRegistration()));
         supplier = convertToEntity(dto, Supplier.class);
         supplier.setCreatedAt(LocalDateTime.now());
         supplier.setUpdatedAt(LocalDateTime.now());
@@ -64,6 +65,7 @@ public class SupplierService {
             Supplier supplier = supplierRepository.getReferenceById(id);
             if(!supplier.getCpfCnpj().equals(supplierUpdateDto.getCpfCnpj()))
                 verifyExistsDocuments(supplierUpdateDto.getCpfCnpj(), supplierUpdateDto.getStateRegistration(), supplierUpdateDto.getTypePfOrPj());
+            supplierUpdateDto.setStateRegistration(stateRegistrationNormalize(supplierUpdateDto.getStateRegistration()));
             convertToEntity(supplierUpdateDto, supplier);
             supplier.setUpdatedAt(LocalDateTime.now());
             supplier = supplierRepository.save(supplier);
@@ -96,6 +98,10 @@ public class SupplierService {
             throw new DatabaseException(typePfOrPj.equals(TypePfOrPj.PJ) ? "CNPJ já cadastrado no sistema." : "CPF já cadastrado no sistema.");
         if(typePfOrPj.equals(TypePfOrPj.PJ) && supplierRepository.existsByStateRegistration(stateRegistration) && !stateRegistration.equalsIgnoreCase("isento"))
             throw new DatabaseException("Inscrição estadual já cadastrada no sistema.");
+    }
+
+    private String stateRegistrationNormalize(String stateRegistration){
+        return stateRegistration != null ? stateRegistration.toLowerCase() : null;
     }
 
 }

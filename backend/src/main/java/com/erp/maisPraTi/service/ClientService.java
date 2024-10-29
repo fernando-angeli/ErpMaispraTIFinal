@@ -27,6 +27,7 @@ public class ClientService {
     @Transactional
     public ClientDto insert(ClientDto dto) {
         verifyExistsDocuments(dto.getCpfCnpj(), dto.getStateRegistration(), dto.getTypePfOrPj());
+        dto.setStateRegistration(stateRegistrationNormalize(dto.getStateRegistration()));
         Client client = new Client();
         client = convertToDto(dto, Client.class);
         client.setCreatedAt(LocalDateTime.now());
@@ -54,6 +55,7 @@ public class ClientService {
             Client client = clientRepository.getReferenceById(id);
             if(!client.getCpfCnpj().equals(clientUpdateDto.getCpfCnpj()))
                 verifyExistsDocuments(clientUpdateDto.getCpfCnpj(), clientUpdateDto.getStateRegistration(), clientUpdateDto.getTypePfOrPj());
+            clientUpdateDto.setStateRegistration(stateRegistrationNormalize(clientUpdateDto.getStateRegistration()));
             convertToEntity(clientUpdateDto, client);
             client.setUpdatedAt(LocalDateTime.now());
             client = clientRepository.save(client);
@@ -86,6 +88,10 @@ public class ClientService {
             throw new DatabaseException(typePfOrPj.equals(TypePfOrPj.PJ) ? "CNPJ já cadastrado no sistema." : "CPF já cadastrado no sistema.");
         if(typePfOrPj.equals(TypePfOrPj.PJ) && clientRepository.existsByStateRegistration(stateRegistration) && !stateRegistration.equalsIgnoreCase("isento"))
             throw new DatabaseException("Inscrição estadual já cadastrada no sistema.");
+    }
+
+    private String stateRegistrationNormalize(String stateRegistration){
+        return stateRegistration != null ? stateRegistration.toLowerCase() : null;
     }
 
 }

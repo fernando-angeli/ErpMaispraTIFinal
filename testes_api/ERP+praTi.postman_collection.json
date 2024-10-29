@@ -120,7 +120,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"fullName\": \"Oraganizações Tabajara\",\r\n    \"typePfOrPj\": \"PJ\",\r\n    \"cpfCnpj\": \"56.211.501/0001-71\",\r\n    \"stateRegistration\": \"241/0044225\",\r\n    \"phoneNumber\": \"513543-4811\",\r\n    \"email\": \"marcelo_mnicolai@gmail.com\", \r\n    \"address\": \"Rua Casemiro Alves\", \r\n    \"number\": \"S/N\", \r\n    \"district\": \"Centro\",\r\n    \"zipCode\": \"95.650-000\",\r\n    \"city\": \"Cachoeirinha\", \r\n    \"state\": \"RS\",\r\n    \"country\": \"Brasil\", \r\n    \"birthDate\": \"1982-03-29\",\r\n    \"creditLimit\": 50000.00, \r\n    \"notes\" : \"Gremistão e bom pagador.\", \r\n    \"status\" : \"ativo\"\r\n}",
+							"raw": "{\r\n    \"fullName\": \"Oraganizações Tabajara\",\r\n    \"typePfOrPj\": \"PJ\",\r\n    \"cpfCnpj\": \"56.211.501/0001-71\",\r\n    \"stateRegistration\": \"ISENTO\",\r\n    \"phoneNumber\": \"513543-4811\",\r\n    \"email\": \"marcelo_mnicolai@gmail.com\", \r\n    \"address\": \"Rua Casemiro Alves\", \r\n    \"number\": \"S/N\", \r\n    \"district\": \"Centro\",\r\n    \"zipCode\": \"95.650-000\",\r\n    \"city\": \"Cachoeirinha\", \r\n    \"state\": \"RS\",\r\n    \"country\": \"Brasil\", \r\n    \"birthDate\": \"1982-03-29\",\r\n    \"creditLimit\": 50000.00, \r\n    \"notes\" : \"Gremistão e bom pagador.\", \r\n    \"status\" : \"ativo\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
