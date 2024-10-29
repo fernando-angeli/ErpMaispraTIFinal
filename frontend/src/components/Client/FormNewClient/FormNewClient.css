@@ -61,6 +61,17 @@ form.hiddenformNewClient {
   flex-basis: 40%;
 }
 
+.divIE {
+  display: flex;
+  flex-direction: column;
+  justify-content: END;
+  flex: 1;
+  position: relative;
+  gap: 5px;
+  bottom: 10px;
+  flex-basis: 40%;
+}
+
 /* line3 */
 .fieldAddress {
   flex-grow: 1;

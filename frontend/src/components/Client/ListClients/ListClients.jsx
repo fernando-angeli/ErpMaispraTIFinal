@@ -165,13 +165,7 @@ const ListClients = () => {
             </table>
           </div>
           <div className="pagination">
-            
-            
-
             <NavigationListClients contClientPages={contClientPages} setListClientsPage={setListClientsPage} />
-            
-            
-            
           </div>
         </div>
       </div>

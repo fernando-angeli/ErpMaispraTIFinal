@@ -6,7 +6,6 @@ import { useAuth } from "../../AuthContext";
 import Viacep from "../../Viacep/Viacep";
 import InputField from "../../InputField/InputField";
 import RadioGroup from "../../RadioGroup/RadioGroup";
-import SelectField from "../../SelectField/SelectField";
 import TextareaField from "../../TextareaField/TextareaField";
 
 
@@ -30,6 +29,8 @@ function FormNewClient(dataClient) {
   const [newClientBirthDate, setNewClientBirthDate] = useState("");
   const [newClientNotes, setNewClientNotes] = useState("");
   const [newClientStatus, setNewClientStatus] = useState("");
+  const [newClientIE, setNewClientIE] = useState("134");
+  
   const [UpdateClientId, setUpdateClientId] = useState();
   const [Error, setError] = useState();
   const [Success, setSuccess] = useState();
@@ -98,7 +99,7 @@ function FormNewClient(dataClient) {
     setNewClientState("");
     setNewClientBirthDate('');
     setNewClientNotes("")
-
+    setNewClientIE("")
     SetPostToUpdade(true)
     setError(null)
     };
@@ -184,7 +185,7 @@ function FormNewClient(dataClient) {
       typePfOrPj: CPForCNPJ === "cpf" ? "PF" : "PJ",
       gender: "NAO INFORMADO",
       cpfCnpj: newClientCPForCNPJ,
-      rgIe: "123132213",
+      rgIe: newClientIE+"21",
       phoneNumber: newClientPhone,
       email: newClientEmail,
       address: newClientAddress,
@@ -230,7 +231,6 @@ function FormNewClient(dataClient) {
 
   useEffect(() => {
   if(dataClient.dataClient){
-    console.log(dataClient.dataClient)
     SetValuestoUpdate(dataClient.dataClient);
     SetPostToUpdade(false)
   }
@@ -321,6 +321,7 @@ function FormNewClient(dataClient) {
               onChange={(selectedValue) => setOption(selectedValue)}
               clasnameDiv={"aaa"}
             />
+      
             <InputField
               type={"text"}
               placeholder={"Digite o CPF/CNPJ do usuário"}
@@ -336,6 +337,21 @@ function FormNewClient(dataClient) {
               classNameDiv="inputFieldNoLabel"
             />
           </div>
+          {CPForCNPJ === "cnpj" && <div className="divIE">
+          <InputField
+              type={"text"}
+              placeholder={"Digite a Inscrição Estadual"}
+              name={"IE"}
+              idInput={"newClientIE"}
+              value={newClientIE}
+              onInvalid={(e) => isInvalid(e)}
+              onChange={(e) => {
+                setNewClientIE(e.target.value);
+                isValid(e);
+              }}
+              label={""}
+              classNameDiv="inputFieldNoLabel"
+            /></div>}
         </div>
 
         <div className="line3 line">
