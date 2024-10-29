@@ -109,7 +109,7 @@ function FormNewClient(dataClient) {
       typePfOrPj: CPForCNPJ === "cpf" ? "PF" : "PJ",
       gender: "NAO INFORMADO",
       cpfCnpj: newClientCPForCNPJ,
-      rgIe: "RG12345",
+      rgIe:"1231234",
       phoneNumber: newClientPhone,
       email: newClientEmail,
       address: newClientAddress,
@@ -137,7 +137,7 @@ function FormNewClient(dataClient) {
       );
       handleReset();
       setSuccess("Cliente adicionado com sucesso!");
-      
+      window.location.reload;
     } catch (err) {
       console.error(err);
       if (err.response && err.response.data) {
@@ -184,7 +184,7 @@ function FormNewClient(dataClient) {
       typePfOrPj: CPForCNPJ === "cpf" ? "PF" : "PJ",
       gender: "NAO INFORMADO",
       cpfCnpj: newClientCPForCNPJ,
-      rgIe: "RG12345",
+      rgIe: "123132213",
       phoneNumber: newClientPhone,
       email: newClientEmail,
       address: newClientAddress,
