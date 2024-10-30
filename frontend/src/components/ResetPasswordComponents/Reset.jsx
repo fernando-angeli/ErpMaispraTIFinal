@@ -4,13 +4,14 @@ import ErpLogo from '../../assets/icons/artboard.svg'
 import { AiOutlineUser } from "react-icons/ai";
 import { useNavigate } from 'react-router-dom';
 import { BsArrowReturnRight } from "react-icons/bs";
-
+import LoadingSpin from '../LoadingSpin/LoadingSpin'
 import axios from 'axios';
 
 const Reset = () => {
   const [ResetEmail, setResetEmail] = useState("");
   const [Error, setError] = useState();
   const [Error2, setError2] = useState();
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const isInvalid = (e) => {
@@ -36,17 +37,20 @@ const Reset = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setIsLoading(true)
     try {
       const response = await axios.post('http://localhost:8080/api/forgot-password', {
         email: ResetEmail,
       });      
       setError(null)
       setError2(response.data)
+      setIsLoading(false)
       setInterval(()=>{
         navigate('/login');
       },2000) 
     } catch (err) {
       setError(err.response.data.message+".")
+      setIsLoading(false)
     }
   };
 
@@ -84,6 +88,7 @@ const Reset = () => {
         <p className='error'>{Error && Error}</p>
         <p className='sucess'>{Error2 && Error2}</p>
         <p className='pForgotPass'><a href='/login' className='forgotPass'>Login <BsArrowReturnRight size={22} style={{margin:"3px"}}/></a></p>
+              {isLoading && <LoadingSpin/>}
       </div>
     </div>
   );

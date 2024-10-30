@@ -2,7 +2,6 @@ import "./App.css";
 import "./assets/css/texts.css";
 import "./assets/css/buttons.css";
 
-import { useState } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
 import Header from "./components/header/header";
@@ -16,7 +15,6 @@ import AddEmployeePage from "./pages/addEmployeePage/AddEmployeePage";
 import ResetPassword from "./pages/ResetPassword/ResetPassword";
 function App() {
   const { isAuthenticated } = useAuth();
-  const [isLogged, Log] = useState(isAuthenticated);
   return (
     <>
       <Router>
@@ -24,12 +22,13 @@ function App() {
           {isAuthenticated && <NavigationMenu />}
           
         <Routes>
-          {!isLogged && <Route path="/login" element={<Login />} />}
-          {!isLogged && <Route path="/resetpassword" element={<ResetPassword/>} />}
+        {!isAuthenticated && <Route path="/" element={<Login />} />}
+          {!isAuthenticated && <Route path="/login" element={<Login />} />}
+          {!isAuthenticated && <Route path="/resetpassword" element={<ResetPassword/>} />}
           <Route
             path="/cliente"
             element={
-              <ProtectedRoute isLoggedIn={isLogged}>
+              <ProtectedRoute isLoggedIn={isAuthenticated }>
                 <AddClientPage />
               </ProtectedRoute>
             }
@@ -37,7 +36,7 @@ function App() {
           <Route
             path="/funcionario"
             element={
-              <ProtectedRoute isLoggedIn={isLogged}>
+              <ProtectedRoute isLoggedIn={isAuthenticated }>
                 <AddEmployeePage />
               </ProtectedRoute>
             }
@@ -45,7 +44,7 @@ function App() {
           <Route
             path="/home"
             element={
-              <ProtectedRoute isLoggedIn={isLogged}>
+              <ProtectedRoute isLoggedIn={isAuthenticated }>
                 <HomePage />
               </ProtectedRoute>
             }
