@@ -28,7 +28,7 @@ function FormNewClient(dataClient) {
   const [newClientState, setNewClientState] = useState("");
   const [newClientBirthDate, setNewClientBirthDate] = useState("");
   const [newClientNotes, setNewClientNotes] = useState("");
-  const [newClientStatus, setNewClientStatus] = useState("");
+  const [newClientStatus, setNewClientStatus] = useState("ativo");
   const [newClientIE, setNewClientIE] = useState("134");
   
   const [UpdateClientId, setUpdateClientId] = useState();
