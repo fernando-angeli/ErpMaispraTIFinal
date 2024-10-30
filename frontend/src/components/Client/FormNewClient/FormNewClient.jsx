@@ -91,15 +91,23 @@ function FormNewClient(dataClient) {
   }
 
   const CheckTelephone = (phone)=> {
-    const phoneRegex = /^\(?\+?(\d{1,3})?\)?[-.\s]?(\d{2})[-.\s]?(\d{4,5})[-.\s]?(\d{4})$/;
+    const phoneRegex = /^(\(?\d{2}\)?[\s-]?(\d{4,5})[\s-]?(\d{4})|\d{4,5}-\d{4})$/;
     if (phoneRegex.test(phone)) {
       setError(null);
     } else {
       setError('Formato de Telefone Inválido!');
-      return
     }
   }
 
+  const CheckCpf = (cpf)=> {
+  const cpfRegex = /^(?!.*(\d)(?:-?\1){10})\d{3}\.\d{3}\.\d{3}-\d{2}$|^(\d{11})$/;
+  if (cpfRegex.test(cpf)) {
+    setError(null);
+  } else {
+    setError('Formato de Telefone Inválido!');
+    return
+  }
+  }
 
   const handleReset = () => {
     let form = document.getElementById("formNewClient");
@@ -150,7 +158,16 @@ function FormNewClient(dataClient) {
       notes: newClientNotes,
       status: newClientStatus,
     };
-    
+  
+    const cpfRegex = /^(?!.*(\d)(?:-?\1){10})\d{3}\.\d{3}\.\d{3}-\d{2}$|^(\d{11})$/;
+    if (cpfRegex.test(newClientData.cpfCnpj)) {
+      setError(null);
+    } else {
+      setError('Formato de Cpf Invalido');
+      setIsLoading(false) 
+      return
+    }
+
     try {
       const response = await axios.post(
         `http://localhost:8080/api/clientes`,
@@ -179,6 +196,7 @@ function FormNewClient(dataClient) {
   };
   const handleUpdate = async (event) => {
     setIsLoading(true)
+
     event.preventDefault();
     const newClientData = {
       fullName: newClientName,
@@ -201,14 +219,15 @@ function FormNewClient(dataClient) {
       status: newClientStatus,
     }
     ;
-    const TelephoneRegex = /^\(?\+?(\d{1,3})?\)?[-.\s]?(\d{2})[-.\s]?(\d{4,5})[-.\s]?(\d{4})$/;
-    if (TelephoneRegex.test(newClientData.phoneNumber)) {
+
+    const cpfRegex = /^(?!.*(\d)(?:-?\1){10})\d{3}\.\d{3}\.\d{3}-\d{2}$|^(\d{11})$/;
+    if (cpfRegex.test(newClientData.cpfCnpj)) {
       setError(null);
     } else {
-      setError('Formato de Telefone Inválido!');
+      setError('Formato de Cpf Invalido');
+      setIsLoading(false) 
       return
     }
-
     try {
       const response = await axios.put(
         `http://localhost:8080/api/clientes/${UpdateClientId}`,
@@ -288,8 +307,8 @@ function FormNewClient(dataClient) {
           ResponsiveCliente ? "visibleformNewClient" : "hiddenformNewClient"
         }
         id="formNewClient"
-        onSubmit={handleSubmit}
         onReset={handleReset}
+        onSubmit={PostToUpdate ? handleSubmit :  handleUpdate}
       >
         <div className="line1 line">
           <InputField
@@ -371,6 +390,7 @@ function FormNewClient(dataClient) {
               onChange={(e) => {
                 setNewClientCPForCNPJ(e.target.value);
                 isValid(e);
+                CheckCpf(e.target.value)
               }}
               label={""}
               classNameDiv="inputFieldNoLabel"
