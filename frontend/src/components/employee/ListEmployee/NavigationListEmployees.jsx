@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 
-function NavigationListClients({ contClientPages, setListClientsPage }) {
+function NavigationListEmployees({ contEmployeePages, setListEmployeesPage }) {
   const [listPageSelected, setListPageSelected] = useState(1);
 
   useEffect(() => {
     const selectedPageElement = document.getElementById(
-      "pageClientList" + listPageSelected
+      "pageEmployeeList" + listPageSelected
     );
 
     if (selectedPageElement) {
@@ -18,12 +18,12 @@ function NavigationListClients({ contClientPages, setListClientsPage }) {
   }, [listPageSelected]);
 
   const handlePageClick = (page) => {
-    setListPageSelected(page); // Atualiza o estado local
-    setListClientsPage(page); // Atualiza o estado no componente pai
+    setListPageSelected(page); 
+    setListEmployeesPage(page); 
   };
 
   const goToNextPage = () => {
-    if (listPageSelected < contClientPages) {
+    if (listPageSelected < contEmployeePages) {
       handlePageClick(listPageSelected + 1);
     }
   };
@@ -46,12 +46,12 @@ function NavigationListClients({ contClientPages, setListClientsPage }) {
         ❮
       </a>
 
-      {Array.from({ length: contClientPages }, (_, index) => {
+      {Array.from({ length: contEmployeePages }, (_, index) => {
         const pageNum = index + 1;
         return (
           <a
             key={pageNum}
-            id={"pageClientList" + pageNum}
+            id={"pageEmployeeList" + pageNum}
             href="#"
             onClick={(e) => {
               e.preventDefault();
@@ -75,4 +75,4 @@ function NavigationListClients({ contClientPages, setListClientsPage }) {
   );
 }
 
-export default NavigationListClients;
+export default NavigationListEmployees;
