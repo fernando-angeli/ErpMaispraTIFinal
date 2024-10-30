@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import './Login.css'
-import ErpLogo from '../../assets/icons/artboard.svg'
+import ErpLogo from '../../../assets/icons/artboard.svg'
 
-import { useAuth } from '../AuthContext.jsx';
+import { useAuth } from '../../AuthContext.jsx';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
@@ -22,8 +22,6 @@ const Login = () => {
     if (e.target.value && e.target.className !== 'inputText') {
       e.target.className = 'inputText';
     }
-
-    
   };
 
   const handleReset = () => {
