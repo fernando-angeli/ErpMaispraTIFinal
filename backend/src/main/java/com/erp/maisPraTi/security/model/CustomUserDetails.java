@@ -6,12 +6,13 @@ import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 public class CustomUserDetails implements UserDetails {
 
     private String firstName;
@@ -19,6 +20,8 @@ public class CustomUserDetails implements UserDetails {
     private String email;
     private String password;
     private List<GrantedAuthority> authorities;
+    private String resetPasswordToken;
+    private LocalDateTime tokenExpiration;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

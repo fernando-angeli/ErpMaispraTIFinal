@@ -1,7 +1,7 @@
 package com.erp.maisPraTi.service;
 
-import com.erp.maisPraTi.dto.login.LoginRequest;
-import com.erp.maisPraTi.dto.login.LoginResponse;
+import com.erp.maisPraTi.dto.auth.LoginRequest;
+import com.erp.maisPraTi.dto.auth.LoginResponse;
 import com.erp.maisPraTi.fixture.LoginFixture;
 import com.erp.maisPraTi.fixture.UserFixture;
 import com.erp.maisPraTi.model.User;
@@ -10,7 +10,6 @@ import com.erp.maisPraTi.service.exceptions.AuthenticationUserException;
 import com.erp.maisPraTi.util.EntityMapper;
 import org.hibernate.service.spi.InjectService;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.extension.ExtendWith; // Para extensão do Mockito
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
