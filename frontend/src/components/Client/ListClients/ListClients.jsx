@@ -8,6 +8,7 @@ import "./ListClients.css";
 import FormNewClient from '../FormNewClient/FormNewClient.jsx'
 import NavigationListClients from "./navigationListClients.jsx";
 import PageOfListClients from "./PageOfListClients.jsx";
+import LoadingSpin from "../../LoadingSpin/LoadingSpin.jsx";
 
 const ListClients = () => {
   const { JwtToken } = useAuth();
@@ -17,7 +18,7 @@ const ListClients = () => {
   const [showInativos, setShowInativos] = useState(true);
   const [searchClients, setsearchClients] = useState("");
   const [showModal, setShowModal] = useState(false);
-  const [DeleteOption, setDeleteOption] = useState();
+  const [isLoading, setIsLoading] =  useState(false);
   const [ClienteNameShow, setClienteNameShow] = useState();
 
   const [listClientsPageSelected, setListClientsPage] = useState(1)
@@ -41,6 +42,7 @@ const ListClients = () => {
   }, []);
 
   const deleteClient = async (client) => {
+    
     setClienteNameShow(client.fullName);
     const confirmDelete = await new Promise((resolve) => {
       setShowModal(true);
@@ -53,15 +55,17 @@ const ListClients = () => {
     if (!confirmDelete) {
       return;
     }
+    setIsLoading(true)
     try {
       await axios.delete(`http://localhost:8080/api/clientes/${client.id}`, {
         headers: {
           Authorization: `Bearer ${JwtToken}`,
         },
       });
+      setIsLoading(false)
       handleShowClients();
     } catch (err) {
-      console.log(err);
+      setIsLoading(false)
       alert("Erro ao deletar");
     }
   };
@@ -88,6 +92,7 @@ const ListClients = () => {
   return (
 
     <>
+    {isLoading && <LoadingSpin/>}
       <FormNewClient dataClient={clientUpdate} />
       <div className="contentListClients">
         <div className="ListClients">
