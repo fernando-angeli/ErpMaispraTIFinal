@@ -114,7 +114,7 @@ const Login = () => {
         </form>
         <p className='error'>{Error && Error}</p>
         <p className='sucess'>{Error2 && Error2}</p>
-        <p className='pForgotPass'><a href='' className='forgotPass'>Esqueceu sua senha?</a></p>
+        <p className='pForgotPass'><a href='/resetpassword' className='forgotPass'>Esqueceu sua senha?</a></p>
       </div>
     </div>
   );

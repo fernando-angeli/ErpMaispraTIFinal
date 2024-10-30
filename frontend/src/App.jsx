@@ -13,7 +13,7 @@ import HomePage from "./pages/HomePage";
 import Login from "./pages/LoginPage/Login";
 import { useAuth } from "./components/AuthContext";
 import AddEmployeePage from "./pages/addEmployeePage/AddEmployeePage";
-
+import ResetPassword from "./pages/ResetPassword/ResetPassword";
 function App() {
   const { isAuthenticated } = useAuth();
   const [isLogged, Log] = useState(isAuthenticated);
@@ -26,6 +26,7 @@ function App() {
         </ProtectedRoute>
         <Routes>
           {!isLogged && <Route path="/login" element={<Login />} />}
+          {!isLogged && <Route path="/resetpassword" element={<ResetPassword/>} />}
           <Route
             path="/cliente"
             element={
