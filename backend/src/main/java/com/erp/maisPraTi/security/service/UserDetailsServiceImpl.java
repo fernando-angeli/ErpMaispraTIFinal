@@ -36,6 +36,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 user.getLastName(),
                 user.getEmail(),
                 user.getPassword(),
-                authorities);
+                authorities,
+                user.getResetPasswordToken(),
+                user.getTokenExpiration());
     }
 }

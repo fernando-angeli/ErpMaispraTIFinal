@@ -24,6 +24,9 @@ public class JwtTokenProvider {
     @Value("${jwt.expiration}")
     private Long jwtExpiration;
 
+    @Value("${jwt.expiration-recovery}")
+    private Long jwtExpirationRecovery;
+
     //Metodo para gerar uma chave secreta do tipo SecretKey a partir da string do jwtSecret
     private SecretKey getSigningKey() {
         return Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
@@ -87,4 +90,20 @@ public class JwtTokenProvider {
                 .getBody();
     }
 
+    public String generateTokenWithUserId(Long userId) {
+        return Jwts.builder()
+                .setSubject(Long.toString(userId))
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + jwtExpirationRecovery))
+                .signWith(SignatureAlgorithm.HS256, jwtSecret)
+                .compact();
+    }
+
+    public Long getUserIdFromToken(String token) {
+        Claims claims = Jwts.parser()
+                .setSigningKey(jwtSecret)
+                .parseClaimsJws(token)
+                .getBody();
+        return Long.parseLong(claims.getSubject());
+    }
 }
