@@ -1,7 +1,6 @@
 import { BiSolidUser } from "react-icons/bi";
 import { BiSearch } from "react-icons/bi";
-import { BiEdit } from "react-icons/bi";
-import { MdDeleteOutline } from "react-icons/md";
+import ModalYesOrNot from "../../ModalYesOrNot/ModalYesOrNot.jsx"
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useAuth } from "../../AuthContext.jsx";
@@ -17,6 +16,9 @@ const ListClients = () => {
   const [showAtivos, setShowAtivos] = useState(true);
   const [showInativos, setShowInativos] = useState(true);
   const [searchClients, setsearchClients] = useState("");
+  const [showModal, setShowModal] = useState(false);
+  const [DeleteOption, setDeleteOption] = useState();
+  const [ClienteNameShow, setClienteNameShow] = useState();
 
   const [listClientsPageSelected, setListClientsPage] = useState(1)
 
@@ -38,23 +40,32 @@ const ListClients = () => {
     handleShowClients();
   }, []);
 
-  const deleteClient = async (id) => {
+  const deleteClient = async (client) => {
+    setClienteNameShow(client.fullName);
+    const confirmDelete = await new Promise((resolve) => {
+      setShowModal(true);
+      const handleConfirm = (choice) => {
+        setShowModal(false);
+        resolve(choice);
+      };
+      window.handleModalConfirm = handleConfirm;
+    });
+    if (!confirmDelete) {
+      return;
+    }
     try {
-      const response = await axios.delete(
-        `http://localhost:8080/api/clientes/${id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${JwtToken}`,
-          },
-        }
-      );
-      alert("Cliente id" + id + " Deletado!");
+      await axios.delete(`http://localhost:8080/api/clientes/${client.id}`, {
+        headers: {
+          Authorization: `Bearer ${JwtToken}`,
+        },
+      });
       handleShowClients();
     } catch (err) {
       console.log(err);
       alert("Erro ao deletar");
     }
   };
+  
 
   const ToFormUpdateClient = (data) => {
     setClientsUpdate(data)
@@ -67,7 +78,7 @@ const ListClients = () => {
     return matchesStatus && matchesSearch;
   }) || [];
 
-  const maxClientsPerList = 4
+  const maxClientsPerList = 6
   let contClientPages = Math.ceil(filteredClients.length/maxClientsPerList)
 
   
@@ -140,6 +151,16 @@ const ListClients = () => {
               </thead>
 
               <tbody>
+                
+              <ModalYesOrNot
+                show={showModal}
+                onClose={() => setShowModal(false)}
+                title="Deletar Cliente?">
+                <h6>Confirma Exclusão de {ClienteNameShow && ClienteNameShow}?</h6>
+                <button onClick={() => window.handleModalConfirm(true)}>Sim</button>
+                <button onClick={() => window.handleModalConfirm(false)}>Não</button>
+              </ModalYesOrNot>
+
                 <PageOfListClients clients={filteredClients} onEdit={ToFormUpdateClient} onDelete={deleteClient} maxClientsPerList={maxClientsPerList} listClientsPageSelected={listClientsPageSelected}/>
 
                 {/* {filteredClients.map((client) => {

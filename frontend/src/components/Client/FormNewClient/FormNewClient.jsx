@@ -28,7 +28,7 @@ function FormNewClient(dataClient) {
   const [newClientState, setNewClientState] = useState("");
   const [newClientBirthDate, setNewClientBirthDate] = useState("");
   const [newClientNotes, setNewClientNotes] = useState("");
-  const [newClientStatus, setNewClientStatus] = useState("");
+  const [newClientStatus, setNewClientStatus] = useState("active");
   const [newClientIE, setNewClientIE] = useState("134");
   
   const [UpdateClientId, setUpdateClientId] = useState();
@@ -78,6 +78,26 @@ function FormNewClient(dataClient) {
     }
   };
 
+  const CheckEmail = (email)=> {
+    const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+    if (emailRegex.test(email)) {
+      setError(null);
+    } else {
+      setError('Formato de Email Inválido!');
+      return
+    }
+  }
+
+  const CheckTelephone = (phone)=> {
+    const phoneRegex = /^\(?\+?(\d{1,3})?\)?[-.\s]?(\d{2})[-.\s]?(\d{4,5})[-.\s]?(\d{4})$/;
+    if (phoneRegex.test(phone)) {
+      setError(null);
+    } else {
+      setError('Formato de Telefone Inválido!');
+      return
+    }
+  }
+
 
   const handleReset = () => {
     let form = document.getElementById("formNewClient");
@@ -103,6 +123,8 @@ function FormNewClient(dataClient) {
     SetPostToUpdade(true)
     setError(null)
     };
+
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     const newClientData = {
@@ -110,7 +132,7 @@ function FormNewClient(dataClient) {
       typePfOrPj: CPForCNPJ === "cpf" ? "PF" : "PJ",
       gender: "NAO INFORMADO",
       cpfCnpj: newClientCPForCNPJ,
-      rgIe:"1231234",
+      stateRegistration: newClientIE,
       phoneNumber: newClientPhone,
       email: newClientEmail,
       address: newClientAddress,
@@ -125,6 +147,7 @@ function FormNewClient(dataClient) {
       notes: newClientNotes,
       status: newClientStatus,
     };
+    
     try {
       const response = await axios.post(
         `http://localhost:8080/api/clientes`,
@@ -158,6 +181,7 @@ function FormNewClient(dataClient) {
    setUpdateClientId(values.id)
    setNewClientName(values.fullName);
    setNewClientEmail(values.email);
+   setNewClientIE(values.stateRegistration)
    setNewClientAddress(values.address);
    setNewClientDistrict(values.district)
    setNewClientPhone(values.phoneNumber);
@@ -185,7 +209,7 @@ function FormNewClient(dataClient) {
       typePfOrPj: CPForCNPJ === "cpf" ? "PF" : "PJ",
       gender: "NAO INFORMADO",
       cpfCnpj: newClientCPForCNPJ,
-      rgIe: newClientIE+"21",
+      stateRegistration: newClientIE,
       phoneNumber: newClientPhone,
       email: newClientEmail,
       address: newClientAddress,
@@ -202,6 +226,15 @@ function FormNewClient(dataClient) {
     }
     ;
     
+  
+    const TelephoneRegex = /^\(?\+?(\d{1,3})?\)?[-.\s]?(\d{2})[-.\s]?(\d{4,5})[-.\s]?(\d{4})$/;
+    if (TelephoneRegex.test(newClientData.phoneNumber)) {
+      setError(null);
+    } else {
+      setError('Formato de Telefone Inválido!');
+      return
+    }
+
     try {
       const response = await axios.put(
         `http://localhost:8080/api/clientes/${UpdateClientId}`,
@@ -257,7 +290,7 @@ function FormNewClient(dataClient) {
         <div className="line1 line">
           <InputField
             label={"Nome:"}
-            placeholder={"Digite o nome do usuário"}
+            placeholder={"Digite o nome do cliente"}
             name={"nome"}
             idInput={"newClientName"}
             classNameDiv="fieldName"
@@ -270,7 +303,7 @@ function FormNewClient(dataClient) {
           />
           <InputField
             label={"E-mail:"}
-            placeholder={"Digite o e-mail do usuário"}
+            placeholder={"Digite o e-mail do cliente"}
             name={"email"}
             idInput={"newClientEmail"}
             classNameDiv={"fieldEmail"}
@@ -279,6 +312,7 @@ function FormNewClient(dataClient) {
             onChange={(e) => {
               setNewClientEmail(e.target.value);
               isValid(e);
+              CheckEmail(newClientEmail);
             }}
             onInvalid={(e) => isInvalid(e)}
           />
@@ -300,7 +334,7 @@ function FormNewClient(dataClient) {
 
           <InputField
             label={"Telefone:"}
-            placeholder={"Digite o telefone do usuário"}
+            placeholder={"Digite o telefone do cliente"}
             name={"telefone"}
             idInput={"newClientPhone"}
             classNameDiv="fieldPhone"
@@ -309,6 +343,7 @@ function FormNewClient(dataClient) {
             onChange={(e) => {
               setNewClientPhone(e.target.value);
               isValid(e);
+              CheckTelephone(newClientPhone);
             }}
             onInvalid={(e) => isInvalid(e)}
           />
@@ -324,7 +359,7 @@ function FormNewClient(dataClient) {
       
             <InputField
               type={"text"}
-              placeholder={"Digite o CPF/CNPJ do usuário"}
+              placeholder={"Digite o CPF/CNPJ do cliente"}
               name={"cpf/cnpj"}
               idInput={"newClientCPForCNPJ"}
               value={newClientCPForCNPJ}
@@ -355,6 +390,21 @@ function FormNewClient(dataClient) {
         </div>
 
         <div className="line3 line">
+        <InputField
+            label={"CEP:"}
+            name={"CEP"}
+            placeholder={"00000-000"}
+            idInput={"newClientCEP"}
+            classNameDiv={"fieldCep"}
+            type={"text"}
+            value={newClientCEP}
+            onChange={(e) => {
+              setNewClientCEP(e.target.value);
+              isValid(e);
+            }}
+            onInvalid={(e) => isInvalid(e)}
+          />
+
           <InputField
             label={"Logradouro:"}
             name={"logradouro"}
@@ -369,7 +419,10 @@ function FormNewClient(dataClient) {
             }}
             onInvalid={(e) => isInvalid(e)}
           />
-          <InputField
+        </div>
+
+        <div className="line4 line">
+        <InputField
             label={"Número:"}
             name={"numero"}
             placeholder={"0000"}
@@ -383,9 +436,6 @@ function FormNewClient(dataClient) {
             }}
             onInvalid={(e) => isInvalid(e)}
           />
-        </div>
-
-        <div className="line4 line">
           <InputField
             label={"Bairro:"}
             name={"bairro"}
@@ -414,21 +464,6 @@ function FormNewClient(dataClient) {
               isValid(e);
             }}
             arrayOptions={cityList}
-          />
-
-          <InputField
-            label={"CEP:"}
-            name={"CEP"}
-            placeholder={"00000-000"}
-            idInput={"newClientCEP"}
-            classNameDiv={"fieldCep"}
-            type={"text"}
-            value={newClientCEP}
-            onChange={(e) => {
-              setNewClientCEP(e.target.value);
-              isValid(e);
-            }}
-            onInvalid={(e) => isInvalid(e)}
           />
         </div>
 
