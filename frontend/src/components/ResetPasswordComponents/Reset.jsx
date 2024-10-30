@@ -37,11 +37,14 @@ const Reset = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const response = await axios.post('', {
+      const response = await axios.post('http://localhost:8080/api/forgot-password', {
         email: ResetEmail,
       });      
       setError(null)
-      setError2('Instruções enviadas por email!')
+      setError2(response.data)
+      setInterval(()=>{
+        navigate('/login');
+      },2000) 
     } catch (err) {
       setError(err.response.data.message+".")
     }

@@ -1,6 +1,6 @@
 INSERT INTO tb_users (first_name, last_name, email, password) VALUES ('Luiz Fernando', 'Angeli', 'fernando@hotmail.com', '$2a$10$ocxs8qS.b/D3VPzdwyYi1eC5YoLXC7E0LgZOEsTAA6I70Y0p0JcdW'); -- senha: 12345
 INSERT INTO tb_users (first_name, last_name, email, password) VALUES ('Marcelo', 'Nicolai', 'marcelo@hotmail.com', '$2a$10$ocxs8qS.b/D3VPzdwyYi1eC5YoLXC7E0LgZOEsTAA6I70Y0p0JcdW'); -- senha: 12345
-INSERT INTO tb_users (first_name, last_name, email, password) VALUES ('Emerson Gremista', 'Fã do Renato', 'emerson@hotmail.com', '$2a$10$ocxs8qS.b/D3VPzdwyYi1eC5YoLXC7E0LgZOEsTAA6I70Y0p0JcdW'); -- senha: 12345
+INSERT INTO tb_users (first_name, last_name, email, password) VALUES ('Emerson ', 'Colorado, chupa gremio', 'euemerson1@gmail.com', '$2a$10$ocxs8qS.b/D3VPzdwyYi1eC5YoLXC7E0LgZOEsTAA6I70Y0p0JcdW'); -- senha: 12345
 
 INSERT INTO tb_roles (authority) VALUES ('ROLE_OPERATOR');
 INSERT INTO tb_roles (authority) VALUES ('ROLE_ADMIN');

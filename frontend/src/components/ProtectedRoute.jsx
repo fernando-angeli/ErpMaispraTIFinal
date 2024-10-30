@@ -2,16 +2,17 @@ import { Navigate } from "react-router-dom";
 import { useAuth } from './AuthContext';
 import { useLocation } from 'react-router-dom';
 
+
 function ProtectedRoute({isLoggedIn, children}) {
+
     const location = useLocation();
-    console.log("Current URL:", location.pathname);
     const { isAuthenticated } = useAuth();
+    console.log('Acionou Protect')
     if(!isLoggedIn && !isAuthenticated) {
         if(location.pathname == "/resetpassword"){
-            return <Navigate to={'/resetpassword'}/>
+            return children
         }
         return <Navigate to={'/login'}/>
-
     }
     return children
 }

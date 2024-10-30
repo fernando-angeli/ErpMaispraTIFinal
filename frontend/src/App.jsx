@@ -20,10 +20,9 @@ function App() {
   return (
     <>
       <Router>
-        <ProtectedRoute isLoggedIn={isAuthenticated}>
-          <Header isLoggedIn={isAuthenticated} />
-          <NavigationMenu />
-        </ProtectedRoute>
+          {isAuthenticated &&<Header isLoggedIn={isAuthenticated} />}
+          {isAuthenticated && <NavigationMenu />}
+          
         <Routes>
           {!isLogged && <Route path="/login" element={<Login />} />}
           {!isLogged && <Route path="/resetpassword" element={<ResetPassword/>} />}
