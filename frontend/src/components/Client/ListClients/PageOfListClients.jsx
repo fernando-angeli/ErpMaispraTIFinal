@@ -23,7 +23,7 @@ function PageOfListClients({clients, onEdit, onDelete, maxClientsPerList, listCl
                         <a href="#" onClick={() => onEdit(client)}>
                           <BiEdit className="editLine" size={30} />
                         </a>
-                        <a href="#" onClick={() => onDelete(client.id)}>
+                        <a href="#" onClick={() => onDelete(client)}>
                           <MdDeleteOutline className="deleteLine" size={30} />
                         </a>
                       </td>
