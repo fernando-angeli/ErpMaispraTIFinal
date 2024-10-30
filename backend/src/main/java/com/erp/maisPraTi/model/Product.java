@@ -2,6 +2,7 @@ package com.erp.maisPraTi.model;
 
 import com.erp.maisPraTi.enums.UnitOfMeasure;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,7 +23,11 @@ public class Product {
     private Long id;
 
     private String supplierCode;
+
+    @NotNull(message = "Campo obrigatório.")
     private String name;
+
+    @NotNull(message = "Campo obrigatório.")
     private String description;
 
     @Enumerated(EnumType.STRING)

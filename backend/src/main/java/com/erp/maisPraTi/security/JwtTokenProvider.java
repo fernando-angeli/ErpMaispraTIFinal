@@ -1,6 +1,6 @@
 package com.erp.maisPraTi.security;
 
-import com.erp.maisPraTi.model.CustomUserDetails;
+import com.erp.maisPraTi.security.model.CustomUserDetails;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -23,6 +23,9 @@ public class JwtTokenProvider {
 
     @Value("${jwt.expiration}")
     private Long jwtExpiration;
+
+    @Value("${jwt.expiration-recovery}")
+    private Long jwtExpirationRecovery;
 
     //Metodo para gerar uma chave secreta do tipo SecretKey a partir da string do jwtSecret
     private SecretKey getSigningKey() {
@@ -87,4 +90,20 @@ public class JwtTokenProvider {
                 .getBody();
     }
 
+    public String generateTokenWithUserId(Long userId) {
+        return Jwts.builder()
+                .setSubject(Long.toString(userId))
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + jwtExpirationRecovery))
+                .signWith(SignatureAlgorithm.HS256, jwtSecret)
+                .compact();
+    }
+
+    public Long getUserIdFromToken(String token) {
+        Claims claims = Jwts.parser()
+                .setSigningKey(jwtSecret)
+                .parseClaimsJws(token)
+                .getBody();
+        return Long.parseLong(claims.getSubject());
+    }
 }

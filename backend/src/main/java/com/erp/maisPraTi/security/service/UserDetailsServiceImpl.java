@@ -1,6 +1,6 @@
-package com.erp.maisPraTi.service;
+package com.erp.maisPraTi.security.service;
 
-import com.erp.maisPraTi.model.CustomUserDetails;
+import com.erp.maisPraTi.security.model.CustomUserDetails;
 import com.erp.maisPraTi.model.User;
 import com.erp.maisPraTi.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +36,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 user.getLastName(),
                 user.getEmail(),
                 user.getPassword(),
-                authorities);
+                authorities,
+                user.getResetPasswordToken(),
+                user.getTokenExpiration());
     }
 }

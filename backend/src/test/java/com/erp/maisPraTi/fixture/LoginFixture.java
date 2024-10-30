@@ -1,7 +1,7 @@
 package com.erp.maisPraTi.fixture;
 
-import com.erp.maisPraTi.dto.login.LoginRequest;
-import com.erp.maisPraTi.dto.login.LoginResponse;
+import com.erp.maisPraTi.dto.auth.LoginRequest;
+import com.erp.maisPraTi.dto.auth.LoginResponse;
 
 public class LoginFixture {
 
