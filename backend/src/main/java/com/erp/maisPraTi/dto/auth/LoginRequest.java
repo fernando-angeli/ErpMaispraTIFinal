@@ -1,4 +1,4 @@
-package com.erp.maisPraTi.dto.login;
+package com.erp.maisPraTi.dto.auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
