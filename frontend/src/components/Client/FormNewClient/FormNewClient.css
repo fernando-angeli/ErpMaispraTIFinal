@@ -76,22 +76,32 @@ form.hiddenformNewClient {
 .fieldAddress {
   flex-grow: 1;
   flex-shrink: 1;
-  flex-basis: 60%;
+  flex-basis: 70%;
 }
+
+.fieldCep {
+  flex-grow: 2;
+  flex-shrink: 3;
+  flex-basis: 30%;
+}
+/* line 4 */
 .fieldAddressNumber {
   flex-grow: 0;
-  flex-shrink: 2;
+  flex-shrink: 3;
   flex-basis: 20%;
 }
 
-/* line 4 e 5 */
 .fieldDistrict {
-  flex-basis: 25%;
+  flex-grow: 1;
+  flex-shrink: 1;
+  flex-basis: 30%;
 }
 
-/* select:invalid {
-    color: var(--text-40);
-} */
+.divSelectCity {
+  flex-grow: 1.5;
+  flex-shrink: 1;
+  flex-basis: 50%;
+}
 
 .selectCity {
   -webkit-appearance: none; /* Remove a aparência padrão no Chrome/Safari */
@@ -100,13 +110,6 @@ form.hiddenformNewClient {
   background: url(../../assets/icons/selectArrow.svg) no-repeat right center;
   background-position: calc(100% - 1rem);
   background-size: 2rem;
-}
-
-.divSelectCity {
-  flex-basis: 25%;
-}
-.fieldCep {
-  flex-basis: 50%;
 }
 
 .fieldNotes {

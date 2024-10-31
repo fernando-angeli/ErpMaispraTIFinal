@@ -28,9 +28,9 @@ function FormNewClient(dataClient) {
   const [newClientState, setNewClientState] = useState("");
   const [newClientBirthDate, setNewClientBirthDate] = useState("");
   const [newClientNotes, setNewClientNotes] = useState("");
-  const [newClientStatus, setNewClientStatus] = useState("active");
+  const [newClientStatus, setNewClientStatus] = useState("ativo");
 
-  const [newClientIE, setNewClientIE] = useState("134");
+  const [newClientIE, setNewClientIE] = useState("");
   
   const [UpdateClientId, setUpdateClientId] = useState();
   const [Error, setError] = useState();
@@ -137,7 +137,6 @@ function FormNewClient(dataClient) {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setIsLoading(true)
     const newClientData = {
       fullName: newClientName,
       typePfOrPj: CPForCNPJ === "cpf" ? "PF" : "PJ",
@@ -158,8 +157,18 @@ function FormNewClient(dataClient) {
       notes: newClientNotes,
       status: newClientStatus,
     };
-  
+    
+    
+    
     const cpfRegex = /^(?!.*(\d)(?:-?\1){10})\d{3}\.\d{3}\.\d{3}-\d{2}$|^(\d{11})$/;
+    if(!document.getElementById("formNewClient").reportValidity()) {
+      setError("Preencha todos os campos!")
+      return 
+    }
+      setIsLoading(true)
+      if (cpfRegex.test(newClientData.cpfCnpj)) {
+        setError(null);
+     
     if (cpfRegex.test(newClientData.cpfCnpj)) {
       setError(null);
     } else {
@@ -190,14 +199,12 @@ function FormNewClient(dataClient) {
         setIsLoading(false);
         setError(`${err.response.data.message}`);
       } else {
-        setError("Erro ao adicionar cliente! Tente novamente.");
-        setSuccess(null);
+        setError('Formato de Cpf Invalido');
+        setIsLoading(false) 
+        return
       }
-    }finally {
-      setIsLoading(false);
-    }
-
   };
+        
   const handleUpdate = async (event) => {
     setIsLoading(true)
 
@@ -486,7 +493,7 @@ function FormNewClient(dataClient) {
             label={"Cidade:"}
             name={"cidade"}
             id={"newClientCity"}
-            classnameDiv={"divSelectCity"}
+            classNameDiv={"divSelectCity"}
             classNameSelect={"selectCity"}
             value={newClientCity}
             onInvalid={(e) => isInvalid(e)}
