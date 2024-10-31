@@ -7,7 +7,7 @@ import Viacep from "../../Viacep/Viacep";
 import InputField from "../../InputField/InputField";
 import RadioGroup from "../../RadioGroup/RadioGroup";
 import TextareaField from "../../TextareaField/TextareaField";
-
+import LoadingSpin from '../../LoadingSpin/LoadingSpin'
 
 function FormNewClient(dataClient) {
   
@@ -35,6 +35,7 @@ function FormNewClient(dataClient) {
   const [UpdateClientId, setUpdateClientId] = useState();
   const [Error, setError] = useState();
   const [Success, setSuccess] = useState();
+  const [isLoading, setIsLoading] =  useState(false);
 
   const { JwtToken } = useAuth();
 
@@ -90,15 +91,23 @@ function FormNewClient(dataClient) {
   }
 
   const CheckTelephone = (phone)=> {
-    const phoneRegex = /^\(?\+?(\d{1,3})?\)?[-.\s]?(\d{2})[-.\s]?(\d{4,5})[-.\s]?(\d{4})$/;
+    const phoneRegex = /^(\(?\d{2}\)?[\s-]?(\d{4,5})[\s-]?(\d{4})|\d{4,5}-\d{4})$/;
     if (phoneRegex.test(phone)) {
       setError(null);
     } else {
       setError('Formato de Telefone Inválido!');
-      return
     }
   }
 
+  const CheckCpf = (cpf)=> {
+  const cpfRegex = /^(?!.*(\d)(?:-?\1){10})\d{3}\.\d{3}\.\d{3}-\d{2}$|^(\d{11})$/;
+  if (cpfRegex.test(cpf)) {
+    setError(null);
+  } else {
+    setError('Formato de Telefone Inválido!');
+    return
+  }
+  }
 
   const handleReset = () => {
     let form = document.getElementById("formNewClient");
@@ -128,6 +137,7 @@ function FormNewClient(dataClient) {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setIsLoading(true)
     const newClientData = {
       fullName: newClientName,
       typePfOrPj: CPForCNPJ === "cpf" ? "PF" : "PJ",
@@ -148,7 +158,16 @@ function FormNewClient(dataClient) {
       notes: newClientNotes,
       status: newClientStatus,
     };
-    
+  
+    const cpfRegex = /^(?!.*(\d)(?:-?\1){10})\d{3}\.\d{3}\.\d{3}-\d{2}$|^(\d{11})$/;
+    if (cpfRegex.test(newClientData.cpfCnpj)) {
+      setError(null);
+    } else {
+      setError('Formato de Cpf Invalido');
+      setIsLoading(false) 
+      return
+    }
+
     try {
       const response = await axios.post(
         `http://localhost:8080/api/clientes`,
@@ -162,8 +181,10 @@ function FormNewClient(dataClient) {
       );
       handleReset();
       setSuccess("Cliente adicionado com sucesso!");
+      setIsLoading(false);
       window.location.reload;
     } catch (err) {
+      setIsLoading(false);
       console.error(err);
       if (err.response && err.response.data) {
         setError(`${err.response.data.message}`);
@@ -173,11 +194,70 @@ function FormNewClient(dataClient) {
       }
     }
   };
+  const handleUpdate = async (event) => {
+    setIsLoading(true)
 
+    event.preventDefault();
+    const newClientData = {
+      fullName: newClientName,
+      typePfOrPj: CPForCNPJ === "cpf" ? "PF" : "PJ",
+      gender: "NAO INFORMADO",
+      cpfCnpj: newClientCPForCNPJ,
+      stateRegistration: newClientIE,
+      phoneNumber: newClientPhone,
+      email: newClientEmail,
+      address: newClientAddress,
+      number: newClientAddressNumber,
+      district: newClientDistrict,
+      zipCode: newClientCEP,
+      city: newClientCity,
+      state: newClientState,
+      country: "Brasil",
+      birthDate: newClientBirthDate,
+      creditLimit: 100.0,
+      notes: newClientNotes,
+      status: newClientStatus,
+    }
+    ;
+
+    const cpfRegex = /^(?!.*(\d)(?:-?\1){10})\d{3}\.\d{3}\.\d{3}-\d{2}$|^(\d{11})$/;
+    if (cpfRegex.test(newClientData.cpfCnpj)) {
+      setError(null);
+    } else {
+      setError('Formato de Cpf Invalido');
+      setIsLoading(false) 
+      return
+    }
+    try {
+      const response = await axios.put(
+        `http://localhost:8080/api/clientes/${UpdateClientId}`,
+        newClientData,
+        {
+          headers: {
+            Authorization: `Bearer ${JwtToken}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      handleReset();
+      setSuccess("Cliente Atualizado com sucesso!");
+      setIsLoading(!isLoading)
+      setError(null);
+      SetPostToUpdade(true)
+      window.location.reload()
+    } catch (err) {
+      setIsLoading(!isLoading)
+      if (err.response && err.response.data) {
+        setError(`${err.response.data.message}`);
+      } else {
+        setError("Erro ao atualizar cliente! Tente novamente.");
+        setSuccess(null);
+      }
+    }
+  };
   const resposiveClienteShow = () => {
     setResponsiveCliente(!ResponsiveCliente);
   };
-
  const SetValuestoUpdate = (values) => {
    setUpdateClientId(values.id)
    setNewClientName(values.fullName);
@@ -203,65 +283,7 @@ function FormNewClient(dataClient) {
    
   };
 
-  const handleUpdate = async (event) => {
-    event.preventDefault();
-    const newClientData = {
-      fullName: newClientName,
-      typePfOrPj: CPForCNPJ === "cpf" ? "PF" : "PJ",
-      gender: "NAO INFORMADO",
-      cpfCnpj: newClientCPForCNPJ,
-      stateRegistration: newClientIE,
-      phoneNumber: newClientPhone,
-      email: newClientEmail,
-      address: newClientAddress,
-      number: newClientAddressNumber,
-      district: newClientDistrict,
-      zipCode: newClientCEP,
-      city: newClientCity,
-      state: newClientState,
-      country: "Brasil",
-      birthDate: newClientBirthDate,
-      creditLimit: 100.0,
-      notes: newClientNotes,
-      status: newClientStatus,
-    }
-    ;
-    
   
-    const TelephoneRegex = /^\(?\+?(\d{1,3})?\)?[-.\s]?(\d{2})[-.\s]?(\d{4,5})[-.\s]?(\d{4})$/;
-    if (TelephoneRegex.test(newClientData.phoneNumber)) {
-      setError(null);
-    } else {
-      setError('Formato de Telefone Inválido!');
-      return
-    }
-
-    try {
-      const response = await axios.put(
-        `http://localhost:8080/api/clientes/${UpdateClientId}`,
-        newClientData,
-        {
-          headers: {
-            Authorization: `Bearer ${JwtToken}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      handleReset();
-      setSuccess("Cliente Atualizado com sucesso!");
-      window.location.reload()
-      setError(null);
-      SetPostToUpdade(true)
-    } catch (err) {
-      console.error(err);
-      if (err.response && err.response.data) {
-        setError(`${err.response.data.message}`);
-      } else {
-        setError("Erro ao atualizar cliente! Tente novamente.");
-        setSuccess(null);
-      }
-    }
-  };
 
   useEffect(() => {
   if(dataClient.dataClient){
@@ -285,8 +307,8 @@ function FormNewClient(dataClient) {
           ResponsiveCliente ? "visibleformNewClient" : "hiddenformNewClient"
         }
         id="formNewClient"
-        onSubmit={handleSubmit}
         onReset={handleReset}
+        onSubmit={PostToUpdate ? handleSubmit :  handleUpdate}
       >
         <div className="line1 line">
           <InputField
@@ -368,6 +390,7 @@ function FormNewClient(dataClient) {
               onChange={(e) => {
                 setNewClientCPForCNPJ(e.target.value);
                 isValid(e);
+                CheckCpf(e.target.value)
               }}
               label={""}
               classNameDiv="inputFieldNoLabel"
@@ -526,6 +549,7 @@ function FormNewClient(dataClient) {
           </div>
         </div>
       </form>
+      {isLoading && <LoadingSpin/>}
     </div>
   );
 }

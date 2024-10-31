@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import './Login.css'
 import ErpLogo from '../../../assets/icons/artboard.svg'
-
+import LoadingSpin from '../../LoadingSpin/LoadingSpin.jsx';
 import { useAuth } from '../../AuthContext.jsx';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -13,7 +13,7 @@ const Login = () => {
   const [Error2, setError2] = useState();
   const { login } = useAuth();
   const navigate = useNavigate();
-
+  const [isLoading, setIsLoading] = useState(false);
   const isInvalid = (e) => {
     e.target.className = 'isInvalid inputText';
   };
@@ -54,19 +54,21 @@ const Login = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setIsLoading(true)
     try {
       const response = await axios.post('http://localhost:8080/api/login', {
         email: LoginEmail,
         password: LoginPassword,
-      });      
+      });
+      login(response.data);
       setError(null)
       setError2('Login Efetuado!')
-      console.log(response.data)
-      login(response.data);
+      setIsLoading(false)   
       navigate('/home')
     } catch (err) {
       setError(err.response.data.message+".")
       setLoginPassword("")
+      setIsLoading(false)
     }
   };
 
@@ -112,7 +114,8 @@ const Login = () => {
         </form>
         <p className='error'>{Error && Error}</p>
         <p className='sucess'>{Error2 && Error2}</p>
-        <p className='pForgotPass'><a href='' className='forgotPass'>Esqueceu sua senha?</a></p>
+        <p className='pForgotPass'><a href='/resetpassword' className='forgotPass'>Esqueceu sua senha?</a></p>
+        {isLoading  && <LoadingSpin/>}
       </div>
     </div>
   );
