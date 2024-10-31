@@ -163,8 +163,8 @@ function FormNewClient(dataClient) {
     if (cpfRegex.test(newClientData.cpfCnpj)) {
       setError(null);
     } else {
-      setError('Formato de Cpf Invalido');
       setIsLoading(false) 
+      setError('Formato de Cpf Invalido');
       return
     }
 
@@ -187,12 +187,16 @@ function FormNewClient(dataClient) {
       setIsLoading(false);
       console.error(err);
       if (err.response && err.response.data) {
+        setIsLoading(false);
         setError(`${err.response.data.message}`);
       } else {
         setError("Erro ao adicionar cliente! Tente novamente.");
         setSuccess(null);
       }
+    }finally {
+      setIsLoading(false);
     }
+
   };
   const handleUpdate = async (event) => {
     setIsLoading(true)
@@ -224,8 +228,9 @@ function FormNewClient(dataClient) {
     if (cpfRegex.test(newClientData.cpfCnpj)) {
       setError(null);
     } else {
+      setIsLoading(false)
+      console.log('falso')
       setError('Formato de Cpf Invalido');
-      setIsLoading(false) 
       return
     }
     try {
@@ -246,13 +251,15 @@ function FormNewClient(dataClient) {
       SetPostToUpdade(true)
       window.location.reload()
     } catch (err) {
-      setIsLoading(!isLoading)
+      setIsLoading(!isLoading);
       if (err.response && err.response.data) {
         setError(`${err.response.data.message}`);
       } else {
         setError("Erro ao atualizar cliente! Tente novamente.");
         setSuccess(null);
       }
+    }finally {
+      setIsLoading(false);
     }
   };
   const resposiveClienteShow = () => {

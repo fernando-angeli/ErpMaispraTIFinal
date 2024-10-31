@@ -7,7 +7,7 @@ import Viacep from "../../Viacep/Viacep";
 import InputField from "../../InputField/InputField";
 import SelectField from "../../SelectField/SelectField";
 import RadioGroup from "../../RadioGroup/RadioGroup";
-
+import LoadingSpin from "../../LoadingSpin/LoadingSpin";
 function FormNewEmployee(dataEmployee) {
   const [ResponsiveEmployee, setResponsiveEmployee] = useState(true);
   const [PostToUpdate, SetPostToUpdade] = useState(true);
@@ -25,7 +25,7 @@ function FormNewEmployee(dataEmployee) {
   const [newEmployeeState, setNewEmployeeState] = useState("");
   const [newEmployeeBirthDate, setNewEmployeeBirthDate] = useState("");
   const [newEmployeeStatus, setNewEmployeeStatus] = useState("active");
-
+  const [isLoading, setIsLoading] =  useState(false);
   const [newEmployeeIE, setNewEmployeeIE] = useState("134");
   const [UpdateEmployeeId, setUpdateEmployeeId] = useState();
 
@@ -34,7 +34,7 @@ function FormNewEmployee(dataEmployee) {
 
   const { JwtToken } = useAuth();
 
-  const roleList = [{ id: 1, city: "teste" }];
+  const roleList = [{ id: 1, label: "ROLE_ADMIN" }, { id: 2, label: "ROLE_MANAGER" }];
 
   const statusOptions = [
     { value: "ativo", label: "Ativo" },
@@ -117,7 +117,18 @@ function FormNewEmployee(dataEmployee) {
     setError(null);
   };
 
+  const CheckCpf = (cpf)=> {
+    const cpfRegex = /^(?!.*(\d)(?:-?\1){10})\d{3}\.\d{3}\.\d{3}-\d{2}$|^(\d{11})$/;
+    if (cpfRegex.test(cpf)) {
+      setError(null);
+    } else {
+      setError('Formato de Telefone Inválido!');
+      return
+    }
+    }
+
   const handleSubmit = async (event) => {
+    setIsLoading(true);
     event.preventDefault();
     const newEmployeeData = {
       fullName: newEmployeeName,
@@ -141,7 +152,7 @@ function FormNewEmployee(dataEmployee) {
 
     try {
       const response = await axios.post(
-        `http://localhost:8080/employees`,
+        `http://localhost:8080/api/usuarios`,
         newEmployeeData,
         {
           headers: {
@@ -152,8 +163,10 @@ function FormNewEmployee(dataEmployee) {
       );
       handleReset();
       setSuccess("Usuário adicionado com sucesso!");
+      setIsLoading(false);
       setError(null);
     } catch (err) {
+      setIsLoading(false);
       console.error(err);
       if (err.response && err.response.data) {
         setError(`${err.response.data.message}`);
@@ -188,6 +201,7 @@ function FormNewEmployee(dataEmployee) {
   };
 
   const handleUpdate = async (event) => {
+    setIsLoading(true);
     event.preventDefault();
     const newEmployeeData = {
       fullName: newEmployeeName,
@@ -229,10 +243,12 @@ function FormNewEmployee(dataEmployee) {
       );
       handleReset();
       setSuccess("Usuario Atualizado com sucesso!");
+      setIsLoading(false);
       window.location.reload();
       setError(null);
       SetPostToUpdade(true);
     } catch (err) {
+      setIsLoading(false);
       console.error(err);
       if (err.response && err.response.data) {
         setError(`${err.response.data.message}`);
@@ -251,7 +267,8 @@ function FormNewEmployee(dataEmployee) {
   }, [dataEmployee]);
 
   return (
-    <div className="containerForm">
+    
+    <div className="containerForm">{isLoading && <LoadingSpin/>}
       <h2 className="tabTitle">
         Adicionar Usuario
         <a className="hide-desktop" onClick={resposiveEmployeeShow}>
@@ -266,7 +283,7 @@ function FormNewEmployee(dataEmployee) {
             : "hiddenformNewEmployee"
         }
         id="formNewEmployee"
-        onSubmit={handleSubmit}
+        onSubmit={PostToUpdate ? handleSubmit :  handleUpdate}
         onReset={handleReset}
       >
         <div className="line1 line">
@@ -340,12 +357,29 @@ function FormNewEmployee(dataEmployee) {
             onChange={(e) => {
               setNewEmployeeCPF(e.target.value);
               isValid(e);
+              CheckCpf(e.target.value);
             }}
             onInvalid={(e) => isInvalid(e)}
           />
         </div>
 
         <div className="line3 line">
+
+        <InputField
+            label={"CEP:"}
+            name={"CEP"}
+            placeholder={"00000-000"}
+            idInput={"newEmployeeCEP"}
+            classNameDiv={"fieldCep"}
+            type={"text"}
+            value={newEmployeeCEP}
+            onChange={(e) => {
+              setNewEmployeeCEP(e.target.value);
+              isValid(e);
+            }}
+            onInvalid={(e) => isInvalid(e)}
+          />
+
           <InputField
             label={"Logradouro:"}
             name={"logradouro"}
@@ -405,25 +439,7 @@ function FormNewEmployee(dataEmployee) {
               selectIsValid(e);
             }}
           />
-
-          <InputField
-            label={"CEP:"}
-            name={"CEP"}
-            placeholder={"00000-000"}
-            idInput={"newEmployeeCEP"}
-            classNameDiv={"fieldCep"}
-            type={"text"}
-            value={newEmployeeCEP}
-            onChange={(e) => {
-              setNewEmployeeCEP(e.target.value);
-              isValid(e);
-            }}
-            onInvalid={(e) => isInvalid(e)}
-          />
-        </div>
-
-        <div className="line5 line">
-          <div className="roleAndStatus">
+<div className="roleAndStatus">
             <SelectField
               label={"Cargo:"}
               name={"cargo"}
@@ -459,6 +475,10 @@ function FormNewEmployee(dataEmployee) {
               </label>
             </div>
           </div>
+        </div>
+
+        <div className="line5 line">
+          
           <div className="errorsOrSuccess">
             <p style={{ color: "red" }}>{Error && Error}</p>
             <p style={{ color: "green" }}>{Success && Success}</p>
@@ -467,7 +487,7 @@ function FormNewEmployee(dataEmployee) {
             <button
               type="submit"
               className="primaryNormal"
-              onClick={handleSubmit}
+              onClick={PostToUpdate ? handleSubmit :  handleUpdate}
             >
               Salvar
             </button>
