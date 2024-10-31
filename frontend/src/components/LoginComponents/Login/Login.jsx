@@ -14,6 +14,7 @@ const Login = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
+  
   const isInvalid = (e) => {
     e.target.className = 'isInvalid inputText';
   };
