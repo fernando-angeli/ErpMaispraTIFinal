@@ -3,7 +3,6 @@ import './ResetPassbyToken.css';
 import ErpLogo from '../../assets/icons/artboard.svg';
 import { RiLockPasswordLine } from "react-icons/ri";
 import { useNavigate } from 'react-router-dom';
-import { BsArrowReturnRight } from "react-icons/bs";
 import LoadingSpin from '../LoadingSpin/LoadingSpin';
 import axios from 'axios';
 
@@ -77,11 +76,11 @@ const ResetPassbyToken = ({ token }) => {
       return
     }
     try {
-      // const response = await axios.get(`http://localhost:8080/api/usuarios`, {
-      // });
+       const response = await axios.get(`http://localhost:8080/api/auth/validation-users/${CpfConfirm}`, {
+       });
      const users = response.data.content
       console.log(users)
-      setCpfPass(false)
+      setCpfPass(response.data.content)
     } catch (err) {
       setError(err.response.data.message);
     } finally {

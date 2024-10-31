@@ -1,16 +1,13 @@
 package com.erp.maisPraTi.controller;
 
-import com.erp.maisPraTi.dto.auth.ForgotPasswordRequest;
-import com.erp.maisPraTi.dto.auth.LoginRequest;
-import com.erp.maisPraTi.dto.auth.LoginResponse;
-import com.erp.maisPraTi.dto.auth.ResetPasswordRequest;
+import com.erp.maisPraTi.dto.auth.*;
 import com.erp.maisPraTi.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/auth")
 public class AuthController {
 
     @Autowired
@@ -28,9 +25,15 @@ public class AuthController {
         return ResponseEntity.ok("Link de recuperação enviado para o e-mail.");
     }
 
+    @PostMapping("/validation-user")
+    public ResponseEntity<Boolean> validationUser(@RequestParam String token, @RequestBody ValidationUserRequest request){
+        boolean response = service.validateUser(token, request);
+        return ResponseEntity.ok(response);
+    }
+
     @PostMapping("/reset-password")
     public ResponseEntity<String> resetPassword(@RequestParam String token, @RequestBody ResetPasswordRequest request){
-        service.resetPassword(token, request.getNewPassword());
+        service.resetPassword(token, request);
         return ResponseEntity.ok("Senha redefinida com sucesso.");
     }
 

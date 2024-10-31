@@ -8,6 +8,7 @@ import "./ListEmployees.css";
 import FormNewEmployee from "../FormNewEmployee/FormNewEmployee.jsx";
 import NavigationListEmployees from "./navigationListEmployees.jsx";
 import PageOfListEmployees from "./PageOfListEmployees.jsx";
+import LoadingSpin from "../../LoadingSpin/LoadingSpin.jsx";
 
 const ListEmployees = () => {
   const { JwtToken } = useAuth();
@@ -17,9 +18,9 @@ const ListEmployees = () => {
   const [showInativos, setShowInativos] = useState(true);
   const [searchEmployees, setsearchEmployees] = useState("");
   const [showModal, setShowModal] = useState(false);
-  const [DeleteOption, setDeleteOption] = useState();
-  const [EmployeeNameShow, setEmployeeNameShow] = useState();
 
+  const [EmployeeNameShow, setEmployeeNameShow] = useState();
+  const [isLoading, setIsLoading] =  useState(false);
   const [listEmployeesPageSelected, setListEmployeesPage] = useState(1);
 
   const handleShowEmployees = async () => {
@@ -41,6 +42,7 @@ const ListEmployees = () => {
   }, []);
 
   const deleteEmployee = async (employee) => {
+    console.log(employee)
     setEmployeeNameShow(employee.fullName);
     const confirmDelete = await new Promise((resolve) => {
       setShowModal(true);
@@ -53,14 +55,17 @@ const ListEmployees = () => {
     if (!confirmDelete) {
       return;
     }
+    setIsLoading(true)
     try {
-      await axios.delete(`http://localhost:8080/api/employees/${employee.id}`, {
+      await axios.delete(`http://localhost:8080/api/usuarios/${employee.id}`, {
         headers: {
           Authorization: `Bearer ${JwtToken}`,
         },
       });
+      setIsLoading(false)
       handleShowEmployees();
     } catch (err) {
+      setIsLoading(false)
       console.log(err);
       alert("Erro ao deletar");
     }
@@ -88,7 +93,7 @@ const ListEmployees = () => {
 
   return (
     <>
-      <FormNewEmployee dataEmployee={employeeUpdate} />
+      <FormNewEmployee dataEmployee={employeeUpdate} />{isLoading && <LoadingSpin/>}
       <div className="contentListEmployees">
         <div className="ListEmployees">
           <div className="headerListEmployees">

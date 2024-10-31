@@ -1,6 +1,6 @@
-INSERT INTO tb_users (first_name, last_name, email, password) VALUES ('Luiz Fernando', 'Angeli', 'fernando@hotmail.com', '$2a$10$ocxs8qS.b/D3VPzdwyYi1eC5YoLXC7E0LgZOEsTAA6I70Y0p0JcdW'); -- senha: 12345
-INSERT INTO tb_users (first_name, last_name, email, password) VALUES ('Marcelo', 'Nicolai', 'marcelo@hotmail.com', '$2a$10$ocxs8qS.b/D3VPzdwyYi1eC5YoLXC7E0LgZOEsTAA6I70Y0p0JcdW'); -- senha: 12345
-INSERT INTO tb_users (first_name, last_name, email, password) VALUES ('Emerson ', 'Colorado, chupa gremio', 'euemerson1@gmail.com', '$2a$10$ocxs8qS.b/D3VPzdwyYi1eC5YoLXC7E0LgZOEsTAA6I70Y0p0JcdW'); -- senha: 12345
+INSERT INTO tb_users (full_name, email, birth_date, phone_number, cpf, address, number, district, city, state, zip_code, password) VALUES ('Luiz Fernando Angeli', 'fernando_angeli@hotmail.com', '1998-01-01', '(51)99999-99999', '314.559.980-15', 'Rua Teste', '200', 'Teste', 'Porto Alegre', 'RS', '91700-000', '$2a$10$ocxs8qS.b/D3VPzdwyYi1eC5YoLXC7E0LgZOEsTAA6I70Y0p0JcdW'); -- senha: 12345
+INSERT INTO tb_users (full_name, email, birth_date, phone_number, cpf, address, number, district, city, state, zip_code, password) VALUES ('Emerson', 'euemerson1@gmail.com', '1998-01-01', '(51)99999-99999', '314.559.980-16', 'Rua Teste', '200', 'Teste', 'Porto Alegre', 'RS', '91700-000', '$2a$10$ocxs8qS.b/D3VPzdwyYi1eC5YoLXC7E0LgZOEsTAA6I70Y0p0JcdW'); -- senha: 12345
+INSERT INTO tb_users (full_name, email, birth_date, phone_number, cpf, address, number, district, city, state, zip_code, password) VALUES ('Marcelo', 'marcelo@hotmail.com', '1998-01-01', '(51)99999-99999', '314.559.980-17', 'Rua Teste', '200', 'Teste', 'Porto Alegre', 'RS', '91700-000', '$2a$10$ocxs8qS.b/D3VPzdwyYi1eC5YoLXC7E0LgZOEsTAA6I70Y0p0JcdW'); -- senha: 12345
 
 INSERT INTO tb_roles (authority) VALUES ('ROLE_OPERATOR');
 INSERT INTO tb_roles (authority) VALUES ('ROLE_ADMIN');

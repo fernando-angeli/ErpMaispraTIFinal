@@ -18,14 +18,6 @@ const Reset = () => {
     e.target.className = 'isInvalid inputText';
   };
 
-  const isValid = (e) => {
-    if (e.target.value && e.target.className !== 'inputText') {
-      e.target.className = 'inputText';
-    }
-
-    
-  };
-
   const handleCheckEmail = (email) => {
     const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
     if (emailRegex.test(email)) {
@@ -73,7 +65,6 @@ const Reset = () => {
               onInvalid={(e) => isInvalid(e)}
               onChange={(e) => {
                 setResetEmail(e.target.value)
-                isValid(e);
                 handleCheckEmail(e.target.value)
               }}
             /></div>

@@ -161,7 +161,6 @@ function FormNewClient(dataClient) {
     
     
     const cpfRegex = /^(?!.*(\d)(?:-?\1){10})\d{3}\.\d{3}\.\d{3}-\d{2}$|^(\d{11})$/;
-    
     if(!document.getElementById("formNewClient").reportValidity()) {
       setError("Preencha todos os campos!")
       return 
@@ -169,39 +168,43 @@ function FormNewClient(dataClient) {
       setIsLoading(true)
       if (cpfRegex.test(newClientData.cpfCnpj)) {
         setError(null);
+     
+    if (cpfRegex.test(newClientData.cpfCnpj)) {
+      setError(null);
+    } else {
+      setIsLoading(false) 
+      setError('Formato de Cpf Invalido');
+      return
+    }
+
+    try {
+      const response = await axios.post(
+        `http://localhost:8080/api/clientes`,
+        newClientData,
+        {
+          headers: {
+            Authorization: `Bearer ${JwtToken}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      handleReset();
+      setSuccess("Cliente adicionado com sucesso!");
+      setIsLoading(false);
+      window.location.reload;
+    } catch (err) {
+      setIsLoading(false);
+      console.error(err);
+      if (err.response && err.response.data) {
+        setIsLoading(false);
+        setError(`${err.response.data.message}`);
       } else {
         setError('Formato de Cpf Invalido');
         setIsLoading(false) 
         return
       }
-  
-      try {
-        const response = await axios.post(
-          `http://localhost:8080/api/clientes`,
-          newClientData,
-          {
-            headers: {
-              Authorization: `Bearer ${JwtToken}`,
-              "Content-Type": "application/json",
-            },
-          }
-        );
-        handleReset();
-        setSuccess("Cliente adicionado com sucesso!");
-        setIsLoading(false);
-        window.location.reload;
-      } catch (err) {
-        setIsLoading(false);
-        console.error(err);
-        if (err.response && err.response.data) {
-          setError(`${err.response.data.message}`);
-        } else {
-          setError("Erro ao adicionar cliente! Tente novamente.");
-          setSuccess(null);
-        }
-      }
-    
   };
+        
   const handleUpdate = async (event) => {
     setIsLoading(true)
 
@@ -232,8 +235,9 @@ function FormNewClient(dataClient) {
     if (cpfRegex.test(newClientData.cpfCnpj)) {
       setError(null);
     } else {
+      setIsLoading(false)
+      console.log('falso')
       setError('Formato de Cpf Invalido');
-      setIsLoading(false) 
       return
     }
     try {
@@ -254,13 +258,15 @@ function FormNewClient(dataClient) {
       SetPostToUpdade(true)
       window.location.reload()
     } catch (err) {
-      setIsLoading(!isLoading)
+      setIsLoading(!isLoading);
       if (err.response && err.response.data) {
         setError(`${err.response.data.message}`);
       } else {
         setError("Erro ao atualizar cliente! Tente novamente.");
         setSuccess(null);
       }
+    }finally {
+      setIsLoading(false);
     }
   };
   const resposiveClienteShow = () => {

@@ -3,6 +3,7 @@ package com.erp.maisPraTi.security.service;
 import com.erp.maisPraTi.security.model.CustomUserDetails;
 import com.erp.maisPraTi.model.User;
 import com.erp.maisPraTi.repository.UserRepository;
+import com.erp.maisPraTi.service.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -22,7 +23,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        User user = userRepository.findByEmail(email);
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado."));
 
         if(user == null)
             throw new UsernameNotFoundException("Usuário não encontrado: " + email);
@@ -32,8 +34,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 .collect(Collectors.toList());
 
         return new CustomUserDetails(
-                user.getFirstName(),
-                user.getLastName(),
+                user.getId(),
+                user.getFullName(),
                 user.getEmail(),
                 user.getPassword(),
                 authorities,

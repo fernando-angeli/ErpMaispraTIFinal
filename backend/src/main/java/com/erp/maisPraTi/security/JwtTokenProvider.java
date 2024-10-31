@@ -36,10 +36,8 @@ public class JwtTokenProvider {
         CustomUserDetails userPrincipal = (CustomUserDetails) authentication.getPrincipal();
 
         Map<String, Object> claims = new HashMap<>();
-        claims.put("firstName", userPrincipal.getFirstName());
-        claims.put("lastName", userPrincipal.getLastName());
+        claims.put("fullName", userPrincipal.getFullName());
         claims.put("roles", getRoles(userPrincipal));
-
         return createToken(claims, userPrincipal.getUsername());
     }
 
@@ -90,20 +88,22 @@ public class JwtTokenProvider {
                 .getBody();
     }
 
-    public String generateTokenWithUserId(Long userId) {
-        return Jwts.builder()
-                .setSubject(Long.toString(userId))
+    public String generateTokenWithUserEmail(String email) {
+        return Jwts
+                .builder()
+                .setSubject(email)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + jwtExpirationRecovery))
-                .signWith(SignatureAlgorithm.HS256, jwtSecret)
+                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
 
-    public Long getUserIdFromToken(String token) {
+    public String getUserEmailFromToken(String token) {
         Claims claims = Jwts.parser()
-                .setSigningKey(jwtSecret)
+                .setSigningKey(getSigningKey())
                 .parseClaimsJws(token)
                 .getBody();
-        return Long.parseLong(claims.getSubject());
+        return claims.getSubject();
     }
+
 }
