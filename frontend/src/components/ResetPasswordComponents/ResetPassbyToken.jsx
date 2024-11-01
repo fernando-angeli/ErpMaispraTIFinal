@@ -2,16 +2,19 @@ import { useState } from 'react';
 import './ResetPassbyToken.css';
 import ErpLogo from '../../assets/icons/artboard.svg';
 import { RiLockPasswordLine } from "react-icons/ri";
+import { AiOutlineUser } from "react-icons/ai";
 import { useNavigate } from 'react-router-dom';
 import LoadingSpin from '../LoadingSpin/LoadingSpin';
 import axios from 'axios';
 
 const ResetPassbyToken = ({ token }) => { 
-
+console.log(token);
   const [ResetPassword, setResetPassword] = useState("");
   const [ConfirmResetPassword, setConfirmResetPassword] = useState("");
   const [CpfConfirm, setCpfConfirm] = useState("");
-  const [CpfPass, setCpfPass] = useState(!false);
+  const [CpfPass, setCpfPass] = useState(false);
+  const [ResetEmail, setResetEmail] = useState('');
+
   const [Error, setError] = useState("");
   const [SuccessMessage, setSuccessMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -33,10 +36,9 @@ const ResetPassbyToken = ({ token }) => {
       return false
     } else {
       setError('');
+      return true
     }
   };
-
-  console.log(token)
 
 
   const handleSubmit = async (event) => {
@@ -50,7 +52,7 @@ const ResetPassbyToken = ({ token }) => {
     }
 
     try {
-      const response = await axios.post(`http://localhost:8080/api/reset-password?token=${token}`, { 
+      const response = await axios.post(`http://localhost:8080/api/reset-password?token=${token}`, {
         newPassword: ResetPassword,
       });
       setSuccessMessage(response.data.message);
@@ -71,22 +73,29 @@ const ResetPassbyToken = ({ token }) => {
   const handleCpfConfirm = async (event) => {
     event.preventDefault();
     setIsLoading(true);
-    if(!handleCheckCPF(CpfConfirm)){
-      setError('CPF Invalido');
-      return
+  
+    if (!handleCheckCPF(CpfConfirm)) {
+      setError('CPF Inválido');
+      setIsLoading(false); 
+      return;
     }
+  
     try {
-       const response = await axios.get(`http://localhost:8080/api/auth/validation-users/${CpfConfirm}`, {
-       });
-     const users = response.data.content
-      console.log(users)
-      setCpfPass(response.data.content)
+      const response = await axios.post(`http://localhost:8080/auth/validation-user?token=${token}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        cpf: CpfConfirm,
+      });
+      console.log(response);
+      setCpfPass(response.data.content); 
     } catch (err) {
-      setError(err.response.data.message);
+      setError(err.response?.data?.message || 'Erro desconhecido');
     } finally {
       setIsLoading(false);
     }
   };
+  
 
   return (
     <div className='contentReset'>
@@ -103,7 +112,7 @@ const ResetPassbyToken = ({ token }) => {
             <div className='inputTextPassword'>
               <RiLockPasswordLine className="icon" />
               <input 
-                type='password' // Alterado para type='password'
+                type='password' 
                 placeholder='Digite a nova senha' 
                 className='inputText'  
                 name='password' 
@@ -149,7 +158,7 @@ const ResetPassbyToken = ({ token }) => {
         {isLoading && <LoadingSpin />}
       </div> }
       
-     {!CpfPass && <div className='ResetBox' id="CPF CHECK">
+     {!CpfPass && <div className='ResetBox' id="CPF CHECK - compomente de checar cpf email"> 
         <h4>Recuperar Senha</h4>
         <form className='formReset' onSubmit={handleCpfConfirm}>
 
@@ -170,7 +179,7 @@ const ResetPassbyToken = ({ token }) => {
           </label>
 
           <div className='divButtons'>
-            <button type='submit' className='primaryNormal loginButton'>
+            <button type='submit' className='primaryNormal loginButton' onClick={()=>handleCpfConfirm}>
               Continuar
             </button>
           </div>

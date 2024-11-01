@@ -7,7 +7,6 @@ import { useAuth } from "../AuthContext";
 function AccountContainer({ isLoggedIn }) {
   const { JwtToken } = useAuth();
   const decoded = jwtDecode(JwtToken);
-
   if (isLoggedIn) {
     return (
       <>
@@ -16,7 +15,7 @@ function AccountContainer({ isLoggedIn }) {
           <label>
             Olá,
             <br />
-            {decoded.firstName}
+            {decoded.fullName}
           </label>
         </div>
       </>

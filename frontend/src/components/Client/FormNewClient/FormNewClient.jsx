@@ -157,8 +157,7 @@ function FormNewClient(dataClient) {
       notes: newClientNotes,
       status: newClientStatus,
     };
-    
-    
+  
     
     const cpfRegex = /^(?!.*(\d)(?:-?\1){10})\d{3}\.\d{3}\.\d{3}-\d{2}$|^(\d{11})$/;
     if(!document.getElementById("formNewClient").reportValidity()) {
@@ -203,8 +202,9 @@ function FormNewClient(dataClient) {
         setIsLoading(false) 
         return
       }
-  };
-        
+    }
+      }
+  }
   const handleUpdate = async (event) => {
     setIsLoading(true)
 
@@ -268,6 +268,7 @@ function FormNewClient(dataClient) {
     }finally {
       setIsLoading(false);
     }
+
   };
   const resposiveClienteShow = () => {
     setResponsiveCliente(!ResponsiveCliente);
@@ -293,11 +294,10 @@ function FormNewClient(dataClient) {
    setNewClientStatus(values.status)
    document.getElementById(values.typePfOrPj == "PF" ? "cpf" : "cnpj").checked = true;
    document.getElementById(values.status).checked = true;
-
    
   };
 
-  
+
 
   useEffect(() => {
   if(dataClient.dataClient){
@@ -568,4 +568,4 @@ function FormNewClient(dataClient) {
   );
 }
 
-export default FormNewClient;
+export default FormNewClient

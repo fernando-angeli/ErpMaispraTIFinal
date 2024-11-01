@@ -31,7 +31,7 @@ const Reset = () => {
     event.preventDefault();
     setIsLoading(true)
     try {
-      const response = await axios.post('http://localhost:8080/api/forgot-password', {
+      const response = await axios.post('http://localhost:8080/auth/forgot-password', {
         email: ResetEmail,
       });      
       setError(null)

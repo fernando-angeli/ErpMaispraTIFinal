@@ -57,7 +57,7 @@ const Login = () => {
     event.preventDefault();
     setIsLoading(true)
     try {
-      const response = await axios.post('http://localhost:8080/api/login', {
+      const response = await axios.post('http://localhost:8080/auth/login', {
         email: LoginEmail,
         password: LoginPassword,
       });
