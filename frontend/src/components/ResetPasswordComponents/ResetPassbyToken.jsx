@@ -8,7 +8,7 @@ import LoadingSpin from '../LoadingSpin/LoadingSpin';
 import axios from 'axios';
 
 const ResetPassbyToken = ({ token }) => { 
-console.log(token);
+
   const [ResetPassword, setResetPassword] = useState("");
   const [ConfirmResetPassword, setConfirmResetPassword] = useState("");
   const [CpfConfirm, setCpfConfirm] = useState("");
@@ -40,7 +40,6 @@ console.log(token);
     }
   };
 
-
   const handleSubmit = async (event) => {
     event.preventDefault();
     setIsLoading(true);
@@ -52,9 +51,13 @@ console.log(token);
     }
 
     try {
-      const response = await axios.post(`http://localhost:8080/api/reset-password?token=${token}`, {
-        newPassword: ResetPassword,
-      });
+      const response = await axios.post(`http://localhost:8080/auth/reset-password?token=${token}`,
+        { newPassword: ResetPassword },
+        { headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        }}
+      );
       setSuccessMessage(response.data.message);
       
       setError('');
@@ -81,14 +84,15 @@ console.log(token);
     }
   
     try {
-      const response = await axios.post(`http://localhost:8080/auth/validation-user?token=${token}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        cpf: CpfConfirm,
-      });
-      console.log(response);
-      setCpfPass(response.data.content); 
+      let response = await axios.post(
+        `http://localhost:8080/auth/validation-user?token=${token}`, 
+      { cpf: CpfConfirm },
+      { headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      }}
+    );
+      setCpfPass(response.data); 
     } catch (err) {
       setError(err.response?.data?.message || 'Erro desconhecido');
     } finally {
@@ -96,13 +100,11 @@ console.log(token);
     }
   };
   
-
   return (
     <div className='contentReset'>
       <div className='ErPlogo'>
         <img src={ErpLogo} alt='LogoErp' />
       </div>
-
       {CpfPass && <div className='ResetBox'>
         <h4>Recuperar Senha</h4>
         <form className='formReset' onSubmit={handleSubmit}>
@@ -192,7 +194,6 @@ console.log(token);
       
     </div>
 
-    
   );
 };
 
