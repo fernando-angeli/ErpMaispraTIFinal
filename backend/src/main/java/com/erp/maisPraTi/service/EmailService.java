@@ -12,7 +12,7 @@ public class EmailService {
     private JavaMailSender mailSender;
 
     public void sendPasswordResetEmail(String to, String token){
-        String link = "http://localhost:8080/auth/validation-user?token=" + token;
+        String link = "http://localhost:5173/resetpassword?token=" + token;
         String subject = "Recuperação de Senha";
         String body = "Clique no link abaixo para redefinir a sua senha:\n" + link;
 
