@@ -27,11 +27,6 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @EnableWebSecurity
 public class SecurityConfig{
 
-//    @Value("${jwt.issuerUri}")
-//    private String jwtIssuerUri;
-//    @Value("${jwt.secret}")
-//    private String jwtSecret;
-
     @Autowired
     private Environment environment;
 
