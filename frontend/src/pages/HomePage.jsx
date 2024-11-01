@@ -18,7 +18,7 @@ function getSaudacao() {
   }
     return (
         <>
-            <h1 style={{padding:"1em"}}>{getSaudacao()}, {decoded.firstName}</h1>
+            <h1 style={{padding:"1em"}}>{getSaudacao()}, {decoded.fullName}</h1>
         </>
     )
 }

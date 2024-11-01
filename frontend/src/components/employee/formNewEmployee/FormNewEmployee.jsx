@@ -7,9 +7,11 @@ import Viacep from "../../Viacep/Viacep";
 import InputField from "../../InputField/InputField";
 import SelectField from "../../SelectField/SelectField";
 import RadioGroup from "../../RadioGroup/RadioGroup";
-
-function FormNewEmployee() {
+import LoadingSpin from "../../LoadingSpin/LoadingSpin";
+function FormNewEmployee(dataEmployee) {
   const [ResponsiveEmployee, setResponsiveEmployee] = useState(true);
+  const [PostToUpdate, SetPostToUpdade] = useState(true);
+
   const [newEmployeeName, setNewEmployeeName] = useState("");
   const [newEmployeeEmail, setNewEmployeeEmail] = useState("");
   const [newEmployeeAddress, setNewEmployeeAddress] = useState("");
@@ -22,15 +24,17 @@ function FormNewEmployee() {
   const [newEmployeeRole, setNewEmployeeRole] = useState("");
   const [newEmployeeState, setNewEmployeeState] = useState("");
   const [newEmployeeBirthDate, setNewEmployeeBirthDate] = useState("");
-  const [newEmployeeStatus, setNewEmployeeStatus] = useState("");
+  const [newEmployeeStatus, setNewEmployeeStatus] = useState("active");
+  const [isLoading, setIsLoading] =  useState(false);
+  const [newEmployeeIE, setNewEmployeeIE] = useState("134");
+  const [UpdateEmployeeId, setUpdateEmployeeId] = useState();
 
   const [Error, setError] = useState();
   const [Success, setSuccess] = useState();
 
   const { JwtToken } = useAuth();
 
-  const cityList = [{ id: 1, city: newEmployeeCity }];
-  const roleList = [{ id: 1, city: "teste" }];
+  const roleList = [{ id: 1, label: "ROLE_ADMIN" }, { id: 2, label: "ROLE_MANAGER" }];
 
   const statusOptions = [
     { value: "ativo", label: "Ativo" },
@@ -57,23 +61,35 @@ function FormNewEmployee() {
   }, [newEmployeeCEP]);
 
   const isInvalid = (e) => {
-    e.target.className = "isInvalid inputText";
+    e.target.className = "isInvalid";
   };
 
   const isValid = (e) => {
-    if (e.target.value && e.target.className !== "inputText") {
-      e.target.className = "inputText";
+    if (e.target.value && e.target.className.indexOf("isInvalid") != -1) {
+      console.log(e.target.className);
+      e.target.classList.remove("isInvalid");
     }
   };
 
-  const selectIsValid = (e) => {
-    if (e.target.value && e.target.className !== "selectCity") {
-      e.target.className = "selectCity";
+  const CheckEmail = (email) => {
+    const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+    if (emailRegex.test(email)) {
+      setError(null);
+    } else {
+      setError("Formato de Email Inválido!");
+      return;
     }
   };
 
-  const selectIsInvalid = (e) => {
-    e.target.className = "isInvalid selectCity";
+  const CheckTelephone = (phone) => {
+    const phoneRegex =
+      /^\(?\+?(\d{1,3})?\)?[-.\s]?(\d{2})[-.\s]?(\d{4,5})[-.\s]?(\d{4})$/;
+    if (phoneRegex.test(phone)) {
+      setError(null);
+    } else {
+      setError("Formato de Telefone Inválido!");
+      return;
+    }
   };
 
   const handleReset = () => {
@@ -94,14 +110,31 @@ function FormNewEmployee() {
     setNewEmployeeCity("");
     setNewEmployeeCEP("");
     setNewEmployeeState("");
+    setNewEmployeeBirthDate("");
+    setNewEmployeeRole("");
+    setNewEmployeeIE("");
+    SetPostToUpdade(true);
+    setError(null);
   };
+
+  const CheckCpf = (cpf)=> {
+    const cpfRegex = /^(?!.*(\d)(?:-?\1){10})\d{3}\.\d{3}\.\d{3}-\d{2}$|^(\d{11})$/;
+    if (cpfRegex.test(cpf)) {
+      setError(null);
+    } else {
+      setError('Formato de Telefone Inválido!');
+      return
+    }
+    }
+
   const handleSubmit = async (event) => {
+    setIsLoading(true);
     event.preventDefault();
     const newEmployeeData = {
       fullName: newEmployeeName,
       gender: "NAO INFORMADO",
       cpf: newEmployeeCPF,
-      rgIe: "RG12345",
+      rgIe: newEmployeeIE,
       phoneNumber: newEmployeePhone,
       email: newEmployeeEmail,
       address: newEmployeeAddress,
@@ -119,7 +152,7 @@ function FormNewEmployee() {
 
     try {
       const response = await axios.post(
-        `http://localhost:8080/employees`,
+        `http://localhost:8080/api/usuarios`,
         newEmployeeData,
         {
           headers: {
@@ -130,8 +163,10 @@ function FormNewEmployee() {
       );
       handleReset();
       setSuccess("Usuário adicionado com sucesso!");
+      setIsLoading(false);
       setError(null);
     } catch (err) {
+      setIsLoading(false);
       console.error(err);
       if (err.response && err.response.data) {
         setError(`${err.response.data.message}`);
@@ -146,8 +181,94 @@ function FormNewEmployee() {
     setResponsiveEmployee(!ResponsiveEmployee);
   };
 
+  const SetValuestoUpdate = (values) => {
+    setUpdateEmployeeId(values.id);
+    setNewEmployeeName(values.fullName);
+    setNewEmployeeEmail(values.email);
+    setNewEmployeeIE(values.rgIe);
+    setNewEmployeeAddress(values.address);
+    setNewEmployeeDistrict(values.district);
+    setNewEmployeePhone(values.phoneNumber);
+    setNewEmployeeCPF(values.cpfCnpj);
+    setNewEmployeeAddressNumber(values.number);
+    setNewEmployeeCEP(values.zipCode.replace(/\D/g, ""));
+    setNewEmployeeCity(values.city);
+    setNewEmployeeBirthDate(values.birthDate);
+    setNewEmployeeState(values.state);
+
+    setNewEmployeeStatus(values.status);
+    document.getElementById(values.status).checked = true;
+  };
+
+  const handleUpdate = async (event) => {
+    setIsLoading(true);
+    event.preventDefault();
+    const newEmployeeData = {
+      fullName: newEmployeeName,
+      gender: "NAO INFORMADO",
+      cpf: newEmployeeCPF,
+      stateRegistration: newEmployeeIE,
+      phoneNumber: newEmployeePhone,
+      email: newEmployeeEmail,
+      address: newEmployeeAddress,
+      number: newEmployeeAddressNumber,
+      district: newEmployeeDistrict,
+      zipCode: newEmployeeCEP,
+      city: newEmployeeCity,
+      state: newEmployeeState,
+      country: "Brasil",
+      birthDate: newEmployeeBirthDate,
+      creditLimit: 100.0,
+      status: newEmployeeStatus,
+    };
+    const TelephoneRegex =
+      /^\(?\+?(\d{1,3})?\)?[-.\s]?(\d{2})[-.\s]?(\d{4,5})[-.\s]?(\d{4})$/;
+    if (TelephoneRegex.test(newEmployeeData.phoneNumber)) {
+      setError(null);
+    } else {
+      setError("Formato de Telefone Inválido!");
+      return;
+    }
+
+    try {
+      const response = await axios.put(
+        `http://localhost:8080/api/usuarios/${UpdateEmployeeId}`,
+        newEmployeeData,
+        {
+          headers: {
+            Authorization: `Bearer ${JwtToken}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      handleReset();
+      setSuccess("Usuario Atualizado com sucesso!");
+      setIsLoading(false);
+      window.location.reload();
+      setError(null);
+      SetPostToUpdade(true);
+    } catch (err) {
+      setIsLoading(false);
+      console.error(err);
+      if (err.response && err.response.data) {
+        setError(`${err.response.data.message}`);
+      } else {
+        setError("Erro ao atualizar usuário! Tente novamente.");
+        setSuccess(null);
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (dataEmployee.dataEmployee) {
+      SetValuestoUpdate(dataEmployee.dataEmployee);
+      SetPostToUpdade(false);
+    }
+  }, [dataEmployee]);
+
   return (
-    <div className="containerForm">
+    
+    <div className="containerForm">{isLoading && <LoadingSpin/>}
       <h2 className="tabTitle">
         Adicionar Usuario
         <a className="hide-desktop" onClick={resposiveEmployeeShow}>
@@ -162,7 +283,7 @@ function FormNewEmployee() {
             : "hiddenformNewEmployee"
         }
         id="formNewEmployee"
-        onSubmit={handleSubmit}
+        onSubmit={PostToUpdate ? handleSubmit :  handleUpdate}
         onReset={handleReset}
       >
         <div className="line1 line">
@@ -190,6 +311,7 @@ function FormNewEmployee() {
             onChange={(e) => {
               setNewEmployeeEmail(e.target.value);
               isValid(e);
+              CheckEmail(newClientEmail);
             }}
             onInvalid={(e) => isInvalid(e)}
           />
@@ -220,6 +342,7 @@ function FormNewEmployee() {
             onChange={(e) => {
               setNewEmployeePhone(e.target.value);
               isValid(e);
+              CheckTelephone(newEmployeePhone);
             }}
             onInvalid={(e) => isInvalid(e)}
           />
@@ -234,12 +357,29 @@ function FormNewEmployee() {
             onChange={(e) => {
               setNewEmployeeCPF(e.target.value);
               isValid(e);
+              CheckCpf(e.target.value);
             }}
             onInvalid={(e) => isInvalid(e)}
           />
         </div>
 
         <div className="line3 line">
+
+        <InputField
+            label={"CEP:"}
+            name={"CEP"}
+            placeholder={"00000-000"}
+            idInput={"newEmployeeCEP"}
+            classNameDiv={"fieldCep"}
+            type={"text"}
+            value={newEmployeeCEP}
+            onChange={(e) => {
+              setNewEmployeeCEP(e.target.value);
+              isValid(e);
+            }}
+            onInvalid={(e) => isInvalid(e)}
+          />
+
           <InputField
             label={"Logradouro:"}
             name={"logradouro"}
@@ -261,7 +401,7 @@ function FormNewEmployee() {
             idInput={"newEmployeeAddressNumber"}
             classNameDiv={"fieldAddressNumber"}
             type={"text"}
-            value={newEmployeeAddress}
+            value={newEmployeeAddressNumber}
             onChange={(e) => {
               setNewEmployeeAddressNumber(e.target.value);
               isValid(e);
@@ -286,39 +426,20 @@ function FormNewEmployee() {
             onInvalid={(e) => isInvalid(e)}
           />
 
-          <SelectField
+          <InputField
             label={"Cidade:"}
             name={"cidade"}
-            id={"newEmployeeCity"}
-            classnameDiv={"divSelectCity"}
-            classNameSelect={"selectCity"}
+            placeholder={"Digite a cidade do usuário"}
+            idInput={"newEmployeeCity"}
+            classNameDiv={"divSelectCity"}
             value={newEmployeeCity}
-            onInvalid={(e) => selectIsInvalid(e)}
+            onInvalid={(e) => isInvalid(e)}
             onChange={(e) => {
               setNewEmployeeCity(e.target.value);
               selectIsValid(e);
             }}
-            arrayOptions={cityList}
           />
-
-          <InputField
-            label={"CEP:"}
-            name={"CEP"}
-            placeholder={"00000-000"}
-            idInput={"newEmployeeCEP"}
-            classNameDiv={"fieldCep"}
-            type={"text"}
-            value={newEmployeeCEP}
-            onChange={(e) => {
-              setNewEmployeeCEP(e.target.value);
-              isValid(e);
-            }}
-            onInvalid={(e) => isInvalid(e)}
-          />
-        </div>
-
-        <div className="line5 line">
-          <div className="roleAndStatus">
+<div className="roleAndStatus">
             <SelectField
               label={"Cargo:"}
               name={"cargo"}
@@ -354,6 +475,10 @@ function FormNewEmployee() {
               </label>
             </div>
           </div>
+        </div>
+
+        <div className="line5 line">
+          
           <div className="errorsOrSuccess">
             <p style={{ color: "red" }}>{Error && Error}</p>
             <p style={{ color: "green" }}>{Success && Success}</p>
@@ -362,7 +487,7 @@ function FormNewEmployee() {
             <button
               type="submit"
               className="primaryNormal"
-              onClick={handleSubmit}
+              onClick={PostToUpdate ? handleSubmit :  handleUpdate}
             >
               Salvar
             </button>

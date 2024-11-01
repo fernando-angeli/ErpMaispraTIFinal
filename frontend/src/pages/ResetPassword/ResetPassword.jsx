@@ -7,7 +7,6 @@ function ResetPassword() {
   const location = useLocation();
   const token = new URLSearchParams(location.search).get("token"); 
   const [NewPassword, setNewPassword] = useState(false);
-console.log(token)
   useEffect(() => {
     if (token) {
       setNewPassword(true);
@@ -16,7 +15,7 @@ console.log(token)
   return (
     <div>
       {!NewPassword && <Reset />}
-      {NewPassword && <ResetPassbyToken/>}
+      {NewPassword && <ResetPassbyToken token={token}/>}
     </div>
   );
 }
