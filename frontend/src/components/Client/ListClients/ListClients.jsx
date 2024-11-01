@@ -165,7 +165,7 @@ const ListClients = () => {
                 <button onClick={() => window.handleModalConfirm(true)}>Sim</button>
                 <button onClick={() => window.handleModalConfirm(false)}>Não</button>
               </ModalYesOrNot>
-
+        
                 <PageOfListClients clients={filteredClients} onEdit={ToFormUpdateClient} onDelete={deleteClient} maxClientsPerList={maxClientsPerList} listClientsPageSelected={listClientsPageSelected}/>
 
                 {/* {filteredClients.map((client) => {
