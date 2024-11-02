@@ -12,8 +12,8 @@ function PageOfListClients({
   listClientsPageSelected,
 }) {
 
-const [showModalDetails,setshowModalDetails] = useState(false);
-const [selectedClient, setSelectedClient] = useState('');
+  const [showModalDetails, setshowModalDetails] = useState(false);
+  const [selectedClient, setSelectedClient] = useState('');
 
   let clientsToList = [];
 
@@ -29,13 +29,13 @@ const [selectedClient, setSelectedClient] = useState('');
 
   return (
     <>
-     <ModalDetails
+      <ModalDetails
         show={showModalDetails}
         onClose={() => setshowModalDetails(false)}
         content={selectedClient}
-        title ="Detalhes Cliente"> 
-        </ModalDetails>
-        
+        title="Detalhes Cliente">
+      </ModalDetails>
+
 
       {clientsToList.map((client) => (
         <tr key={client.id}>
@@ -44,18 +44,20 @@ const [selectedClient, setSelectedClient] = useState('');
           <td>{client.phoneNumber}</td>
           <td>{client.cpfCnpj}</td>
           <td>
-          <Link onClick={() => {setSelectedClient(client)
-              setshowModalDetails(true)}
+            <Link onClick={() => {
+              setSelectedClient(client)
+              setshowModalDetails(true)
+            }
             }>
-            <BiDetail className="editLine" size={30}/>
+              <BiDetail className="editLine" size={30} />
             </Link>
             <Link onClick={() => onEdit(client)}>
               <BiEdit className="editLine" size={30} />
             </Link>
             <Link onClick={() => onDelete(client)}>
               <MdDeleteOutline className="deleteLine" size={30} />
-              </Link>
-            
+            </Link>
+
           </td>
         </tr>
       ))}
