@@ -18,7 +18,7 @@ const ListClients = () => {
   const [showInativos, setShowInativos] = useState(true);
   const [searchClients, setsearchClients] = useState("");
   const [showModal, setShowModal] = useState(false);
-  const [isLoading, setIsLoading] =  useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [ClienteNameShow, setClienteNameShow] = useState();
 
   const [listClientsPageSelected, setListClientsPage] = useState(1)
@@ -42,7 +42,7 @@ const ListClients = () => {
   }, []);
 
   const deleteClient = async (client) => {
-    
+
     setClienteNameShow(client.fullName);
     const confirmDelete = await new Promise((resolve) => {
       setShowModal(true);
@@ -69,7 +69,7 @@ const ListClients = () => {
       alert("Erro ao deletar");
     }
   };
-  
+
 
   const ToFormUpdateClient = (data) => {
     setClientsUpdate(data)
@@ -83,16 +83,16 @@ const ListClients = () => {
   }) || [];
 
   const maxClientsPerList = 6
-  let contClientPages = Math.ceil(filteredClients.length/maxClientsPerList)
+  let contClientPages = Math.ceil(filteredClients.length / maxClientsPerList)
 
-  
-  
-  
+
+
+
   // estou chamando form cliente dentro de list pra poder jogar os dados nele pra update!!!!
   return (
 
     <>
-    {isLoading && <LoadingSpin/>}
+      {isLoading && <LoadingSpin />}
       <FormNewClient dataClient={clientUpdate} />
       <div className="contentListClients">
         <div className="ListClients">
@@ -147,45 +147,32 @@ const ListClients = () => {
             <table>
               <thead>
                 <tr>
-                  <th className="formatH4 col1">Nome</th>
-                  <th className="formatH4 col2">E-mail</th>
-                  <th className="formatH4 col3">Telefone</th>
-                  <th className="formatH4 col4">CPF/CNPJ</th>
-                  <th className="formatH4 col5"></th>
+                  <th className="formatH4">Nome</th>
+                  <th className="formatH4">E-mail</th>
+                  <th className="formatH4">Telefone</th>
+                  <th className="formatH4">CPF/CNPJ</th>
+                  <th className="formatH4"></th>
                 </tr>
               </thead>
 
               <tbody>
-                
-              <ModalYesOrNot
-                show={showModal}
-                onClose={() => setShowModal(false)}
-                title="Deletar Cliente?">
-                <h6>Confirma Exclusão de {ClienteNameShow && ClienteNameShow}?</h6>
-                <button onClick={() => window.handleModalConfirm(true)}>Sim</button>
-                <button onClick={() => window.handleModalConfirm(false)}>Não</button>
-              </ModalYesOrNot>
-        
-                <PageOfListClients clients={filteredClients} onEdit={ToFormUpdateClient} onDelete={deleteClient} maxClientsPerList={maxClientsPerList} listClientsPageSelected={listClientsPageSelected}/>
 
-                {/* {filteredClients.map((client) => {
-                  return (
-                    <tr key={client.id}>
-                      <td>{client.fullName}</td>
-                      <td>{client.email}</td>
-                      <td>{client.phoneNumber}</td>
-                      <td>{client.cpfCnpj}</td>
-                      <td>
-                        <a href="#" onClick={() => ToFormUpdateClient(client)}>
-                          <BiEdit className="editLine" size={30} />
-                        </a>
-                        <a href="#" onClick={() => deleteClient(client.id)}>
-                          <MdDeleteOutline className="deleteLine" size={30} />
-                        </a>
-                      </td>
-                    </tr>
-                  )
-                })} */}
+                <ModalYesOrNot
+                  show={showModal}
+                  onClose={() => setShowModal(false)}
+                  title="Deletar Cliente?">
+                  <h6>Confirma Exclusão de {ClienteNameShow && ClienteNameShow}?</h6>
+                  <button onClick={() => window.handleModalConfirm(true)}>Sim</button>
+                  <button onClick={() => window.handleModalConfirm(false)}>Não</button>
+                </ModalYesOrNot>
+
+                <PageOfListClients 
+                clients={filteredClients} 
+                onEdit={ToFormUpdateClient} 
+                onDelete={deleteClient} 
+                maxClientsPerList={maxClientsPerList} 
+                listClientsPageSelected={listClientsPageSelected}/>
+
               </tbody>
 
             </table>

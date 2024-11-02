@@ -119,21 +119,6 @@ thead th {
     font-weight: bold;
 }
 
-.col1 {
-    width: 25%;
-}
-.col2 {
-    width: 35%;
-}
-.col3 {
-    width: 15%;
-}
-.col4 {
-    width: 20;
-}
-.col5 {
-    width: 5%;
-}
 
 
 thead th:first-child{
@@ -220,4 +205,73 @@ tbody td svg.deleteLine:hover{
 
 .pagination a:hover {
     background-color: #ddd;
+}
+
+@media (max-width: 768px) {
+    .contentListClients {
+        width: 100%;
+        border: none;
+    }
+    .headerListClients .userIcon {
+        width: 2.875rem;
+    }
+    .ListClientsTable {
+        padding-top: 0;
+    }
+    .headerListClients, .headerListClients section {
+        flex-direction: column;
+    }
+    .headerListClients, .headerListClients section {
+        flex-direction: column;
+    }
+    .headerListClients section {
+        width: 100%;
+    }
+    .headerListClients section .searchClient {
+        flex-basis: 0;
+        width: 100%;
+    }
+    .headerListClients .divCheckboxes, .headerListClients.divRadios {
+        flex-basis: 0 !important;
+        width: 100%;
+        justify-content: end !important;
+        margin-top: 0.7rem;
+        
+    }
+
+    .headerListClients .divCheckboxes .labelRadio::before{
+        transform: scale(0.5);
+        border-radius: 50%;
+        
+    }
+    .headerListClients .inputRadio:checked + label:before {
+        content: "\00A0";
+    }
+
+    .ListClients hr {
+        display: none;
+    }
+
+
+
+
+
+    .ListClientsTable thead {
+        display: none;
+    }
+
+    .ListClientsTable tbody tr td {
+        display: flex;
+        border-radius: 0 !important;
+        padding-left: 0.7rem !important;
+    }
+
+    .ListClientsTable tbody tr :first-child  {
+        border-radius: 0.9375rem 0.9375rem 0 0 !important;
+    } 
+    .ListClientsTable tbody tr :last-child  {
+        border-radius: 0 0 0.9375rem 0.9375rem !important;
+    } 
+
+
 }
