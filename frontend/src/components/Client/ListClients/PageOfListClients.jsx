@@ -1,4 +1,5 @@
-import { BiEdit } from "react-icons/bi";
+import { BiEdit, BiAt, BiPhone, BiFileBlank  } from "react-icons/bi";
+
 import { MdDeleteOutline } from "react-icons/md";
 import ModalDetails from "../../ModalDetails/ModalDetails"
 import { BiDetail } from "react-icons/bi";
@@ -39,11 +40,11 @@ function PageOfListClients({
 
       {clientsToList.map((client) => (
         <tr key={client.id}>
-          <td>{client.fullName}</td>
-          <td>{client.email}</td>
-          <td>{client.phoneNumber}</td>
-          <td>{client.cpfCnpj}</td>
-          <td>
+          <td className="td-fullName">{client.fullName}</td>
+          <td className="td-email"><BiAt className="td-icon" size={16}/>{client.email}</td>
+          <td className="td-phoneNumber"><BiPhone className="td-icon" size={16}/>{client.phoneNumber}</td>
+          <td className="td-cpfCnpj"><BiFileBlank className="td-icon-2" size={16}/>{client.cpfCnpj}</td>
+          <td className="td-editLine">
             <Link onClick={() => {
               setSelectedClient(client)
               setshowModalDetails(true)
