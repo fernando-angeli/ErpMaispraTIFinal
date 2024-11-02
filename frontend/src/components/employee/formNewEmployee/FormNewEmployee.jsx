@@ -25,16 +25,18 @@ function FormNewEmployee(dataEmployee) {
   const [newEmployeeState, setNewEmployeeState] = useState("");
   const [newEmployeeBirthDate, setNewEmployeeBirthDate] = useState("");
   const [newEmployeeStatus, setNewEmployeeStatus] = useState("active");
-  const [isLoading, setIsLoading] =  useState(false);
-  const [newEmployeeIE, setNewEmployeeIE] = useState("134");
-  const [UpdateEmployeeId, setUpdateEmployeeId] = useState();
+  const [isLoading, setIsLoading] = useState(false);
+  const [updateEmployeeId, setUpdateEmployeeId] = useState();
 
   const [Error, setError] = useState();
   const [Success, setSuccess] = useState();
 
   const { JwtToken } = useAuth();
 
-  const roleList = [{ id: 1, label: "ROLE_ADMIN" }, { id: 2, label: "ROLE_MANAGER" }];
+  const roleList = [
+    { id: 1, label: "ROLE_ADMIN" },
+    { id: 2, label: "ROLE_MANAGER" },
+  ];
 
   const statusOptions = [
     { value: "ativo", label: "Ativo" },
@@ -112,44 +114,41 @@ function FormNewEmployee(dataEmployee) {
     setNewEmployeeState("");
     setNewEmployeeBirthDate("");
     setNewEmployeeRole("");
-    setNewEmployeeIE("");
     SetPostToUpdade(true);
     setError(null);
   };
 
-  const CheckCpf = (cpf)=> {
-    const cpfRegex = /^(?!.*(\d)(?:-?\1){10})\d{3}\.\d{3}\.\d{3}-\d{2}$|^(\d{11})$/;
+  const CheckCpf = (cpf) => {
+    const cpfRegex =
+      /^(?!.*(\d)(?:-?\1){10})\d{3}\.\d{3}\.\d{3}-\d{2}$|^(\d{11})$/;
     if (cpfRegex.test(cpf)) {
       setError(null);
     } else {
-      setError('Formato de Telefone Inválido!');
-      return
+      setError("Formato de Telefone Inválido!");
+      return;
     }
-    }
+  };
 
   const handleSubmit = async (event) => {
     setIsLoading(true);
     event.preventDefault();
     const newEmployeeData = {
       fullName: newEmployeeName,
-      gender: "NAO INFORMADO",
-      cpf: newEmployeeCPF,
-      rgIe: newEmployeeIE,
-      phoneNumber: newEmployeePhone,
       email: newEmployeeEmail,
+      birthDate: newEmployeeBirthDate,
+      phoneNumber: newEmployeePhone,
+      cpf: newEmployeeCPF,
       address: newEmployeeAddress,
       number: newEmployeeAddressNumber,
       district: newEmployeeDistrict,
       zipCode: newEmployeeCEP,
       city: newEmployeeCity,
-      role: newEmployeeRole,
       state: newEmployeeState,
       country: "Brasil",
-      birthDate: newEmployeeBirthDate,
-      creditLimit: 100.0,
+      roles: newEmployeeRole,
       status: "ativo",
+      password: "string",
     };
-
     try {
       const response = await axios.post(
         `http://localhost:8080/api/usuarios`,
@@ -161,10 +160,11 @@ function FormNewEmployee(dataEmployee) {
           },
         }
       );
+      console.log(response);
       handleReset();
       setSuccess("Usuário adicionado com sucesso!");
       setIsLoading(false);
-      setError(null);
+      window.location.reload;
     } catch (err) {
       setIsLoading(false);
       console.error(err);
@@ -185,16 +185,17 @@ function FormNewEmployee(dataEmployee) {
     setUpdateEmployeeId(values.id);
     setNewEmployeeName(values.fullName);
     setNewEmployeeEmail(values.email);
-    setNewEmployeeIE(values.rgIe);
     setNewEmployeeAddress(values.address);
     setNewEmployeeDistrict(values.district);
     setNewEmployeePhone(values.phoneNumber);
-    setNewEmployeeCPF(values.cpfCnpj);
+    setNewEmployeeCPF(values.cpf);
     setNewEmployeeAddressNumber(values.number);
     setNewEmployeeCEP(values.zipCode.replace(/\D/g, ""));
     setNewEmployeeCity(values.city);
     setNewEmployeeBirthDate(values.birthDate);
     setNewEmployeeState(values.state);
+
+    setNewEmployeeRole(values.roles);
 
     setNewEmployeeStatus(values.status);
     document.getElementById(values.status).checked = true;
@@ -202,14 +203,14 @@ function FormNewEmployee(dataEmployee) {
 
   const handleUpdate = async (event) => {
     setIsLoading(true);
+
     event.preventDefault();
     const newEmployeeData = {
       fullName: newEmployeeName,
-      gender: "NAO INFORMADO",
-      cpf: newEmployeeCPF,
-      stateRegistration: newEmployeeIE,
-      phoneNumber: newEmployeePhone,
       email: newEmployeeEmail,
+      birthDate: newEmployeeBirthDate,
+      phoneNumber: newEmployeePhone,
+      cpf: newEmployeeCPF,
       address: newEmployeeAddress,
       number: newEmployeeAddressNumber,
       district: newEmployeeDistrict,
@@ -217,10 +218,11 @@ function FormNewEmployee(dataEmployee) {
       city: newEmployeeCity,
       state: newEmployeeState,
       country: "Brasil",
-      birthDate: newEmployeeBirthDate,
-      creditLimit: 100.0,
-      status: newEmployeeStatus,
+      roles: newEmployeeRole,
+      status: "ativo",
+      password: "string",
     };
+    console.log(newEmployeeData);
     const TelephoneRegex =
       /^\(?\+?(\d{1,3})?\)?[-.\s]?(\d{2})[-.\s]?(\d{4,5})[-.\s]?(\d{4})$/;
     if (TelephoneRegex.test(newEmployeeData.phoneNumber)) {
@@ -232,7 +234,7 @@ function FormNewEmployee(dataEmployee) {
 
     try {
       const response = await axios.put(
-        `http://localhost:8080/api/usuarios/${UpdateEmployeeId}`,
+        `http://localhost:8080/api/usuarios/${updateEmployeeId}`,
         newEmployeeData,
         {
           headers: {
@@ -261,14 +263,15 @@ function FormNewEmployee(dataEmployee) {
 
   useEffect(() => {
     if (dataEmployee.dataEmployee) {
+      console.log(dataEmployee.dataEmployee);
       SetValuestoUpdate(dataEmployee.dataEmployee);
       SetPostToUpdade(false);
     }
   }, [dataEmployee]);
 
   return (
-    
-    <div className="containerForm">{isLoading && <LoadingSpin/>}
+    <div className="containerForm">
+      {isLoading && <LoadingSpin />}
       <h2 className="tabTitle">
         Adicionar Usuario
         <a className="hide-desktop" onClick={resposiveEmployeeShow}>
@@ -283,7 +286,7 @@ function FormNewEmployee(dataEmployee) {
             : "hiddenformNewEmployee"
         }
         id="formNewEmployee"
-        onSubmit={PostToUpdate ? handleSubmit :  handleUpdate}
+        onSubmit={PostToUpdate ? handleSubmit : handleUpdate}
         onReset={handleReset}
       >
         <div className="line1 line">
@@ -311,7 +314,7 @@ function FormNewEmployee(dataEmployee) {
             onChange={(e) => {
               setNewEmployeeEmail(e.target.value);
               isValid(e);
-              CheckEmail(newClientEmail);
+              CheckEmail(newEmployeeEmail);
             }}
             onInvalid={(e) => isInvalid(e)}
           />
@@ -364,8 +367,7 @@ function FormNewEmployee(dataEmployee) {
         </div>
 
         <div className="line3 line">
-
-        <InputField
+          <InputField
             label={"CEP:"}
             name={"CEP"}
             placeholder={"00000-000"}
@@ -436,21 +438,25 @@ function FormNewEmployee(dataEmployee) {
             onInvalid={(e) => isInvalid(e)}
             onChange={(e) => {
               setNewEmployeeCity(e.target.value);
-              selectIsValid(e);
+              isValid(e);
             }}
           />
-<div className="roleAndStatus">
+        </div>
+
+        <div className="line5 line">
+          <div className="roleAndStatus">
             <SelectField
               label={"Cargo:"}
               name={"cargo"}
               id={"newEmployeeRole"}
               classnameDiv={"divSelectRole"}
               classNameSelect={"selectRole"}
-              value={newEmployeeRole}
+              value={newEmployeeRole ? JSON.stringify(newEmployeeRole[0]) : ""}
               onInvalid={(e) => selectIsInvalid(e)}
               onChange={(e) => {
-                setNewEmployeeRole(e.target.value);
-                selectIsValid(e);
+                const selectedRole = JSON.parse(e.target.value);
+                setNewEmployeeRole([selectedRole]);
+                isValid(e);
               }}
               arrayOptions={roleList}
             />
@@ -475,10 +481,6 @@ function FormNewEmployee(dataEmployee) {
               </label>
             </div>
           </div>
-        </div>
-
-        <div className="line5 line">
-          
           <div className="errorsOrSuccess">
             <p style={{ color: "red" }}>{Error && Error}</p>
             <p style={{ color: "green" }}>{Success && Success}</p>
@@ -487,9 +489,9 @@ function FormNewEmployee(dataEmployee) {
             <button
               type="submit"
               className="primaryNormal"
-              onClick={PostToUpdate ? handleSubmit :  handleUpdate}
+              onClick={PostToUpdate ? handleSubmit : handleUpdate}
             >
-              Salvar
+              {PostToUpdate ? "Salvar" : "Atualizar"}
             </button>
             <button
               type="reset"

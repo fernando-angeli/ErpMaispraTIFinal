@@ -20,12 +20,12 @@ const ListEmployees = () => {
   const [showModal, setShowModal] = useState(false);
 
   const [EmployeeNameShow, setEmployeeNameShow] = useState();
-  const [isLoading, setIsLoading] =  useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [listEmployeesPageSelected, setListEmployeesPage] = useState(1);
 
   const handleShowEmployees = async () => {
     try {
-      const response = await axios.get(`http://localhost:8080/api/clientes`, {
+      const response = await axios.get(`http://localhost:8080/api/usuarios`, {
         headers: {
           Authorization: `Bearer ${JwtToken}`,
         },
@@ -42,7 +42,7 @@ const ListEmployees = () => {
   }, []);
 
   const deleteEmployee = async (employee) => {
-    console.log(employee)
+    console.log(employee);
     setEmployeeNameShow(employee.fullName);
     const confirmDelete = await new Promise((resolve) => {
       setShowModal(true);
@@ -55,17 +55,17 @@ const ListEmployees = () => {
     if (!confirmDelete) {
       return;
     }
-    setIsLoading(true)
+    setIsLoading(true);
     try {
       await axios.delete(`http://localhost:8080/api/usuarios/${employee.id}`, {
         headers: {
           Authorization: `Bearer ${JwtToken}`,
         },
       });
-      setIsLoading(false)
+      setIsLoading(false);
       handleShowEmployees();
     } catch (err) {
-      setIsLoading(false)
+      setIsLoading(false);
       console.log(err);
       alert("Erro ao deletar");
     }
@@ -79,7 +79,7 @@ const ListEmployees = () => {
     employees?.filter((employee) => {
       const matchesStatus =
         (showAtivos && employee.status === "ativo") ||
-        (showInativos && employee.status === "inativo"); 
+        (showInativos && employee.status === "inativo");
       const matchesSearch = employee.fullName
         .toLowerCase()
         .includes(searchEmployees.toLowerCase());
@@ -93,7 +93,8 @@ const ListEmployees = () => {
 
   return (
     <>
-      <FormNewEmployee dataEmployee={employeeUpdate} />{isLoading && <LoadingSpin/>}
+      <FormNewEmployee dataEmployee={employeeUpdate} />
+      {isLoading && <LoadingSpin />}
       <div className="contentListEmployees">
         <div className="ListEmployees">
           <div className="headerListEmployees">
@@ -167,8 +168,7 @@ const ListEmployees = () => {
                   title="Deletar funcionario?"
                 >
                   <h6>
-                    Confirma Exclusão de{" "}
-                    {EmployeeNameShow && EmployeeNameShow}?
+                    Confirma Exclusão de {EmployeeNameShow && EmployeeNameShow}?
                   </h6>
                   <button onClick={() => window.handleModalConfirm(true)}>
                     Sim

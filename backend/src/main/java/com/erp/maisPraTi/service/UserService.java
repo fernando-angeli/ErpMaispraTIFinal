@@ -38,7 +38,7 @@ public class UserService {
 
     @Transactional
     public UserDto insert(UserInsertDto userInsertDto) {
-        if(userRepository.findByEmail(userInsertDto.getEmail()) != null)
+        if(userRepository.findByEmail(userInsertDto.getEmail()).isPresent())
             throw new DatabaseException("E-mail já utilizado.");
         User newUser = convertToEntity(userInsertDto, User.class);
         newUser.setCreatedAt(LocalDateTime.now());
