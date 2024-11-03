@@ -60,7 +60,10 @@ public class AuthService {
         Optional<User> user = userRepository.findByEmail(jwtTokenProvider.getUserEmailFromToken(token));
         if(user.isPresent() && user.get().getCpf().equals(request.getCpf()))
             return true;
-        throw new ResourceNotFoundException("Usuário não encontrado ou CPF inválido.");
+        else if(user.isEmpty())
+            throw new ResourceNotFoundException("Usuário não encontrado.");
+        else
+            throw new ResourceNotFoundException("CPF inválido.");
     }
 
     public void resetPassword(String token, ResetPasswordRequest request){
@@ -69,7 +72,7 @@ public class AuthService {
             user.get().setPassword(passwordEncoder.encode(request.getNewPassword()));
             userRepository.save(user.get());
         } else{
-            throw new ResourceNotFoundException("Usuário não encontrado ou Senha inválida");
+            throw new ResourceNotFoundException("Usuário não encontrado.");
         }
     }
 

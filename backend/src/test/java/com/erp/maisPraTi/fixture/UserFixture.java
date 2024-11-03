@@ -24,9 +24,9 @@ public class UserFixture {
     public static User userAdmin (){
         User user = new User();
         user.setId(1L);
-        user.setFirstName("Admin");
-        user.setLastName("Amin");
+        user.setFullName("Admin Admin");
         user.setEmail("admin@admin.com");
+        user.setCpf("000.111.222.333-44");
         user.setCreatedAt(LocalDateTime.now());
         user.setUpdatedAt(null);
         user.setPassword("12345");
@@ -36,9 +36,9 @@ public class UserFixture {
     public static User userOperator (){
         User user = new User();
         user.setId(1L);
-        user.setFirstName("Operator");
-        user.setLastName("Operatos");
+        user.setFullName("Operator Operator");
         user.setEmail("operator@operator.com");
+        user.setCpf("000.111.222.333-55");
         user.setCreatedAt(LocalDateTime.now());
         user.setUpdatedAt(null);
         user.setPassword("12345");
