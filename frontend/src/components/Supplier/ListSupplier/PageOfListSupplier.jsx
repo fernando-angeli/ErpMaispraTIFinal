@@ -5,26 +5,26 @@ import ModalDetails from "../../ModalDetails/ModalDetails"
 import { BiDetail } from "react-icons/bi";
 import { Link } from "react-router-dom";
 import { useState } from "react";
-function PageOfListClients({
-  clients,
+function PageOfListSuppliers({
+  suppliers,
   onEdit,
   onDelete,
-  maxClientsPerList,
-  listClientsPageSelected,
+  maxSuppliersPerList,
+  listSuppliersPageSelected,
 }) {
 
   const [showModalDetails, setshowModalDetails] = useState(false);
-  const [selectedClient, setSelectedClient] = useState('');
+  const [selectedSupplier, setSelectedSupplier] = useState('');
 
-  let clientsToList = [];
+  let suppliersToList = [];
 
   for (
-    let i = (listClientsPageSelected - 1) * maxClientsPerList;
-    i < listClientsPageSelected * maxClientsPerList;
+    let i = (listSuppliersPageSelected - 1) * maxSuppliersPerList;
+    i < listSuppliersPageSelected * maxSuppliersPerList;
     i++
   ) {
-    if (clients[i]) {
-      clientsToList.push(clients[i]);
+    if (suppliers[i]) {
+      suppliersToList.push(suppliers[i]);
     }
   }
 
@@ -33,12 +33,12 @@ function PageOfListClients({
       <ModalDetails
         show={showModalDetails}
         onClose={() => setshowModalDetails(false)}
-        content={selectedClient}
-        title="Detalhes Cliente">
+        content={selectedSupplier}
+        title="Detalhes Suppliere">
       </ModalDetails>
 
 
-      {clientsToList.map((client) => (
+      {suppliersToList.map((client) => (
         <tr key={client.id}>
           <td className="td-fullName">{client.fullName}</td>
           <td className="td-email"><BiAt className="td-icon" size={16}/>{client.email}</td>
@@ -46,15 +46,15 @@ function PageOfListClients({
           <td className="td-cpfCnpj"><BiFileBlank className="td-icon-2" size={16}/>{client.cpfCnpj}</td>
           <td className="td-editLine">
             <Link onClick={() => {
-              setSelectedClient(client)
+              setSelectedSupplier(client)
               setshowModalDetails(true)
             }
             }>
               <BiDetail className="editLine" size={30} />
             </Link>
-            <a href="#" onClick={() => onEdit(client)}>
+            <Link onClick={() => onEdit(client)}>
               <BiEdit className="editLine" size={30} />
-            </a>
+            </Link>
             <Link onClick={() => onDelete(client)}>
               <MdDeleteOutline className="deleteLine" size={30} />
             </Link>
@@ -65,4 +65,4 @@ function PageOfListClients({
     </>
   );
 }
-export default PageOfListClients;
+export default PageOfListSuppliers;

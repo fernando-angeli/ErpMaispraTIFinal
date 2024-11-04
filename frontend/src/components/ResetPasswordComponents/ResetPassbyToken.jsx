@@ -2,7 +2,6 @@ import { useState } from 'react';
 import './ResetPassbyToken.css';
 import ErpLogo from '../../assets/icons/artboard.svg';
 import { RiLockPasswordLine } from "react-icons/ri";
-import { AiOutlineUser } from "react-icons/ai";
 import { useNavigate } from 'react-router-dom';
 import LoadingSpin from '../LoadingSpin/LoadingSpin';
 import axios from 'axios';
@@ -13,7 +12,6 @@ const ResetPassbyToken = ({ token }) => {
   const [ConfirmResetPassword, setConfirmResetPassword] = useState("");
   const [CpfConfirm, setCpfConfirm] = useState("");
   const [CpfPass, setCpfPass] = useState(false);
-  const [ResetEmail, setResetEmail] = useState('');
 
   const [Error, setError] = useState("");
   const [SuccessMessage, setSuccessMessage] = useState("");
@@ -58,7 +56,7 @@ const ResetPassbyToken = ({ token }) => {
           "Content-Type": "application/json",
         }}
       );
-      setSuccessMessage(response.data.message);
+      setSuccessMessage("Senha alterada com sucesso!");
       
       setError('');
       setTimeout(() => {

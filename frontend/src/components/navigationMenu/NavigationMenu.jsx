@@ -22,6 +22,7 @@ function NavigationMenu() {
     {
       icon: newSupplierIcon,
       description: "Novo Fornecedor",
+      url:'/supplier'
     },
     {
       icon: newProductIcon,
@@ -46,6 +47,7 @@ function NavigationMenu() {
     {
       icon: newSupplierIcon,
       description: "Novo Fornecedor",
+      url:"/supplier"
     },
     {
       icon: newProductIcon,
