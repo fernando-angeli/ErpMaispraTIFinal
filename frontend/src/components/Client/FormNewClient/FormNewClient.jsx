@@ -141,9 +141,11 @@ function FormNewClient(dataClient) {
       fullName: newClientName,
       typePfOrPj: CPForCNPJ === "cpf" ? "PF" : "PJ",
       gender: "NAO INFORMADO",
-      cpfCnpj: newClientCPForCNPJ,
+       cpfCnpj: CPForCNPJ === "cpf" 
+      ? newClientCPForCNPJ.replace(/\D/g, "").replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4")
+      : newClientCPForCNPJ.replace(/\D/g, "").replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, "$1.$2.$3/$4-$5"),
       stateRegistration: newClientIE,
-      phoneNumber: newClientPhone,
+      phoneNumber: newClientPhone.replace(/\D/g, "").replace(/(\d{2})(\d{5})(\d{4})/, "($1) $2-$3"),
       email: newClientEmail,
       address: newClientAddress,
       number: newClientAddressNumber,
@@ -160,20 +162,38 @@ function FormNewClient(dataClient) {
   
     
     const cpfRegex = /^(?!.*(\d)(?:-?\1){10})\d{3}\.\d{3}\.\d{3}-\d{2}$|^(\d{11})$/;
-    if(!document.getElementById("formNewClient").reportValidity()) {
-      setError("Preencha todos os campos!")
-      return 
-    }
-      setIsLoading(true)
+    const cnpjRegex = /^(\d{2}\.\d{3}\.\d{3}\/\d{4}-\d{2}|\d{14})$/;
+    if (CPForCNPJ === "cpf") {
+      if (!document.getElementById("formNewClient").reportValidity()) {
+        setError("Preencha todos os campos!");
+        return;
+      }
+      
+      setIsLoading(true);
+      
       if (cpfRegex.test(newClientData.cpfCnpj)) {
         setError(null);
-     
-    if (cpfRegex.test(newClientData.cpfCnpj)) {
-      setError(null);
+      } else {
+        setIsLoading(false);
+        setError('Formato de CPF Inválido');
+        return;
+      }
+      
     } else {
-      setIsLoading(false) 
-      setError('Formato de Cpf Invalido');
-      return
+      if (!document.getElementById("formNewClient").reportValidity()) {
+        setError("Preencha todos os campos!");
+        return;
+      }
+      
+      setIsLoading(true);
+      
+      if (cnpjRegex.test(newSupplierData.cpfCnpj)) {
+        setError(null);
+      } else {
+        setIsLoading(false);
+        setError('Formato de CNPJ Inválido');
+        return;
+      }
     }
 
     try {
@@ -203,7 +223,7 @@ function FormNewClient(dataClient) {
         return
       }
     }
-      }
+      
   }
   const handleUpdate = async (event) => {
     setIsLoading(true)
@@ -213,9 +233,11 @@ function FormNewClient(dataClient) {
       fullName: newClientName,
       typePfOrPj: CPForCNPJ === "cpf" ? "PF" : "PJ",
       gender: "NAO INFORMADO",
-      cpfCnpj: newClientCPForCNPJ,
+      cpfCnpj: CPForCNPJ === "cpf" 
+      ? newClientCPForCNPJ.replace(/\D/g, "").replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4")
+      : newClientCPForCNPJ.replace(/\D/g, "").replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, "$1.$2.$3/$4-$5"),
       stateRegistration: newClientIE,
-      phoneNumber: newClientPhone,
+      phoneNumber: newClientPhone.replace(/\D/g, "").replace(/(\d{2})(\d{5})(\d{4})/, "($1) $2-$3"),
       email: newClientEmail,
       address: newClientAddress,
       number: newClientAddressNumber,
@@ -230,16 +252,41 @@ function FormNewClient(dataClient) {
       status: newClientStatus,
     }
     ;
-
     const cpfRegex = /^(?!.*(\d)(?:-?\1){10})\d{3}\.\d{3}\.\d{3}-\d{2}$|^(\d{11})$/;
-    if (cpfRegex.test(newClientData.cpfCnpj)) {
-      setError(null);
+    const cnpjRegex = /^(\d{2}\.\d{3}\.\d{3}\/\d{4}-\d{2}|\d{14})$/;
+    if (CPForCNPJ === "cpf") {
+      if (!document.getElementById("formNewClient").reportValidity()) {
+        setError("Preencha todos os campos!");
+        return;
+      }
+      
+      setIsLoading(true);
+      
+      if (cpfRegex.test(newClientData.cpfCnpj)) {
+        setError(null);
+      } else {
+        setIsLoading(false);
+        setError('Formato de CPF Inválido');
+        return;
+      }
+      
     } else {
-      setIsLoading(false)
-      console.log('falso')
-      setError('Formato de Cpf Invalido');
-      return
+      if (!document.getElementById("formNewClient").reportValidity()) {
+        setError("Preencha todos os campos!");
+        return;
+      }
+      
+      setIsLoading(true);
+      
+      if (cnpjRegex.test(newSupplierData.cpfCnpj)) {
+        setError(null);
+      } else {
+        setIsLoading(false);
+        setError('Formato de CNPJ Inválido');
+        return;
+      }
     }
+
     try {
       const response = await axios.put(
         `http://localhost:8080/api/clientes/${UpdateClientId}`,

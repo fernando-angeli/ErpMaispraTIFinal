@@ -34,28 +34,28 @@ function PageOfListSuppliers({
         show={showModalDetails}
         onClose={() => setshowModalDetails(false)}
         content={selectedSupplier}
-        title="Detalhes Suppliere">
+        title="Detalhes Supplier">
       </ModalDetails>
 
 
-      {suppliersToList.map((client) => (
-        <tr key={client.id}>
-          <td className="td-fullName">{client.fullName}</td>
-          <td className="td-email"><BiAt className="td-icon" size={16}/>{client.email}</td>
-          <td className="td-phoneNumber"><BiPhone className="td-icon" size={16}/>{client.phoneNumber}</td>
-          <td className="td-cpfCnpj"><BiFileBlank className="td-icon-2" size={16}/>{client.cpfCnpj}</td>
+      {suppliersToList.map((supplier) => (
+        <tr key={supplier.id}>
+          <td className="td-fullName">{supplier.fullName}</td>
+          <td className="td-email"><BiAt className="td-icon" size={16}/>{supplier.email}</td>
+          <td className="td-phoneNumber"><BiPhone className="td-icon" size={16}/>{supplier.phoneNumber}</td>
+          <td className="td-cpfCnpj"><BiFileBlank className="td-icon-2" size={16}/>{supplier.cpfCnpj}</td>
           <td className="td-editLine">
             <Link onClick={() => {
-              setSelectedSupplier(client)
+              setSelectedSupplier(supplier)
               setshowModalDetails(true)
             }
             }>
               <BiDetail className="editLine" size={30} />
             </Link>
-            <Link onClick={() => onEdit(client)}>
+            <a href='#' onClick={() => onEdit(supplier)}>
               <BiEdit className="editLine" size={30} />
-            </Link>
-            <Link onClick={() => onDelete(client)}>
+            </a>
+            <Link onClick={() => onDelete(supplier)}>
               <MdDeleteOutline className="deleteLine" size={30} />
             </Link>
 
