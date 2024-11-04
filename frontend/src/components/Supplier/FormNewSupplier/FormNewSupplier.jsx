@@ -102,14 +102,23 @@ function FormNewSupplier(dataSupplier) {
 
   const CheckCpf = (cpf)=> {
   const cpfRegex = /^(?!.*(\d)(?:-?\1){10})\d{3}\.\d{3}\.\d{3}-\d{2}$|^(\d{11})$/;
+  const cnpjRegex = /^(\d{2}\.\d{3}\.\d{3}\/\d{4}-\d{2}|\d{14})$/;
+  if (CPForCNPJ === "cpf") {
   if (cpfRegex.test(cpf)) {
     setError(null);
   } else {
-    setError('Formato de Telefone Inválido!');
+    setError('Formato de CPF Inválido!');
     return
   }
+  }else{
+    if (cnpjRegex.test(cpf)) {
+      setError(null);
+    } else {
+      setError('Formato de CNPJ Inválido!');
+      return
+    }
   }
-
+}
   const handleReset = () => {
     let form = document.getElementById("formNewSupplier");
     let elements = form.getElementsByClassName("isInvalid");
@@ -128,23 +137,22 @@ function FormNewSupplier(dataSupplier) {
     setNewSupplierCity("");
     setNewSupplierCEP("");
     setNewSupplierState("");
-    setNewSupplierBirthDate('');
     setNewSupplierNotes("")
     setNewSupplierIE("")
     SetPostToUpdade(true)
     setError(null)
     };
 
-
   const handleSubmit = async (event) => {
     event.preventDefault();
     const newSupplierData = {
       fullName: newSupplierName,
       typePfOrPj: CPForCNPJ === "cpf" ? "PF" : "PJ",
-      gender: "NAO INFORMADO",
-      cpfCnpj: newSupplierCPForCNPJ,
+      cpfCnpj: CPForCNPJ === "cpf" 
+      ? newSupplierCPForCNPJ.replace(/\D/g, "").replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4")
+      : newSupplierCPForCNPJ.replace(/\D/g, "").replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, "$1.$2.$3/$4-$5"),  
       stateRegistration: newSupplierIE,
-      phoneNumber: newSupplierPhone,
+      phoneNumber: newSupplierPhone.replace(/\D/g, "").replace(/(\d{2})(\d{5})(\d{4})/, "($1) $2-$3"),
       email: newSupplierEmail,
       address: newSupplierAddress,
       number: newSupplierAddressNumber,
@@ -157,25 +165,43 @@ function FormNewSupplier(dataSupplier) {
       notes: newSupplierNotes,
       status: newSupplierStatus,
     };
-  
-    
+
     const cpfRegex = /^(?!.*(\d)(?:-?\1){10})\d{3}\.\d{3}\.\d{3}-\d{2}$|^(\d{11})$/;
-    if(!document.getElementById("formNewSupplier").reportValidity()) {
-      setError("Preencha todos os campos!")
-      return 
-    }
-      setIsLoading(true)
+    const cnpjRegex = /^(\d{2}\.\d{3}\.\d{3}\/\d{4}-\d{2}|\d{14})$/;
+    if (CPForCNPJ === "cpf") {
+      if (!document.getElementById("formNewSupplier").reportValidity()) {
+        setError("Preencha todos os campos!");
+        return;
+      }
+      
+      setIsLoading(true);
+      
       if (cpfRegex.test(newSupplierData.cpfCnpj)) {
         setError(null);
-     
-    if (cpfRegex.test(newSupplierData.cpfCnpj)) {
-      setError(null);
+      } else {
+        setIsLoading(false);
+        setError('Formato de CPF Inválido');
+        return;
+      }
+      
     } else {
-      setIsLoading(false) 
-      setError('Formato de Cpf Invalido');
-      return
+      if (!document.getElementById("formNewSupplier").reportValidity()) {
+        setError("Preencha todos os campos!");
+        return;
+      }
+      
+      setIsLoading(true);
+      
+      if (cnpjRegex.test(newSupplierData.cpfCnpj)) {
+        setError(null);
+      } else {
+        setIsLoading(false);
+        setError('Formato de CNPJ Inválido');
+        return;
+      }
     }
-
+    
+  
     try {
       const response = await axios.post(
         `http://localhost:8080/api/fornecedores`,
@@ -198,12 +224,12 @@ function FormNewSupplier(dataSupplier) {
         setIsLoading(false);
         setError(`${err.response.data.message}`);
       } else {
-        setError('Erro desconhecido');
+        setError(err,'Erro desconhecido');
         setIsLoading(false) 
         return
       }
     }
-      }
+      
   }
   const handleUpdate = async (event) => {
     setIsLoading(true)
@@ -212,10 +238,11 @@ function FormNewSupplier(dataSupplier) {
     const newSupplierData = {
       fullName: newSupplierName,
       typePfOrPj: CPForCNPJ === "cpf" ? "PF" : "PJ",
-      gender: "NAO INFORMADO",
-      cpfCnpj: newSupplierCPForCNPJ,
+      cpfCnpj: CPForCNPJ === "cpf" 
+      ? newSupplierCPForCNPJ.replace(/\D/g, "").replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4")
+      : newSupplierCPForCNPJ.replace(/\D/g, "").replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, "$1.$2.$3/$4-$5"),
       stateRegistration: newSupplierIE,
-      phoneNumber: newSupplierPhone,
+      phoneNumber: newSupplierPhone.replace(/\D/g, "").replace(/(\d{2})(\d{5})(\d{4})/, "($1) $2-$3"),
       email: newSupplierEmail,
       address: newSupplierAddress,
       number: newSupplierAddressNumber,
@@ -227,17 +254,42 @@ function FormNewSupplier(dataSupplier) {
       creditLimit: 100.0,
       notes: newSupplierNotes,
       status: newSupplierStatus,
-    }
-    ;
+    };
+
 
     const cpfRegex = /^(?!.*(\d)(?:-?\1){10})\d{3}\.\d{3}\.\d{3}-\d{2}$|^(\d{11})$/;
-    if (cpfRegex.test(newSupplierData.cpfCnpj)) {
-      setError(null);
+    const cnpjRegex = /^(\d{2}\.\d{3}\.\d{3}\/\d{4}-\d{2}|\d{14})$/;
+    if (CPForCNPJ === "cpf") {
+      if (!document.getElementById("formNewSupplier").reportValidity()) {
+        setError("Preencha todos os campos!");
+        return;
+      }
+      
+      setIsLoading(true);
+      
+      if (cpfRegex.test(newSupplierData.cpfCnpj)) {
+        setError(null);
+      } else {
+        setIsLoading(false);
+        setError('Formato de CPF Inválido');
+        return;
+      }
+      
     } else {
-      setIsLoading(false)
-      console.log('falso')
-      setError('Formato de Cpf Invalido');
-      return
+      if (!document.getElementById("formNewSupplier").reportValidity()) {
+        setError("Preencha todos os campos!");
+        return;
+      }
+      
+      setIsLoading(true);
+      
+      if (cnpjRegex.test(newSupplierData.cpfCnpj)) {
+        setError(null);
+      } else {
+        setIsLoading(false);
+        setError('Formato de CNPJ Inválido');
+        return;
+      }
     }
     try {
       const response = await axios.put(
@@ -267,8 +319,8 @@ function FormNewSupplier(dataSupplier) {
     }finally {
       setIsLoading(false);
     }
-
   };
+
   const resposiveSuppliereShow = () => {
     setResponsiveSupplier(!ResponsiveSupplier);
   };
@@ -288,7 +340,6 @@ function FormNewSupplier(dataSupplier) {
    setOption(values.typePfOrPj.toLowerCase());
    setNewSupplierState(values.state);
    setNewSupplierNotes(values.notes)
-   
    setOption(values.typePfOrPj == "PF" ? "cpf" : "cnpj")
    setNewSupplierStatus(values.status)
    document.getElementById(values.typePfOrPj == "PF" ? "cpf" : "cnpj").checked = true;
@@ -309,7 +360,7 @@ function FormNewSupplier(dataSupplier) {
   return (
     <div className="containerForm">
       <h2 className="tabTitle">
-        Adicionar Funcionario
+        Adicionar Fornecedor
         <a className="hide-desktop" onClick={resposiveSuppliereShow}>
           {" "}
           {!ResponsiveSupplier ? <CgAdd size={45} /> : <CgRemove size={45} />}
@@ -326,7 +377,7 @@ function FormNewSupplier(dataSupplier) {
         <div className="line1 line">
           <InputField
             label={"Nome:"}
-            placeholder={"Digite o nome do cliente"}
+            placeholder={"Digite o nome do Fornecedor"}
             name={"nome"}
             idInput={"newSupplierName"}
             classNameDiv="fieldName"
@@ -339,7 +390,7 @@ function FormNewSupplier(dataSupplier) {
           />
           <InputField
             label={"E-mail:"}
-            placeholder={"Digite o e-mail do cliente"}
+            placeholder={"Digite o e-mail do Fornecedor"}
             name={"email"}
             idInput={"newSupplierEmail"}
             classNameDiv={"fieldEmail"}
@@ -356,7 +407,7 @@ function FormNewSupplier(dataSupplier) {
         <div className="line2 line">
           <InputField
             label={"Telefone:"}
-            placeholder={"Digite o telefone do cliente"}
+            placeholder={"Digite o telefone do Fornecedor"}
             name={"telefone"}
             idInput={"newSupplierPhone"}
             classNameDiv="fieldPhone"
@@ -381,7 +432,7 @@ function FormNewSupplier(dataSupplier) {
       
             <InputField
               type={"text"}
-              placeholder={"Digite o CPF/CNPJ do cliente"}
+              placeholder={"Digite o CPF/CNPJ do Fornecedor"}
               name={"cpf/cnpj"}
               idInput={"newSupplierCPForCNPJ"}
               value={newSupplierCPForCNPJ}
@@ -456,7 +507,7 @@ function FormNewSupplier(dataSupplier) {
         <InputField
             label={"Logradouro:"}
             name={"logradouro"}
-            placeholder={"Digite o endereço do cliente"}
+            placeholder={"Digite o endereço do Fornecedor"}
             idInput={"newSupplierAddress"}
             classNameDiv={"fieldAddress"}
             type={"text"}
@@ -485,7 +536,7 @@ function FormNewSupplier(dataSupplier) {
           <InputField
             label={"Bairro:"}
             name={"bairro"}
-            placeholder={"Digite o bairro do cliente"}
+            placeholder={"Digite o bairro do Fornecedor"}
             idInput={"newSupplierDistrict"}
             classNameDiv="fieldDistrict"
             type={"text"}
@@ -501,6 +552,7 @@ function FormNewSupplier(dataSupplier) {
             label={"Cidade:"}
             name={"cidade"}
             id={"newSupplierCity"}
+            placeholder={"Digite o bairro a cidade do Fornecedor"}
             classNameDiv={"divSelectCity"}
             classNameSelect={"selectCity"}
             value={newSupplierCity}
@@ -516,6 +568,7 @@ function FormNewSupplier(dataSupplier) {
             label={"Pais:"}
             name={"pais"}
             id={"newSupplierCountry"}
+            placeholder={"Digite o bairro o pais do Fornecedor"}
             classNameDiv={"divSelectCountry"}
             classNameSelect={"selectCountry"}
             value={newSupplierCountry}
@@ -532,7 +585,7 @@ function FormNewSupplier(dataSupplier) {
           <TextareaField
             label={"Notas:"}
             name={"notas"}
-            placeholder={"Digite notas sobre o cliente"}
+            placeholder={"Digite notas sobre o Fornecedor"}
             idInput={"newSupplierNotes"}
             classNameDiv={"fieldNotes"}
             value={newSupplierNotes}
