@@ -13,6 +13,7 @@ import Login from "./pages/LoginPage/Login";
 import { useAuth } from "./components/AuthContext";
 import AddEmployeePage from "./pages/addEmployeePage/AddEmployeePage";
 import ResetPassword from "./pages/ResetPassword/ResetPassword";
+import AddSupplierpage from './pages/addSupplierpage/AddSupplierpage' 
 function App() {
   const { isAuthenticated } = useAuth();
   return (
@@ -38,6 +39,15 @@ function App() {
             element={
               <ProtectedRoute isLoggedIn={isAuthenticated }>
                 <AddEmployeePage />
+              </ProtectedRoute>
+            }
+          />
+
+<Route
+            path="/supplier"
+            element={
+              <ProtectedRoute isLoggedIn={isAuthenticated }>
+                <AddSupplierpage/>
               </ProtectedRoute>
             }
           />
