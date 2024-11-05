@@ -27,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class AuthServiceTest {
+public class AuthServiceTest {
 
     @Mock
     private AuthenticationManager authenticationManager;
@@ -232,7 +232,5 @@ class AuthServiceTest {
         // Assert
         assertEquals("Usuário não encontrado.", exception.getMessage());
     }
-
-
 
 }
