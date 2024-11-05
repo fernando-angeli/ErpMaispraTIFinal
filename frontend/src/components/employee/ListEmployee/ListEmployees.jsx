@@ -30,7 +30,9 @@ const ListEmployees = () => {
           Authorization: `Bearer ${JwtToken}`,
         },
       });
+
       setEmployees(response.data.content);
+      
     } catch (err) {
       console.log(err);
       alert("Erro ao puxar funcionarios!");
@@ -91,10 +93,11 @@ const ListEmployees = () => {
     filteredEmployees.length / maxEmployeesPerList
   );
 
+
   return (
     <>
-      <FormNewEmployee dataEmployee={employeeUpdate} />
       {isLoading && <LoadingSpin />}
+      <FormNewEmployee dataEmployee={employeeUpdate} />
       <div className="contentListEmployees">
         <div className="ListEmployees">
           <div className="headerListEmployees">

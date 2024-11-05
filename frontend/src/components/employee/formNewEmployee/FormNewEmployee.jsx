@@ -441,25 +441,28 @@ function FormNewEmployee(dataEmployee) {
               isValid(e);
             }}
           />
+          <SelectField
+            label={"Cargo:"}
+            name={"cargo"}
+            id={"newEmployeeRole"}
+            classnameDiv={"divSelectRole"}
+            classNameSelect={"selectRole"}
+            value={newEmployeeRole ? JSON.stringify(newEmployeeRole[0]) : ""}
+            onInvalid={(e) => selectIsInvalid(e)}
+            onChange={(e) => {
+              const selectedRole = JSON.parse(e.target.value);
+              setNewEmployeeRole([selectedRole]);
+              isValid(e);
+            }}
+            arrayOptions={roleList}
+          />
         </div>
 
         <div className="line5 line">
-          <div className="roleAndStatus">
-            <SelectField
-              label={"Cargo:"}
-              name={"cargo"}
-              id={"newEmployeeRole"}
-              classnameDiv={"divSelectRole"}
-              classNameSelect={"selectRole"}
-              value={newEmployeeRole ? JSON.stringify(newEmployeeRole[0]) : ""}
-              onInvalid={(e) => selectIsInvalid(e)}
-              onChange={(e) => {
-                const selectedRole = JSON.parse(e.target.value);
-                setNewEmployeeRole([selectedRole]);
-                isValid(e);
-              }}
-              arrayOptions={roleList}
-            />
+          
+
+          
+          <div className="divStatusAndButtons">
 
             <div className="divStatus">
               <label
@@ -480,26 +483,26 @@ function FormNewEmployee(dataEmployee) {
                 </div>
               </label>
             </div>
-          </div>
-          <div className="errorsOrSuccess">
-            <p style={{ color: "red" }}>{Error && Error}</p>
-            <p style={{ color: "green" }}>{Success && Success}</p>
-          </div>
-          <div className="divButtons">
-            <button
-              type="submit"
-              className="primaryNormal"
-              onClick={PostToUpdate ? handleSubmit : handleUpdate}
-            >
-              {PostToUpdate ? "Salvar" : "Atualizar"}
-            </button>
-            <button
-              type="reset"
-              className="primaryLight"
-              onClick={() => handleReset()}
-            >
-              Cancelar
-            </button>
+            <div className="errorsOrSuccess">
+              <p style={{ color: "red" }}>{Error && Error}</p>
+              <p style={{ color: "green" }}>{Success && Success}</p>
+            </div>
+            <div className="divButtons">
+              <button
+                type="submit"
+                className="primaryNormal"
+                onClick={PostToUpdate ? handleSubmit : handleUpdate}
+              >
+                {PostToUpdate ? "Salvar" : "Atualizar"}
+              </button>
+              <button
+                type="reset"
+                className="primaryLight"
+                onClick={() => handleReset()}
+              >
+                Cancelar
+              </button>
+            </div>
           </div>
         </div>
       </form>
