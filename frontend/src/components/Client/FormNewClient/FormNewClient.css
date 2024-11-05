@@ -31,6 +31,9 @@ form.hiddenformNewClient {
   display: flex;
   gap: inherit;
 }
+#formNewEmployee .line5 {
+  justify-content: end;
+}
 
 .fieldName {
   flex-basis: calc(60% + 19px);
@@ -103,6 +106,14 @@ form.hiddenformNewClient {
   flex-basis: 50%;
 }
 
+/* line 5 */
+
+.line5 {
+  justify-content: space-between;
+}
+
+
+
 .selectCity {
   -webkit-appearance: none; /* Remove a aparência padrão no Chrome/Safari */
   -moz-appearance: none; /* Remove a aparência padrão no Firefox */
@@ -113,7 +124,7 @@ form.hiddenformNewClient {
 }
 
 .fieldNotes {
-  min-width: 100%;
+  width: 100%;
   grid-column: 1/4;
   display: flex;
   justify-content: start;

@@ -1,5 +1,5 @@
 .contentListEmployees {
-  width: 70%;
+  width: 80%;
   height: auto;
   margin: 0 auto;
   border-radius: 1em;
@@ -25,7 +25,6 @@
 .headerListEmployees .title h3 {
   text-align: left;
   width: 100%;
-  font-size: 1.75rem;
 }
 .headerListEmployees section {
   display: flex;
