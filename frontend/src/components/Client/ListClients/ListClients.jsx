@@ -10,6 +10,7 @@ import NavigationListClients from "./navigationListClients.jsx";
 import PageOfListClients from "./PageOfListClients.jsx";
 import LoadingSpin from "../../LoadingSpin/LoadingSpin.jsx";
 
+
 const ListClients = () => {
   const { JwtToken } = useAuth();
   const [clients, setClients] = useState();
@@ -30,19 +31,20 @@ const ListClients = () => {
           Authorization: `Bearer ${JwtToken}`,
         },
       });
+      
       setClients(response.data.content);
     } catch (err) {
       console.log(err);
       alert("Erro ao puxar clientes!");
     }
   };
-
+  
   useEffect(() => {
     handleShowClients();
   }, []);
-
+  
   const deleteClient = async (client) => {
-
+    
     setClienteNameShow(client.fullName);
     const confirmDelete = await new Promise((resolve) => {
       setShowModal(true);
@@ -69,28 +71,28 @@ const ListClients = () => {
       alert("Erro ao deletar");
     }
   };
-
-
+  
+  
   const ToFormUpdateClient = (data) => {
     setClientsUpdate(data)
   };
-
+  
   const filteredClients = clients?.filter((client) => {
     const matchesStatus = (showAtivos && client.status === "ativo")
-      || (showInativos && client.status === "inativo"); // se ambos forem true e ativo ou inativo, ele filtra de acorco com o check
+    || (showInativos && client.status === "inativo"); // se ambos forem true e ativo ou inativo, ele filtra de acorco com o check
     const matchesSearch = client.fullName.toLowerCase().includes(searchClients.toLowerCase()); // Filtro por nome, ele busca por nome e acresenta o filtro
     return matchesStatus && matchesSearch;
   }) || [];
-
+  
   const maxClientsPerList = 6
   let contClientPages = Math.ceil(filteredClients.length / maxClientsPerList)
-
-
-
-
+  
+  
+  
+  
   // estou chamando form cliente dentro de list pra poder jogar os dados nele pra update!!!!
   return (
-
+    
     <>
       {isLoading && <LoadingSpin />}
       <FormNewClient dataClient={clientUpdate} />
@@ -118,7 +120,7 @@ const ListClients = () => {
                     className="inputRadio inputCheckbox"
                     onClick={() => setShowAtivos(!showAtivos)}
                     defaultChecked
-                  />
+                    />
                   <label className="text labelRadio" htmlFor="ativos">
                     Ativos
                   </label>
@@ -133,7 +135,7 @@ const ListClients = () => {
                     className="inputRadio inputCheckbox"
                     onClick={() => setShowInativos(!showInativos)}
                     defaultChecked
-                  />
+                    />
                   <label className="text labelRadio" htmlFor="inativos">
                     Inativos
                   </label>

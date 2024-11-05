@@ -113,7 +113,6 @@ form.hiddenformNewSupplier {
 }
 
 .fieldNotes {
-  min-width: 100%;
   grid-column: 1/4;
   display: flex;
   justify-content: start;
