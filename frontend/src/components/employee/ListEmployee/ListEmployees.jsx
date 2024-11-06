@@ -32,7 +32,6 @@ const ListEmployees = () => {
       });
 
       setEmployees(response.data.content);
-      
     } catch (err) {
       console.log(err);
       alert("Erro ao puxar funcionarios!");
@@ -41,7 +40,7 @@ const ListEmployees = () => {
 
   useEffect(() => {
     handleShowEmployees();
-  }, []);
+  }, [employees]);
 
   const deleteEmployee = async (employee) => {
     console.log(employee);
@@ -92,7 +91,6 @@ const ListEmployees = () => {
   let contEmployeePages = Math.ceil(
     filteredEmployees.length / maxEmployeesPerList
   );
-
 
   return (
     <>

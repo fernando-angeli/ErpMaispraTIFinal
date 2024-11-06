@@ -147,7 +147,7 @@ function FormNewEmployee(dataEmployee) {
       country: "Brasil",
       roles: newEmployeeRole,
       status: "ativo",
-      password: "string",
+      password: "12345",
     };
     try {
       const response = await axios.post(
@@ -203,8 +203,8 @@ function FormNewEmployee(dataEmployee) {
 
   const handleUpdate = async (event) => {
     setIsLoading(true);
-
     event.preventDefault();
+    
     const newEmployeeData = {
       fullName: newEmployeeName,
       email: newEmployeeEmail,
@@ -220,9 +220,10 @@ function FormNewEmployee(dataEmployee) {
       country: "Brasil",
       roles: newEmployeeRole,
       status: "ativo",
-      password: "string",
+      password: "12345",
     };
     console.log(newEmployeeData);
+    console.log(updateEmployeeId);
     const TelephoneRegex =
       /^\(?\+?(\d{1,3})?\)?[-.\s]?(\d{2})[-.\s]?(\d{4,5})[-.\s]?(\d{4})$/;
     if (TelephoneRegex.test(newEmployeeData.phoneNumber)) {
@@ -233,6 +234,7 @@ function FormNewEmployee(dataEmployee) {
     }
 
     try {
+      console.log(JwtToken);
       const response = await axios.put(
         `http://localhost:8080/api/usuarios/${updateEmployeeId}`,
         newEmployeeData,
@@ -263,7 +265,6 @@ function FormNewEmployee(dataEmployee) {
 
   useEffect(() => {
     if (dataEmployee.dataEmployee) {
-      console.log(dataEmployee.dataEmployee);
       SetValuestoUpdate(dataEmployee.dataEmployee);
       SetPostToUpdade(false);
     }
@@ -459,11 +460,7 @@ function FormNewEmployee(dataEmployee) {
         </div>
 
         <div className="line5 line">
-          
-
-          
           <div className="divStatusAndButtons">
-
             <div className="divStatus">
               <label
                 htmlFor="newEmployeeStatus"

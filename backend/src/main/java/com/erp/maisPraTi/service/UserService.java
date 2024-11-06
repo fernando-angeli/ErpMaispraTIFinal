@@ -66,12 +66,14 @@ public class UserService {
     public UserDto update(Long id, UserUpdateDto userUpdateDto){
         verifyExistsId(id);
         try{
+            
             User user = userRepository.getReferenceById(id);
             user.getRoles().clear();
             convertToEntity(userUpdateDto, user);
             user.setUpdatedAt(LocalDateTime.now());
             updateRoles(userUpdateDto.getRoles(), user);
             user.setPassword(passwordEncoder.encode(userUpdateDto.getPassword()));
+            user.setId(id);
             user = userRepository.save(user);
             return convertToDto(user, UserDto.class);
         } catch (DataIntegrityViolationException e){
