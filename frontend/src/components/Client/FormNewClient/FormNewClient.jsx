@@ -359,7 +359,6 @@ function FormNewClient(dataClient) {
       <h2 className="tabTitle">
         Adicionar Cliente
         <a className="hide-desktop" onClick={resposiveClienteShow}>
-          {" "}
           {!ResponsiveCliente ? <CgAdd size={45} /> : <CgRemove size={45} />}
         </a>
       </h2>
@@ -462,6 +461,7 @@ function FormNewClient(dataClient) {
               type={"text"}
               placeholder={"Digite a Inscrição Estadual"}
               name={"IE"}
+              label={"Inscrição Estadual:"}
               idInput={"newClientIE"}
               value={newClientIE}
               onInvalid={(e) => isInvalid(e)}
@@ -469,7 +469,6 @@ function FormNewClient(dataClient) {
                 setNewClientIE(e.target.value);
                 isValid(e);
               }}
-              label={""}
               classNameDiv="inputFieldNoLabel"
             /></div>}
         </div>

@@ -1,5 +1,6 @@
 import { BiSolidUser } from "react-icons/bi";
 import { BiSearch } from "react-icons/bi";
+import { CgAdd, CgRemove } from "react-icons/cg";
 import ModalYesOrNot from "../../ModalYesOrNot/ModalYesOrNot.jsx"
 import axios from "axios";
 import { useEffect, useState } from "react";
@@ -21,8 +22,12 @@ const ListClients = () => {
   const [showModal, setShowModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [ClienteNameShow, setClienteNameShow] = useState();
-
+  const [ResponsiveCliente, setResponsiveCliente] = useState(true);
+  
   const [listClientsPageSelected, setListClientsPage] = useState(1)
+  const resposiveClienteShow = () => {
+    setResponsiveCliente(!ResponsiveCliente);
+  };
 
   const handleShowClients = async () => {
     try {
@@ -101,9 +106,9 @@ const ListClients = () => {
           <div className="headerListClients">
             <div className="title">
               <BiSolidUser className="userIcon" size={75} />
-              <h3>Lista de Clientes</h3>
-            </div>
-            <section>
+              <h3>Lista de Clientes  </h3>
+            </div >
+            <section >
               <label className="searchClient">
                 <input type="text" placeholder="Buscar cliente..." required onChange={(e) => setsearchClients(e.target.value)} />
                 <a>
