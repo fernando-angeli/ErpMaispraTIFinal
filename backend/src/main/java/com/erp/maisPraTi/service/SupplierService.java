@@ -87,20 +87,20 @@ public class SupplierService {
         }
     }
 
-    private void verifyExistsId(Long id){
+    public void verifyExistsId(Long id){
         if(!supplierRepository.existsById(id)){
             throw new ResourceNotFoundException("Id não localizado: " + id);
         }
     }
 
-    private void verifyExistsDocuments(String cpfCnpj, String stateRegistration, TypePfOrPj typePfOrPj) {
+    public void verifyExistsDocuments(String cpfCnpj, String stateRegistration, TypePfOrPj typePfOrPj) {
         if(supplierRepository.existsByCpfCnpj(cpfCnpj))
             throw new DatabaseException(typePfOrPj.equals(TypePfOrPj.PJ) ? "CNPJ já cadastrado no sistema." : "CPF já cadastrado no sistema.");
         if(typePfOrPj.equals(TypePfOrPj.PJ) && supplierRepository.existsByStateRegistration(stateRegistration) && !stateRegistration.equalsIgnoreCase("isento"))
             throw new DatabaseException("Inscrição estadual já cadastrada no sistema.");
     }
 
-    private String stateRegistrationNormalize(String stateRegistration){
+    String stateRegistrationNormalize(String stateRegistration){
         return stateRegistration != null ? stateRegistration.toLowerCase() : null;
     }
 
