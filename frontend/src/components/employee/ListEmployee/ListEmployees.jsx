@@ -11,6 +11,7 @@ import PageOfListEmployees from "./PageOfListEmployees.jsx";
 import LoadingSpin from "../../LoadingSpin/LoadingSpin.jsx";
 
 const ListEmployees = () => {
+  const apiUrl = import.meta.env.VITE_API_URL;
   const { JwtToken } = useAuth();
   const [employees, setEmployees] = useState();
   const [employeeUpdate, setEmployeesUpdate] = useState(null);
@@ -20,12 +21,14 @@ const ListEmployees = () => {
   const [showModal, setShowModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [EmployeeeNameShow, setEmployeeeNameShow] = useState();
-
   const [listEmployeesPageSelected, setListEmployeesPage] = useState(1);
+  const [filteredEmployees, setFilteredEmployees] = useState([]);
+  const maxEmployeesPerList = 6;
+  const [contEmployeePages, setContEmployeePages] = useState(0);
 
   const handleShowEmployees = async () => {
     try {
-      const response = await axios.get(`http://localhost:8080/api/usuarios`, {
+      const response = await axios.get(`${apiUrl}/api/usuarios`, {
         headers: {
           Authorization: `Bearer ${JwtToken}`,
         },
@@ -57,7 +60,7 @@ const ListEmployees = () => {
     }
     setIsLoading(true);
     try {
-      await axios.delete(`http://localhost:8080/api/usuarios/${employee.id}`, {
+      await axios.delete(`${apiUrl}/api/usuarios/${employee.id}`, {
         headers: {
           Authorization: `Bearer ${JwtToken}`,
         },
@@ -74,21 +77,22 @@ const ListEmployees = () => {
     setEmployeesUpdate(data);
   };
 
-  const filteredEmployees =
-    employees?.filter((employee) => {
-      const matchesStatus =
-        (showAtivos && employee.status === "ativo") ||
-        (showInativos && employee.status === "inativo"); // se ambos forem true e ativo ou inativo, ele filtra de acorco com o check
-      const matchesSearch = employee.fullName
-        .toLowerCase()
-        .includes(searchEmployees.toLowerCase()); // Filtro por nome, ele busca por nome e acresenta o filtro
-      return matchesStatus && matchesSearch;
-    }) || [];
+  useEffect(() => {
+    const newFilteredEmployees =
+      employees?.filter((employee) => {
+        console.log(employee.status)
+        const matchesStatus =
+          (showAtivos && employee.status === "ativo") ||
+          (showInativos && employee.status === "inativo");
+        const matchesSearch = employee.fullName
+          .toLowerCase()
+          .includes(searchEmployees.toLowerCase());
+        return matchesStatus && matchesSearch;
+      }) || [];
 
-  const maxEmployeesPerList = 6;
-  let contEmployeePages = Math.ceil(
-    filteredEmployees.length / maxEmployeesPerList
-  );
+    setFilteredEmployees(newFilteredEmployees);
+    setContEmployeePages(Math.ceil(newFilteredEmployees.length / maxEmployeesPerList));
+  }, [employees, showAtivos, showInativos, searchEmployees]);
 
   return (
     <>

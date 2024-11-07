@@ -12,4 +12,5 @@ import lombok.NoArgsConstructor;
 public class UserInsertDto extends UserDto{
 
     private String password;
+
 }

@@ -21,7 +21,7 @@ function SelectField({
 
   const handleSelectChange = (e) => {
     const selectedValue = e.target.value;
-    const parsedValue = JSON.parse(selectedValue); 
+    const parsedValue = JSON.parse(selectedValue);
     onChange(parsedValue);
   };
 
@@ -29,36 +29,49 @@ function SelectField({
     <div className={classnameDiv}>
       <label htmlFor={id} className="inputLabel">
         <span className="inputDescription">{label}</span>
+        <input list="clients" placeholder="Digite..."/>
 
-        <input
-          type="text"
-          placeholder="Buscar..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="searchInput"
-        />
-
-        <select
-          name={name}
-          id={id}
-          value={JSON.stringify(value)} 
-          required={required}
-          onChange={handleSelectChange}
-          onInvalid={onInvalid}
-          className={`selectRole ${classNameSelect}`}
-        >
-          <option value="" disabled hidden>
-            {placeholder}
-          </option>
+        <datalist id="clients" >
           {filteredOptions.map((option) => (
             <option
               key={option.id}
-              value={JSON.stringify({ id: option.id, authority: option.fullName })} 
+              value={option.fullName}
             >
-              {option.fullName}
             </option>
           ))}
-        </select>
+        </datalist>
+
+        {/* 
+            
+            <input
+            type="text"
+            placeholder="Buscar..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="searchInput"
+            />
+            
+            <select
+            name={name}
+            id={id}
+            value={JSON.stringify(value)} 
+            required={required}
+            onChange={handleSelectChange}
+            onInvalid={onInvalid}
+            className={`selectRole ${classNameSelect}`}
+            > 
+            <option value="" disabled hidden>
+            {placeholder}
+            </option>
+            {filteredOptions.map((option) => (
+              <option
+              key={option.id}
+              value={JSON.stringify({ id: option.id, authority: option.fullName })} 
+              >
+              {option.fullName}
+              </option>
+              ))}
+              </select> */}
       </label>
     </div>
   );

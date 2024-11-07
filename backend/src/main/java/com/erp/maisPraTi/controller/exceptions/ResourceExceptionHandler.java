@@ -1,9 +1,6 @@
 package com.erp.maisPraTi.controller.exceptions;
 
-import com.erp.maisPraTi.service.exceptions.DatabaseException;
-import com.erp.maisPraTi.service.exceptions.InvalidDocumentException;
-import com.erp.maisPraTi.service.exceptions.InvalidValueException;
-import com.erp.maisPraTi.service.exceptions.ResourceNotFoundException;
+import com.erp.maisPraTi.service.exceptions.*;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -59,6 +56,18 @@ public class ResourceExceptionHandler {
 
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<StandardError> authentication(AuthenticationException e, HttpServletRequest request){
+        HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
+        StandardError error = new StandardError();
+        error.setTimestamp(Instant.now());
+        error.setStatus(status.value());
+        error.setError("Authentication error");
+        error.setMessage(e.getMessage());
+        error.setPath(request.getRequestURI());
+        return ResponseEntity.status(status).body(error);
+    }
+
+    @ExceptionHandler(AuthenticationUserException.class)
+    public ResponseEntity<StandardError> authenticationUser(AuthenticationUserException e, HttpServletRequest request){
         HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
         StandardError error = new StandardError();
         error.setTimestamp(Instant.now());

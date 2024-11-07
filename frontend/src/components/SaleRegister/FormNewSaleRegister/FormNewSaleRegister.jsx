@@ -9,8 +9,7 @@ import SelectFieldClient from "../../SelectField/SelectFieldClient";
 import SelectFieldProduct from "../../SelectField/SelectFieldProduct";
 import CardSaleRegister from './CardSaleRegister'
 function FormNewSaleRegister({ dataSaleRegister }) {
-
-
+  const apiUrl = import.meta.env.VITE_API_URL;
   const [ResponsiveSaleRegister, setResponsiveSaleRegister] = useState(true);
   const [PostToUpdate, setPostToUpdate] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
@@ -31,7 +30,7 @@ function FormNewSaleRegister({ dataSaleRegister }) {
   const handleSubmit = async (event) => {
     try {
       await axios.post(
-        `http://localhost:8080/api/`,
+        `${apiUrl}/api/`,
         {
           headers: {
             Authorization: `Bearer ${JwtToken}`,
@@ -63,7 +62,7 @@ const handleAddtoCard = ()=>{
 
   const handleGetClients = async () => {
     try {
-      const response = await axios.get(`http://localhost:8080/api/clientes`, {
+      const response = await axios.get(`${apiUrl}/api/clientes`, {
         headers: {
           Authorization: `Bearer ${JwtToken}`,
         },
@@ -81,7 +80,7 @@ const handleAddtoCard = ()=>{
 
   const handleGetProducts = async (event) => {
     try {
-      const response = await axios.get(`http://localhost:8080/api/produtos`, {
+      const response = await axios.get(`${apiUrl}/api/produtos`, {
         headers: {
           Authorization: `Bearer ${JwtToken}`,
         },
@@ -120,7 +119,7 @@ const handleAddtoCard = ()=>{
       >
         <div className="line1 line">
           <SelectFieldClient
-           classNameDiv="fieldName"
+          classNameDiv="fieldName"
           label={"Clientes"}
           placeholder="Clientes"
           arrayOptions={ListClients}

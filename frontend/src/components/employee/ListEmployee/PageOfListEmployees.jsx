@@ -16,7 +16,6 @@ function PageOfListEmployees({
   const [selectedEmployee, setSelectedEmployee] = useState("");
 
   let employeesToList = [];
-
   for (
     let i = (listEmployeesPageSelected - 1) * maxEmployeesPerList;
     i < listEmployeesPageSelected * maxEmployeesPerList;

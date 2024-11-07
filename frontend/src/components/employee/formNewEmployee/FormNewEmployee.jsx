@@ -9,6 +9,8 @@ import SelectField from "../../SelectField/SelectField";
 import RadioGroup from "../../RadioGroup/RadioGroup";
 import LoadingSpin from "../../LoadingSpin/LoadingSpin";
 function FormNewEmployee(dataEmployee) {
+  const apiUrl = import.meta.env.VITE_API_URL;
+
   const [ResponsiveEmployee, setResponsiveEmployee] = useState(true);
   const [PostToUpdate, SetPostToUpdade] = useState(true);
 
@@ -151,7 +153,7 @@ function FormNewEmployee(dataEmployee) {
     };
     try {
       const response = await axios.post(
-        `http://localhost:8080/api/usuarios`,
+        `${apiUrl}/api/usuarios`,
         newEmployeeData,
         {
           headers: {
@@ -236,7 +238,7 @@ function FormNewEmployee(dataEmployee) {
     try {
       console.log(JwtToken);
       const response = await axios.put(
-        `http://localhost:8080/api/usuarios/${updateEmployeeId}`,
+        `${apiUrl}/api/usuarios/${updateEmployeeId}`,
         newEmployeeData,
         {
           headers: {
