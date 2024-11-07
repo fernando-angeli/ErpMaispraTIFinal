@@ -1,4 +1,4 @@
-.contentCircle{
+.contentCircle {
      display: flex;
      flex-direction: column;
      align-items: center;
@@ -7,23 +7,29 @@
      padding: 1.5em;
      width: 100%;
 }
-.circleChart{
-width: auto;
-height:  15em;
-display: flex;
-flex-direction: column;
-align-items: center;
+
+.circleChart {
+     width: auto;
+     height: 15em;
+     display: flex;
+     flex-direction: column;
+     align-items: center;
+}
+.circleChart h4 {
+     margin-block: 0.4rem 1rem;
 }
 
-.circleChart h2{
- margin-top: -3.5em;   
+.circleChart h2 {
+     margin-top: -3.5em;
 }
-.circleChartData{
-width: 100%;
-padding-top: 3.5em;
-text-align: center;
+
+.circleChartData {
+     width: 100%;
+     padding-top: 4.3rem;
+     text-align: center;
 }
-.circleChartData span{
-font-size: 1.25em;
-padding: 0.25em;
+
+.circleChartData span {
+     font-size: 1.25em;
+     padding: 0.25em;
 }
