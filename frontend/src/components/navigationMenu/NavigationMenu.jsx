@@ -35,6 +35,7 @@ function NavigationMenu() {
     {
       icon: newSaleIcon,
       description: "Venda de Produtos",
+      url:"/saleregister"
     },
   ];
 
@@ -60,6 +61,7 @@ function NavigationMenu() {
     {
       icon: newSaleIcon,
       description: "Venda de Produtos",
+      url:"/saleregister"
     },
     {
       icon: newUserIcon,

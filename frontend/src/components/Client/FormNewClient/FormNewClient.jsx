@@ -10,7 +10,7 @@ import TextareaField from "../../TextareaField/TextareaField";
 import LoadingSpin from '../../LoadingSpin/LoadingSpin'
 
 function FormNewClient(dataClient) {
-  
+  const apiUrl = import.meta.env.VITE_API_URL;
 
   const [ResponsiveCliente, setResponsiveCliente] = useState(true);
   const [PostToUpdate, SetPostToUpdade] = useState(true)
@@ -198,7 +198,7 @@ function FormNewClient(dataClient) {
 
     try {
       const response = await axios.post(
-        `http://localhost:8080/api/clientes`,
+        `${apiUrl}/api/clientes`,
         newClientData,
         {
           headers: {
@@ -289,7 +289,7 @@ function FormNewClient(dataClient) {
 
     try {
       const response = await axios.put(
-        `http://localhost:8080/api/clientes/${UpdateClientId}`,
+        `${apiUrl}/api/clientes/${UpdateClientId}`,
         newClientData,
         {
           headers: {
@@ -359,7 +359,6 @@ function FormNewClient(dataClient) {
       <h2 className="tabTitle">
         Adicionar Cliente
         <a className="hide-desktop" onClick={resposiveClienteShow}>
-          {" "}
           {!ResponsiveCliente ? <CgAdd size={45} /> : <CgRemove size={45} />}
         </a>
       </h2>
@@ -462,6 +461,7 @@ function FormNewClient(dataClient) {
               type={"text"}
               placeholder={"Digite a Inscrição Estadual"}
               name={"IE"}
+              label={"Inscrição Estadual:"}
               idInput={"newClientIE"}
               value={newClientIE}
               onInvalid={(e) => isInvalid(e)}
@@ -469,7 +469,6 @@ function FormNewClient(dataClient) {
                 setNewClientIE(e.target.value);
                 isValid(e);
               }}
-              label={""}
               classNameDiv="inputFieldNoLabel"
             /></div>}
         </div>
