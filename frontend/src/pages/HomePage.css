@@ -1,18 +1,8 @@
 div.Homepage{
 display: flex;
 align-items: center;
+justify-content: center;
 flex-direction: column;
+width: 100%;
+height: auto;
 }
-
-.graphs{
-    display: flex;
-    flex-direction: row;
-    gap:1em;
-}
-
-@media (max-width: 600px) {
-    .graphs{
-        padding: 1em;
-        flex-wrap: wrap;
-    }
-  }

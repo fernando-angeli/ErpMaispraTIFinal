@@ -1,0 +1,73 @@
+.BoxChartValue{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    border: 0.20em solid #0E1D25;
+    border-radius: 1em;
+    padding: 1em;
+    height: 100%;
+    width:38em;
+}
+
+.valuebox{
+padding:0 3.5em 0 3em;
+align-items: center;
+border-radius: 1em;
+color: white;
+}
+
+.valuebox span{
+    font-size: 3.5em;
+}
+.valuebox p:first-child{
+    position: relative;
+    top:1.8em;
+    left: 1.5em;
+    color: white;
+    font-size: 1.9em;
+    text-align: end;
+}
+.valuebox p{
+    position: relative;
+    top:-1.7em;
+    left: -1.2em;
+    color: white;
+    font-size:1.9em;
+    text-align: start;
+}
+
+@media (max-width: 768px) {
+    .BoxChartValue{
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: space-around;
+        align-items: center;
+        border: 0.20em solid #0E1D25;
+        border-radius: 1em;
+        padding: 1.5em;
+        height: 100%;
+        width:22em;
+    }
+.BoxChartValue h2{
+    padding-bottom: 0.25em;
+}
+        .valuebox p:first-child{
+            position: relative;
+            top:1.8em;
+            left: 1.5em;
+            color: white;
+            font-size: 1.9em;
+            text-align: end;
+        }
+        .valuebox p{
+            position: relative;
+            top:-1.7em;
+            left: -1.3em;
+            color: white;
+            font-size:1.9em;
+            text-align: start;
+        }
+
+}
