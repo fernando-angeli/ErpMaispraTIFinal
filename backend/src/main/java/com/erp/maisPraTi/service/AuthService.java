@@ -4,6 +4,7 @@ import com.erp.maisPraTi.dto.auth.LoginRequest;
 import com.erp.maisPraTi.dto.auth.LoginResponse;
 import com.erp.maisPraTi.dto.auth.ResetPasswordRequest;
 import com.erp.maisPraTi.dto.auth.ValidationUserRequest;
+import com.erp.maisPraTi.enums.PartyStatus;
 import com.erp.maisPraTi.model.User;
 import com.erp.maisPraTi.repository.UserRepository;
 import com.erp.maisPraTi.security.JwtTokenProvider;
@@ -36,6 +37,7 @@ public class AuthService {
     private PasswordEncoder passwordEncoder;
 
     public LoginResponse login(LoginRequest request){
+        verifyUserActive(request.getEmail());
         try {
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
@@ -50,6 +52,7 @@ public class AuthService {
     }
 
     public void requestPasswordReset(String email){
+        verifyUserActive(email);
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado."));
         String token = jwtTokenProvider.generateTokenWithUserEmail(user.getEmail());
@@ -74,6 +77,14 @@ public class AuthService {
         } else{
             throw new ResourceNotFoundException("Usuário não encontrado.");
         }
+    }
+
+    private void verifyUserActive(String email) {
+        Optional<User> user = userRepository.findByEmail(email);
+        if(user.isEmpty())
+            throw new AuthenticationUserException("Usuário não encontrado.");
+        if(!user.get().getStatus().equals(PartyStatus.ACTIVE))
+            throw new AuthenticationUserException("Usuário inativo ou suspenso, entre em contato com o administrador do sistema.");
     }
 
 }
