@@ -65,8 +65,6 @@ public class ProductService {
             return convertToDto(product, ProductDto.class);
         } catch (DataIntegrityViolationException e) {
             throw new DatabaseException("Não foi possível fazer a alteração neste produto.");
-        } catch (Exception e) {
-            throw new DatabaseException("Erro inesperado ao tentar atualizar produto.");
         }
     }
 
@@ -89,16 +87,26 @@ public class ProductService {
     }
 
     private void insertOrUpdateSuppliers(List<SupplierSimpleDto> supplierDtos, Product product) {
-        if(Objects.nonNull(product) && Objects.nonNull(product.getSuppliers())) product.getSuppliers().clear();
-        supplierDtos.stream().forEach(supplierDto -> {
+        if (Objects.isNull(supplierDtos)) {
+            return; // Ignorar a atualização dos fornecedores se a lista for nula
+        }
+        // Limpa a lista de fornecedores do produto, se não for nula
+        if (Objects.nonNull(product) && Objects.nonNull(product.getSuppliers())) {
+            product.getSuppliers().clear();
+        }
+
+        // Itera sobre os SupplierSimpleDto fornecidos
+        supplierDtos.forEach(supplierDto -> {
             Supplier supplier = convertToEntity(supplierService.findById(supplierDto.getId()), Supplier.class);
+            supplier.setFullName(supplierDto.getFullName());
             product.getSuppliers().add(supplier);
         });
     }
 
-    public void validPrice(BigDecimal price){
-        if(price.compareTo(BigDecimal.ZERO) < 0)
-            throw new InvalidValueException("O preço de custo do produto não pode ser negativo.");
+    public void validPrice(BigDecimal price) {
+        if (price == null || price.compareTo(BigDecimal.ZERO) < 0) {
+            throw new InvalidValueException("O preço de custo do produto não pode ser nulo ou negativo.");
+        }
     }
 
 }
