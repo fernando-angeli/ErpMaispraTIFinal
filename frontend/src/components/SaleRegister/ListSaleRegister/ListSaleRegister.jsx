@@ -11,6 +11,7 @@ import NavigationListSaleRegister from "./NavigationListSaleRegister.jsx";
 import PageOfListSaleRegister from "./PageOfListSaleRegister.jsx";
 import LoadingSpin from "../../LoadingSpin/LoadingSpin.jsx";
 const ListSaleRegisters = () => {
+  const apiUrl = import.meta.env.VITE_API_URL;
   const { JwtToken } = useAuth();
   const [saleRegisters, setSaleRegisters] = useState([]);
   const [saleRegisterUpdate, setSaleRegisterUpdate] = useState(null);
@@ -25,7 +26,7 @@ const ListSaleRegisters = () => {
 
   const handleShowSaleRegisters = async () => {
     try {
-      const response = await axios.get(`http://localhost:8080/api/saleRegisters`, {
+      const response = await axios.get(`${apiUrl}/api/saleRegisters`, {
         headers: {
           Authorization: `Bearer ${JwtToken}`,
         },
@@ -55,7 +56,7 @@ const ListSaleRegisters = () => {
 
     setIsLoading(true);
     try {
-      await axios.delete(`http://localhost:8080/api/saleRegisters/${saleRegister.id}`, {
+      await axios.delete(`${apiUrl}/api/saleRegisters/${saleRegister.id}`, {
         headers: {
           Authorization: `Bearer ${JwtToken}`,
         },

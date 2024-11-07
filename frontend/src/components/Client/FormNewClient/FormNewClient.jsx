@@ -10,7 +10,7 @@ import TextareaField from "../../TextareaField/TextareaField";
 import LoadingSpin from '../../LoadingSpin/LoadingSpin'
 
 function FormNewClient(dataClient) {
-  
+  const apiUrl = import.meta.env.VITE_API_URL;
 
   const [ResponsiveCliente, setResponsiveCliente] = useState(true);
   const [PostToUpdate, SetPostToUpdade] = useState(true)
@@ -198,7 +198,7 @@ function FormNewClient(dataClient) {
 
     try {
       const response = await axios.post(
-        `http://localhost:8080/api/clientes`,
+        `${apiUrl}/api/clientes`,
         newClientData,
         {
           headers: {
@@ -289,7 +289,7 @@ function FormNewClient(dataClient) {
 
     try {
       const response = await axios.put(
-        `http://localhost:8080/api/clientes/${UpdateClientId}`,
+        `${apiUrl}/api/clientes/${UpdateClientId}`,
         newClientData,
         {
           headers: {

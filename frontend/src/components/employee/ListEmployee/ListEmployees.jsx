@@ -5,12 +5,13 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useAuth } from "../../AuthContext.jsx";
 import "./ListEmployees.css";
-import FormNewEmployee from "../FormNewEmployee/FormNewEmployee.jsx";
+import FormNewEmployee from "../formNewEmployee/FormNewEmployee.jsx";
 import NavigationListEmployees from "./navigationListEmployees.jsx";
 import PageOfListEmployees from "./PageOfListEmployees.jsx";
 import LoadingSpin from "../../LoadingSpin/LoadingSpin.jsx";
 
 const ListEmployees = () => {
+  const apiUrl = import.meta.env.VITE_API_URL;
   const { JwtToken } = useAuth();
   const [employees, setEmployees] = useState();
   const [employeeUpdate, setEmployeesUpdate] = useState(null);
@@ -25,7 +26,7 @@ const ListEmployees = () => {
 
   const handleShowEmployees = async () => {
     try {
-      const response = await axios.get(`http://localhost:8080/api/usuarios`, {
+      const response = await axios.get(`${apiUrl}/api/usuarios`, {
         headers: {
           Authorization: `Bearer ${JwtToken}`,
         },
@@ -40,7 +41,7 @@ const ListEmployees = () => {
 
   useEffect(() => {
     handleShowEmployees();
-  }, [employees]);
+  }, []);
 
   const deleteEmployee = async (employee) => {
     console.log(employee);
@@ -58,7 +59,7 @@ const ListEmployees = () => {
     }
     setIsLoading(true);
     try {
-      await axios.delete(`http://localhost:8080/api/usuarios/${employee.id}`, {
+      await axios.delete(`${apiUrl}/api/usuarios/${employee.id}`, {
         headers: {
           Authorization: `Bearer ${JwtToken}`,
         },

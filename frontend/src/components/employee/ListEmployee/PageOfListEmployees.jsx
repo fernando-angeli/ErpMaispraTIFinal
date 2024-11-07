@@ -9,7 +9,6 @@ function PageOfListEmployees({
   listEmployeesPageSelected,
 }) {
   let employeesToList = [];
-
   for (
     let i = (listEmployeesPageSelected - 1) * maxEmployeesPerList;
     i < listEmployeesPageSelected * maxEmployeesPerList;
