@@ -1,0 +1,7 @@
+.CardSale{
+    width: 80%;
+    height: auto;
+    margin: 0 auto;
+    border-radius: 1em;
+    border: 2px solid var(--text-100, #2A153B);
+}

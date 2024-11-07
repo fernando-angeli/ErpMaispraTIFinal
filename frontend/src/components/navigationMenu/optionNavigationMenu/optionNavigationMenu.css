@@ -25,6 +25,18 @@ label.optionDescription {
     padding: 0.5em;
     cursor: pointer;
 }
+.active {
+    background-color: brown;
+}
+
+div.option:hover {
+    background: var(--primary-normal-hover);
+}
+div.option:active{
+    background: var(--primary-dark);
+}
+
+
 
 @media (max-width: 768px) {
     div.option {

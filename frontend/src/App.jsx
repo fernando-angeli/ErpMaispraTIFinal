@@ -14,6 +14,8 @@ import { useAuth } from "./components/AuthContext";
 import AddEmployeePage from "./pages/addEmployeePage/AddEmployeePage";
 import ResetPassword from "./pages/ResetPassword/ResetPassword";
 import AddSupplierpage from './pages/addSupplierpage/AddSupplierpage' 
+import AddSaleRegister from "./pages/addSaleRegister/AddSaleRegister"
+
 function App() {
   const { isAuthenticated } = useAuth();
   return (
@@ -43,7 +45,7 @@ function App() {
             }
           />
 
-<Route
+        <Route
             path="/supplier"
             element={
               <ProtectedRoute isLoggedIn={isAuthenticated }>
@@ -51,6 +53,15 @@ function App() {
               </ProtectedRoute>
             }
           />
+           <Route
+            path="/saleregister"
+            element={
+              <ProtectedRoute isLoggedIn={isAuthenticated }>
+                <AddSaleRegister/>
+              </ProtectedRoute>
+            }
+          />
+
           <Route
             path="/home"
             element={

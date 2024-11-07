@@ -6,13 +6,6 @@ div.navigationMenu {
     margin-top: 40px;
 }
 
-div.navigationMenu :hover {
-    background: var(--primary-normal-hover);
-}
-div.navigationMenu :active{
-    background: var(--primary-dark);
-}
-
 
 .selected {
     background: var(--primary-dark) !important;

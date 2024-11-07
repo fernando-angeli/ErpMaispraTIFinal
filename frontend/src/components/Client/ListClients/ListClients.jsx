@@ -1,5 +1,6 @@
 import { BiSolidUser } from "react-icons/bi";
 import { BiSearch } from "react-icons/bi";
+import { CgAdd, CgRemove } from "react-icons/cg";
 import ModalYesOrNot from "../../ModalYesOrNot/ModalYesOrNot.jsx"
 import axios from "axios";
 import { useEffect, useState } from "react";
@@ -12,6 +13,7 @@ import LoadingSpin from "../../LoadingSpin/LoadingSpin.jsx";
 
 
 const ListClients = () => {
+  const apiUrl = import.meta.env.VITE_API_URL;
   const { JwtToken } = useAuth();
   const [clients, setClients] = useState();
   const [clientUpdate, setClientsUpdate] = useState(null);
@@ -21,12 +23,15 @@ const ListClients = () => {
   const [showModal, setShowModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [ClienteNameShow, setClienteNameShow] = useState();
-
+  const [ResponsiveCliente, setResponsiveCliente] = useState(true);
   const [listClientsPageSelected, setListClientsPage] = useState(1)
+  const resposiveClienteShow = () => {
+    setResponsiveCliente(!ResponsiveCliente);
+  };
 
   const handleShowClients = async () => {
     try {
-      const response = await axios.get(`http://localhost:8080/api/clientes`, {
+      const response = await axios.get(`${apiUrl}/api/clientes`, {
         headers: {
           Authorization: `Bearer ${JwtToken}`,
         },
@@ -59,7 +64,7 @@ const ListClients = () => {
     }
     setIsLoading(true)
     try {
-      await axios.delete(`http://localhost:8080/api/clientes/${client.id}`, {
+      await axios.delete(`${apiUrl}/api/clientes/${client.id}`, {
         headers: {
           Authorization: `Bearer ${JwtToken}`,
         },
@@ -101,9 +106,9 @@ const ListClients = () => {
           <div className="headerListClients">
             <div className="title">
               <BiSolidUser className="userIcon" size={75} />
-              <h3>Lista de Clientes</h3>
-            </div>
-            <section>
+              <h3>Lista de Clientes  </h3>
+            </div >
+            <section >
               <label className="searchClient">
                 <input type="text" placeholder="Buscar cliente..." required onChange={(e) => setsearchClients(e.target.value)} />
                 <a>

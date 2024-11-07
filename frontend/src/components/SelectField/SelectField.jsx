@@ -10,8 +10,8 @@ function SelectField({
   placeholder = "Selecione...",
   classNameSelect = "",
   classnameDiv = "",
-}) {
-  return (
+}) 
+{return (
     <div className={classnameDiv}>
       <label htmlFor={id} className="inputLabel">
         <span className="inputDescription">{label}</span>
