@@ -83,11 +83,7 @@ public class ClientService {
         }
     }
 
-<<<<<<< HEAD
     public void verifyExistsDocuments(String cpfCnpj, String stateRegistration, TypePfOrPj typePfOrPj) {
-=======
-    void verifyExistsDocuments(String cpfCnpj, String stateRegistration, TypePfOrPj typePfOrPj) {
->>>>>>> upstream/development
         if(clientRepository.existsByCpfCnpj(cpfCnpj))
             throw new DatabaseException(typePfOrPj.equals(TypePfOrPj.PJ) ? "CNPJ já cadastrado no sistema." : "CPF já cadastrado no sistema.");
         if(typePfOrPj.equals(TypePfOrPj.PJ) && clientRepository.existsByStateRegistration(stateRegistration) && !stateRegistration.equalsIgnoreCase("isento"))
