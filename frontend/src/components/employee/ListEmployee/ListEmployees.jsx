@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { useAuth } from "../../AuthContext.jsx";
 import "./ListEmployees.css";
 import FormNewEmployee from "../FormNewEmployee/FormNewEmployee.jsx";
-import NavigationListEmployees from "./navigationListEmployees.jsx";
+import NavigationListEmployees from "./NavigationListEmployees.jsx";
 import PageOfListEmployees from "./PageOfListEmployees.jsx";
 import LoadingSpin from "../../LoadingSpin/LoadingSpin.jsx";
 
@@ -18,9 +18,9 @@ const ListEmployees = () => {
   const [showInativos, setShowInativos] = useState(true);
   const [searchEmployees, setsearchEmployees] = useState("");
   const [showModal, setShowModal] = useState(false);
-
-  const [EmployeeNameShow, setEmployeeNameShow] = useState();
   const [isLoading, setIsLoading] = useState(false);
+  const [EmployeeeNameShow, setEmployeeeNameShow] = useState();
+
   const [listEmployeesPageSelected, setListEmployeesPage] = useState(1);
 
   const handleShowEmployees = async () => {
@@ -34,17 +34,16 @@ const ListEmployees = () => {
       setEmployees(response.data.content);
     } catch (err) {
       console.log(err);
-      alert("Erro ao puxar funcionarios!");
+      alert("Erro ao puxar employeees!");
     }
   };
 
   useEffect(() => {
     handleShowEmployees();
-  }, [employees]);
+  }, []);
 
   const deleteEmployee = async (employee) => {
-    console.log(employee);
-    setEmployeeNameShow(employee.fullName);
+    setEmployeeeNameShow(employee.fullName);
     const confirmDelete = await new Promise((resolve) => {
       setShowModal(true);
       const handleConfirm = (choice) => {
@@ -67,7 +66,6 @@ const ListEmployees = () => {
       handleShowEmployees();
     } catch (err) {
       setIsLoading(false);
-      console.log(err);
       alert("Erro ao deletar");
     }
   };
@@ -80,10 +78,10 @@ const ListEmployees = () => {
     employees?.filter((employee) => {
       const matchesStatus =
         (showAtivos && employee.status === "ativo") ||
-        (showInativos && employee.status === "inativo");
+        (showInativos && employee.status === "inativo"); // se ambos forem true e ativo ou inativo, ele filtra de acorco com o check
       const matchesSearch = employee.fullName
         .toLowerCase()
-        .includes(searchEmployees.toLowerCase());
+        .includes(searchEmployees.toLowerCase()); // Filtro por nome, ele busca por nome e acresenta o filtro
       return matchesStatus && matchesSearch;
     }) || [];
 
@@ -101,13 +99,13 @@ const ListEmployees = () => {
           <div className="headerListEmployees">
             <div className="title">
               <BiSolidUser className="userIcon" size={75} />
-              <h3>Lista de funcionarios</h3>
+              <h3>Lista de Employeees</h3>
             </div>
             <section>
               <label className="searchEmployee">
                 <input
                   type="text"
-                  placeholder="Buscar funcionarios..."
+                  placeholder="Buscar employeee..."
                   required
                   onChange={(e) => setsearchEmployees(e.target.value)}
                 />
@@ -154,11 +152,11 @@ const ListEmployees = () => {
             <table>
               <thead>
                 <tr>
-                  <th className="formatH4 col1">Nome</th>
-                  <th className="formatH4 col2">E-mail</th>
-                  <th className="formatH4 col3">Telefone</th>
-                  <th className="formatH4 col4">CPF</th>
-                  <th className="formatH4 col5"></th>
+                  <th className="formatH4">Nome</th>
+                  <th className="formatH4">E-mail</th>
+                  <th className="formatH4">Telefone</th>
+                  <th className="formatH4">CPF</th>
+                  <th className="formatH4"></th>
                 </tr>
               </thead>
 
@@ -166,10 +164,11 @@ const ListEmployees = () => {
                 <ModalYesOrNot
                   show={showModal}
                   onClose={() => setShowModal(false)}
-                  title="Deletar funcionario?"
+                  title="Deletar Employeee?"
                 >
                   <h6>
-                    Confirma Exclusão de {EmployeeNameShow && EmployeeNameShow}?
+                    Confirma Exclusão de{" "}
+                    {EmployeeeNameShow && EmployeeeNameShow}?
                   </h6>
                   <button onClick={() => window.handleModalConfirm(true)}>
                     Sim
@@ -186,25 +185,6 @@ const ListEmployees = () => {
                   maxEmployeesPerList={maxEmployeesPerList}
                   listEmployeesPageSelected={listEmployeesPageSelected}
                 />
-
-                {/* {filteredEmployees.map((employee) => {
-                  return (
-                    <tr key={employee.id}>
-                      <td>{employee.fullName}</td>
-                      <td>{employee.email}</td>
-                      <td>{employee.phoneNumber}</td>
-                      <td>{employee.cpf}</td>
-                      <td>
-                        <a href="#" onClick={() => ToFormUpdateEmployee(employee)}>
-                          <BiEdit className="editLine" size={30} />
-                        </a>
-                        <a href="#" onClick={() => deleteEmployee(employee.id)}>
-                          <MdDeleteOutline className="deleteLine" size={30} />
-                        </a>
-                      </td>
-                    </tr>
-                  )
-                })} */}
               </tbody>
             </table>
           </div>
