@@ -6,6 +6,11 @@ import axios from 'axios'
 import { useState, useEffect } from "react";
 import { useAuth } from "../../components/AuthContext";
 
+import React from 'react';
+import Draggable from 'react-draggable';
+import { ResizableBox } from 'react-resizable';
+import 'react-resizable/css/styles.css';
+
 const Dashbord = () => {
 
   const apiUrl = import.meta.env.VITE_API_URL;
@@ -59,44 +64,69 @@ const Dashbord = () => {
 
   return (
     <div className="dashContent">
-      <div className="graphs">
-        <LineChartGraph 
-          labels={['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 
-          'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro']}
-          labelData1={'Vendas Registradas'}
-          labelData2={'Vendas Canceladas'}
-          colorData1='#0E1D25' colorData2='#80728A'/>
-      </div>
+      <Draggable bounds="parent">
+      <ResizableBox width={1000} height={500} minConstraints={[100, 100]}>
+          <div className="graphs">
+          <LineChartGraph 
+            labels={['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 
+            'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro']}
+            labelData1={'Vendas Registradas'}
+            labelData2={'Vendas Canceladas'}
+            colorData1='#0E1D25' colorData2='#80728A'/>
+        </div>
+        </ResizableBox>
+        </Draggable> 
+      <Draggable bounds="parent" >
+        <ResizableBox width={320} height={100} minConstraints={[100, 100]} >
+            <div className="graphs">
+              <CircleChart 
+                title={'Clientes'} 
+                total={totalClients} 
+                totalActive={totalActiveClients}
+                colorTotal={'#80728A'}
+                colorTotalActive={'#0E1D25'}
+              />
+              </div>
+         </ResizableBox>
+         </Draggable> 
 
-      <div className="graphs">
-        <CircleChart 
-          title={'Clientes'} 
-          total={totalClients} 
-          totalActive={totalActiveClients}
-          colorTotal={'#80728A'}
-          colorTotalActive={'#0E1D25'}
-        />
-        <CircleChart 
-          title={'Fornecedores'} 
-          total={totalSuppliers} 
-          totalActive={totalActiveSuppliers}
-          colorTotal={'#B4D3E4'}
-          colorTotalActive={'#1B3B4B'}
-        />
-      </div>
+     
+         <Draggable bounds="parent" >
+        <ResizableBox width={320} height={100} minConstraints={[100, 100]}>
+          <div className="graphs">
+            <CircleChart 
+              title={'Fornecedores'} 
+              total={totalSuppliers} 
+              totalActive={totalActiveSuppliers}
+              colorTotal={'#B4D3E4'}
+              colorTotalActive={'#1B3B4B'}
+            />
+          </div>
+                </ResizableBox>
+         </Draggable> 
 
-      <div className="graphs">
-        <BoxChartValue
-          title={'Valor em caixa'}
-          isCredit={true}
-          value={'15610485'}
-        />
-        <BoxChartValue
-          title={'Valor Gasto'}
-          isCredit={false}
-          value={'7610485'}
-        />
-      </div>
+         <Draggable bounds="parent" >
+         <ResizableBox width={650} height={120} minConstraints={[100, 100]}>
+            <div className="graphs">
+              <BoxChartValue
+                title={'Valor em caixa'}
+                isCredit={true}
+                value={'15610485'}
+              /> </div>
+          </ResizableBox>
+          </Draggable> 
+
+          <Draggable bounds="parent">
+          <ResizableBox width={650} height={120} minConstraints={[100, 100]}>          
+              <div className="graphs">
+              <BoxChartValue
+                title={'Valor Gasto'}
+                isCredit={false}
+                value={'7610485'}
+              />
+        </div>
+        </ResizableBox>
+          </Draggable> 
     </div>
   );
 };
