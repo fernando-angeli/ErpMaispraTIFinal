@@ -53,20 +53,8 @@ public class AuthService {
 
     public void requestPasswordReset(String email){
         verifyUserActive(email);
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado."));
-        String token = jwtTokenProvider.generateTokenWithUserEmail(user.getEmail());
-        emailService.sendPasswordResetEmail(user.getEmail(), token);
-    }
-
-    public boolean validateUser(String token, ValidationUserRequest request) {
-        Optional<User> user = userRepository.findByEmail(jwtTokenProvider.getUserEmailFromToken(token));
-        if(user.isPresent() && user.get().getCpf().equals(request.getCpf()))
-            return true;
-        else if(user.isEmpty())
-            throw new ResourceNotFoundException("Usuário não encontrado.");
-        else
-            throw new ResourceNotFoundException("CPF inválido.");
+        String token = jwtTokenProvider.generateTokenWithUserEmail(email);
+        emailService.sendPasswordResetEmail(email, token);
     }
 
     public void resetPassword(String token, ResetPasswordRequest request){
@@ -79,12 +67,22 @@ public class AuthService {
         }
     }
 
-    private void verifyUserActive(String email) {
+    public boolean validateUser(String token, ValidationUserRequest request) {
+        Optional<User> user = userRepository.findByEmail(jwtTokenProvider.getUserEmailFromToken(token));
+        if(user.isPresent() && user.get().getCpf().equals(request.getCpf()))
+            return true;
+        else if(user.isEmpty())
+            throw new ResourceNotFoundException("Usuário não encontrado.");
+        else
+            throw new ResourceNotFoundException("CPF inválido.");
+    }
+
+    public void verifyUserActive(String email) {
         Optional<User> user = userRepository.findByEmail(email);
-        if(user.isEmpty())
-            throw new AuthenticationUserException("Usuário não encontrado.");
-        if(!user.get().getStatus().equals(PartyStatus.ACTIVE))
+        if(user.isPresent() && user.get().getStatus() != PartyStatus.ACTIVE)
             throw new AuthenticationUserException("Usuário inativo ou suspenso, entre em contato com o administrador do sistema.");
+        if(user.isEmpty())
+            throw new ResourceNotFoundException("Usuário não encontrado.");
     }
 
 }
