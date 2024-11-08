@@ -1,53 +1,104 @@
 div.navigationMenu {
-    display: flex;
-    width: 90%;
-    margin: 0 auto;
-    gap: 2px;
-    margin-top: 40px;
+  display: flex;
+  width: 90%;
+  margin: 0 auto;
+  gap: 2px;
+  margin-top: 40px;
+  max-width: 100%;
+  flex-wrap: wrap;
 }
-
-
-.selected {
-    background: var(--primary-dark) !important;
-}
-
-
 
 div.navigationMenu > :first-child {
-    border-radius: 15px 0 0 15px;
+  border-radius: 15px 0 0 15px;
+}
+div.navigationMenu > :first-child :hover {
+  border-radius: 15px 0 0 15px;
 }
 
 div.navigationMenu > :last-child {
-    border-radius:  0 15px 15px 0 ;
+  border-radius: 0 15px 15px 0;
 }
 
-@media (max-width: 600px) {
-    div.navigationMenu {
-        display: flex;
-        justify-content: center;
-        width:100%;
-        margin: 0 auto;
-        flex-wrap: wrap;
-        gap: 0.5rem;
-        margin-top: 40px;
-    }
-    
-    div.navigationMenu :hover {
-        background: var(--primary-normal-hover);
-    }
-    div.navigationMenu :active{
-        background: var(--primary-dark);
-    }
-    
-    .selected {
-        background: var(--primary-dark) !important;
-    }
-    
-    div.navigationMenu > :first-child {
-        border-radius: 1rem 1rem  1rem 1rem;
-    }
-    
-    div.navigationMenu > :last-child {
-        border-radius: 1rem 1rem  1rem 1rem;
-    }
+div.navigationMenu > :last-child :hover {
+  border-radius: 0 15px 15px 0;
+}
+
+div.option {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1 1 15%;
+  padding: 28px;
+  cursor: pointer;
+  background-color: var(--primary-normal);
+}
+div.navigationMenu .selected {
+  background: var(--primary-dark);
+}
+div.navigationMenu .option:hover {
+  background: var(--primary-normal-hover);
+}
+div.navigationMenu .option:active {
+  background: var(--primary-dark);
+}
+
+.option a {
+  text-decoration: none;
+}
+
+.optionResposive {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+label.optionDescription {
+  color: var(--text-20);
+  font-weight: 500;
+  text-align: left;
+  padding: 0.5em;
+  cursor: pointer;
+}
+
+@media (max-width: 1570px) {
+  .navigationMenu div.option {
+    flex: 1 1 10%;
+    padding: 20px;
   }
+
+  .navigationMenuAdmin div.option {
+    border-radius: 15px;
+    flex: 1 1 20%;
+  }
+}
+
+@media (max-width: 1279px) {
+  .navigationMenu div.option {
+    border-radius: 15px;
+  }
+}
+
+@media (max-width: 768px) {
+  div.option img {
+    width: 3em;
+  }
+  .optionResposive {
+    width: 7em;
+    height: 1.5em;
+    gap: 8px;
+  }
+  label.optionDescription {
+    font-size: 1em;
+  }
+}
+@media (max-width: 600px) {
+  div.navigationMenu {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin: 0 auto;
+    gap: 0.5rem;
+    margin-top: 40px;
+    padding: 1rem;
+  }
+}
