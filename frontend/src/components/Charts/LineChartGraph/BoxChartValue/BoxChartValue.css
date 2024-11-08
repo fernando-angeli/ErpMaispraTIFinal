@@ -7,7 +7,7 @@
     border-radius: 1em;
     padding: 1em;
     height: 100%;
-    width:38em;
+    width: 100%;
 }
 
 .valuebox{
@@ -18,14 +18,14 @@ color: white;
 }
 
 .valuebox span{
-    font-size: 3.5em;
+    font-size: 3em;
 }
 .valuebox p:first-child{
     position: relative;
     top:1.8em;
     left: 1.5em;
     color: white;
-    font-size: 1.9em;
+    font-size: 1.4em;
     text-align: end;
 }
 .valuebox p{
@@ -33,7 +33,7 @@ color: white;
     top:-1.7em;
     left: -1.2em;
     color: white;
-    font-size:1.9em;
+    font-size:1.4em;
     text-align: start;
 }
 
@@ -48,7 +48,7 @@ color: white;
         border-radius: 1em;
         padding: 1.5em;
         height: 100%;
-        width:22em;
+        
     }
 .BoxChartValue h2{
     padding-bottom: 0.25em;
