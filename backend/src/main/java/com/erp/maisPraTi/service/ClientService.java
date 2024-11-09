@@ -77,7 +77,7 @@ public class ClientService {
         }
     }
 
-    private void verifyExistsId(Long id) {
+    void verifyExistsId(Long id) {
         if (!clientRepository.existsById(id)) {
             throw new ResourceNotFoundException("Id não localizado: " + id);
         }
@@ -90,7 +90,7 @@ public class ClientService {
             throw new DatabaseException("Inscrição estadual já cadastrada no sistema.");
     }
 
-    private String stateRegistrationNormalize(String stateRegistration){
+    String stateRegistrationNormalize(String stateRegistration){
         return stateRegistration != null ? stateRegistration.toLowerCase() : null;
     }
 
