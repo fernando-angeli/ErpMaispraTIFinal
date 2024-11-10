@@ -12,7 +12,7 @@ const valor = formatarRealSeparado(value);
 
   return (
     <div className='BoxChartValue'>
-      <h2>{title}</h2>
+      <h3>{title}</h3>
     
       <div className="valuebox" style={{ backgroundColor: isCredit ? 'Green' : 'red' }}>
         <p>,{valor.depoisDaVirgula}</p>    
