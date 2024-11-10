@@ -1,4 +1,4 @@
-package com.erp.maisPraTi.dto.products;
+package com.erp.maisPraTi.dto.sales;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,10 +7,9 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProductSimpleDto {
+public class SaleSimpleDto {
 
     private Long id;
-    private String name;
-    private String description;
+    private Long saleNumber;
 
 }

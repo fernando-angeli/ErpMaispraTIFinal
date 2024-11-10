@@ -1,7 +1,10 @@
 package com.erp.maisPraTi.model;
 
+import com.erp.maisPraTi.enums.UnitOfMeasure;
 import jakarta.persistence.*;
 import lombok.Data;
+
+import java.math.BigDecimal;
 
 @Entity
 @Data
@@ -12,20 +15,27 @@ public class SaleItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "product_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id")
     private Product product;
 
     @Column(nullable = false)
-    private int quantitySold;
+    private Long quantitySold;
 
-    private int quantityDelivered;
+    @Column(nullable = false)
+    private BigDecimal salePrice;
 
-    @ManyToOne
-    @JoinColumn(name = "sale_id", nullable = false)
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private UnitOfMeasure unitOfMeasure;
+
+    private Long quantityDelivered;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "sale_id")
     private Sale sale;
 
-    private int getQuantityPending(){
+    public Long getQuantityPending(){
         return this.quantitySold - this.quantityDelivered;
     }
 

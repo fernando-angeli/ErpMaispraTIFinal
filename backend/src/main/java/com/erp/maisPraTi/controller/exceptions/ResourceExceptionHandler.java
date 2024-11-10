@@ -102,4 +102,19 @@ public class ResourceExceptionHandler {
         return ResponseEntity.status(status).body(error);
     }
 
+    @ExceptionHandler(NotActivateException.class)
+    public ResponseEntity<StandardError> invalidDocuments(NotActivateException e, HttpServletRequest request){
+        HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
+        StandardError error = new StandardError();
+        error.setTimestamp(Instant.now());
+        error.setStatus(status.value());
+        error.setError("Not active status");
+        error.setMessage(e.getMessage());
+        error.setPath(request.getRequestURI());
+        return ResponseEntity.status(status).body(error);
+    }
+
+
+
+
 }
