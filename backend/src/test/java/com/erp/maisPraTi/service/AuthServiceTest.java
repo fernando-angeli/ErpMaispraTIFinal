@@ -4,6 +4,7 @@ import com.erp.maisPraTi.dto.auth.LoginRequest;
 import com.erp.maisPraTi.dto.auth.LoginResponse;
 import com.erp.maisPraTi.dto.auth.ResetPasswordRequest;
 import com.erp.maisPraTi.dto.auth.ValidationUserRequest;
+import com.erp.maisPraTi.enums.PartyStatus;
 import com.erp.maisPraTi.fixture.LoginFixture;
 import com.erp.maisPraTi.fixture.UserFixture;
 import com.erp.maisPraTi.model.User;
@@ -48,75 +49,34 @@ public class AuthServiceTest {
     private AuthService authService;
 
     @Test
-    void mustReturnLoginResponseWhenGivenValidLoginRequest(){
+    void deveFazerLoginERetornarUmTokenQuandoAsCredenciaisDoUsuarioForemValidasEEstiverAtivo(){
         //Arrange
         LoginRequest request = LoginFixture.loginRequest();
-
         Authentication authentication = mock(Authentication.class);
         String expectedToken = "fake_jwt_token";
-
+        User userAtivo = UserFixture.userAdmin();
         // Definir o comportamento do mock
+        when(userRepository.findByEmail(request.getEmail())).thenReturn(Optional.of(userAtivo));
         when(authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())))
                 .thenReturn(authentication);
         when(jwtTokenProvider.generateToken(authentication)).thenReturn(expectedToken);
-
         //Action
         LoginResponse response = authService.login(request);
-
         //Assert
         assertNotNull(response);
         assertEquals(expectedToken, response.getToken());
     }
 
     @Test
-    void mustThrowExceptionWhenGivenAnInvalidUser(){
+    void deveGerarUmaExceptionQuandoTentarFazerLoginENaoLocalizarOUsuario(){
         //Arrange
         LoginRequest request = LoginFixture.loginRequest();
-
         // Definir o comportamento do mock
-        when(authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())))
-                .thenThrow(new AuthenticationUserException("Credenciais inválidas."));
-
-        // Action
-        AuthenticationUserException exception = assertThrows(AuthenticationUserException.class, () -> {
-            authService.login(request);
-        });
-
-        // Assert
-        assertEquals("Credenciais inválidas.", exception.getMessage());
-    }
-
-    @Test
-    void mustSendAPasswordRecoveryEmailIfTheUserExists(){
-        // Arrange
-        User user = UserFixture.userAdmin();
-        String email = user.getEmail();
-        String token = "fake_token";
-
-        // Definir o comportamento do mock
-        when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
-        when(jwtTokenProvider.generateTokenWithUserEmail(email)).thenReturn(token);
-
-        // Action
-        authService.requestPasswordReset(email);
-
-        // Assert
-        verify(emailService).sendPasswordResetEmail(email, token);
-    }
-
-    @Test
-    void mustThrowExceptionWhenGivenAnInvalidUserInPasswordRecovery(){
-        // Arrange
-        String email = "invalid@email.com";
-
-        // Definir o comportamento do mock
-        when(userRepository.findByEmail(email)).thenReturn(Optional.empty());
-
+        when(userRepository.findByEmail(request.getEmail())).thenReturn(Optional.empty());
         // Action
         ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class, () -> {
-            authService.requestPasswordReset(email);
+            authService.login(request);
         });
 
         // Assert
@@ -124,7 +84,69 @@ public class AuthServiceTest {
     }
 
     @Test
-    void mustReturnTrueWhenCpfIsCorrectForUserSearchedByEmail(){
+    void deveGerarUmaExceptionQuandoTentarFazerLoginOuRecuperacaoDeSenhaDeUsuarioInativo(){
+        // Arrange
+        LoginRequest request = LoginFixture.loginRequest();
+        User inactiveUser = mock(User.class);
+        // Definir o comportamento do mock
+        when(userRepository.findByEmail(request.getEmail())).thenReturn(Optional.of(inactiveUser));
+        when(inactiveUser.getStatus()).thenReturn(PartyStatus.INACTIVE);  // Simula um usuário inativo
+        // Action & Assert
+        AuthenticationUserException exception = assertThrows(AuthenticationUserException.class, () -> {
+            authService.verifyUserActive(request.getEmail());  // Chama o método que lança a exceção
+        });
+        assertEquals("Usuário inativo ou suspenso, entre em contato com o administrador do sistema.", exception.getMessage());
+    }
+
+    @Test
+    void deveGerarUmaExceptionQuandoTentarFazerLoginOuRecuperacaoDeSenhaDeUsuarioSuspenso(){
+        // Arrange
+        LoginRequest request = LoginFixture.loginRequest();
+        User suspendedUser = mock(User.class);
+        // Definir o comportamento do mock
+        when(userRepository.findByEmail(request.getEmail())).thenReturn(Optional.of(suspendedUser));
+        when(suspendedUser.getStatus()).thenReturn(PartyStatus.SUSPENDED);  // Simula um usuário suspenso
+        // Action & Assert
+        AuthenticationUserException exception = assertThrows(AuthenticationUserException.class, () -> {
+            authService.verifyUserActive(request.getEmail());  // Chama o método que lança a exceção
+        });
+        assertEquals("Usuário inativo ou suspenso, entre em contato com o administrador do sistema.", exception.getMessage());
+    }
+
+    @Test
+    void deveGerarUmaExceptionQuandoAsCredenciaisNaoForemValidas(){
+        //Arrange
+        LoginRequest request = LoginFixture.loginRequest();
+        User userAtivo = UserFixture.userAdmin();
+        // Definir o comportamento do mock
+        when(userRepository.findByEmail(request.getEmail())).thenReturn(Optional.of(userAtivo));
+        when(authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())))
+                .thenThrow(new AuthenticationUserException("Credenciais inválidas."));
+        // Action
+        AuthenticationUserException exception = assertThrows(AuthenticationUserException.class, () -> {
+            authService.login(request);
+        });
+        // Assert
+        assertEquals("Credenciais inválidas.", exception.getMessage());
+    }
+
+    @Test
+    void deveEnviarUmEmailDeRecuperacaoQuandoOUsuarioExistir(){
+        // Arrange
+        User user = UserFixture.userAdmin();
+        String token = "fake_token";
+        // Definir o comportamento do mock
+        when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
+        when(jwtTokenProvider.generateTokenWithUserEmail(user.getEmail())).thenReturn(token);
+        // Action
+        authService.requestPasswordReset(user.getEmail());
+        // Assert
+        verify(emailService).sendPasswordResetEmail(user.getEmail(), token);
+    }
+
+    @Test
+    void deveRetornarTrueSeOCpfInformadoForOMesmoDoUsuarioLocalizadoPeloEmail(){
         // Arrange
         User user = UserFixture.userAdmin();
         String email = user.getEmail();
@@ -144,7 +166,7 @@ public class AuthServiceTest {
     }
 
     @Test
-    void mustThrowExceptionWhenTryingToValidateUserAndItIsNotFound(){
+    void deveGerarUmaExceptionQuandoOUsuarioNaoForEncontrado(){
         // Arrange
         User user = UserFixture.userAdmin();
         String email = "invalid-email@email.com";
@@ -166,7 +188,7 @@ public class AuthServiceTest {
     }
 
     @Test
-    void mustsThrowExceptionWhenTryingToValidateUserAndCpfIsNotCorrect(){
+    void deveGerarUmaExceptionQuandoOUsuarioForValidoMasOCpfNaoEstiverCorreto(){
         // Arrange
         User user = UserFixture.userAdmin();
         String email = user.getEmail();
@@ -188,7 +210,7 @@ public class AuthServiceTest {
     }
 
     @Test
-    void mustChangePasswordWhenUserIsFound(){
+    void deveFazerATrocaDeSenhaQuandoOUsuarioForValidoEOCpfForCorreto(){
         // Arrange
         User user = UserFixture.userAdmin();
         String email = user.getEmail();
@@ -211,7 +233,7 @@ public class AuthServiceTest {
 
     // refatorar
     @Test
-    void mustThrowExceptionWhenTryingToChangePasswordAndUserDoesNotExist(){
+    void deveGerarUmaExceptionQuandoOUsuarioNaoExistirNoResetDeSenha(){
         // Arrange
         User user = UserFixture.userAdmin();
         String email = "invalid-email@email.com";

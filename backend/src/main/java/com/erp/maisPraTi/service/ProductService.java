@@ -33,7 +33,7 @@ public class ProductService {
 
     @Transactional
     public ProductDto insert(ProductDto productDto) {
-        validPrice(productDto.getPrice());
+        validPrice(productDto.getProductPrice());
         Product product = convertToEntity(productDto, Product.class);
         insertOrUpdateSuppliers(productDto.getSuppliers(), product);
         if(productDto.getStock() != null)
@@ -100,7 +100,6 @@ public class ProductService {
         if (Objects.nonNull(product) && Objects.nonNull(product.getSuppliers())) {
             product.getSuppliers().clear();
         }
-
         // Itera sobre os SupplierSimpleDto fornecidos
         supplierDtos.forEach(supplierDto -> {
             Supplier supplier = convertToEntity(supplierService.findById(supplierDto.getId()), Supplier.class);

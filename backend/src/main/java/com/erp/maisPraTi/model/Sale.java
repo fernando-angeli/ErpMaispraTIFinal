@@ -7,6 +7,7 @@ import lombok.Data;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -19,7 +20,7 @@ public class Sale {
     private Long id;
 
     @Column(nullable = false, unique = true)
-    private int saleNumber;
+    private Long saleNumber;
 
     @Column(nullable = false)
     private LocalDateTime saleDate;
@@ -33,13 +34,21 @@ public class Sale {
     @JoinColumn(nullable = false)
     private Client client;
 
-    @OneToMany(mappedBy = "sale", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<SaleItem> saleItems;
+    @OneToMany(mappedBy = "sale", cascade = CascadeType.PERSIST)
+    private List<SaleItem> saleItems = new ArrayList<>();
 
+    @Transient
     private BigDecimal totalSaleValue;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private SaleStatus saleStatus;
 
+    public BigDecimal getTotalSaleValue() {
+        if(saleItems == null)
+            return new BigDecimal(0);
+        return saleItems.stream()
+                .map(item -> item.getSalePrice().multiply(new BigDecimal(item.getQuantitySold())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
 }

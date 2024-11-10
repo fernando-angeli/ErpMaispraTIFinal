@@ -33,7 +33,7 @@ public class Product {
     @Enumerated(EnumType.STRING)
     private UnitOfMeasure unitOfMeasure;
 
-    private BigDecimal price;
+    private BigDecimal productPrice;
     private BigDecimal stock = BigDecimal.ZERO;
     private BigDecimal reservedStock = BigDecimal.ZERO;
     private BigDecimal incomingStock = BigDecimal.ZERO;

@@ -13,11 +13,11 @@ public class DeliveryItem {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "delivery_id", nullable = false)
+    @JoinColumn(name = "delivery_id")
     private Delivery delivery;
 
     @ManyToOne
-    @JoinColumn(name = "sale_item_id", nullable = false)
+    @JoinColumn(name = "sale_item_id")
     private SaleItem saleItem;
 
     private int quantityDelivered;
