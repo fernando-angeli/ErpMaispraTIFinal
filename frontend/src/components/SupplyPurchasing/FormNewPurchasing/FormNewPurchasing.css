@@ -1,0 +1,182 @@
+.hide-desktop {
+  display: none;
+  text-decoration: none;
+  color: black;
+}
+
+div.containerForm {
+  width: 80%;
+  margin: 0 auto;
+  margin-bottom: 2em;
+}
+h2.tabTitle {
+  text-align: left;
+  margin-left: 15px;
+  margin-block: 40px;
+}
+
+form.visibleformNewPurchasing {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 60px;
+  row-gap: 15px;
+}
+
+form.hiddenformNewPurchasing {
+  display: none;
+}
+
+.line {
+  grid-column: 1/3;
+  display: flex;
+  gap: inherit;
+}
+
+.fieldProduct {
+  flex-basis: 50%;
+}
+.fieldQte {
+  flex-basis: 20%;
+}
+.fieldDeliveryDate {
+  flex-basis: 15%;
+}
+.fieldExpectedDate {
+  flex-basis: 15%;
+}
+
+/*line2*/
+.line2 {
+  min-height: 10rem;
+}
+
+.line2Left {
+  flex-basis: 50%;
+  display: flex;
+
+  gap: 60px;
+}
+.inputDescription {
+  white-space: nowrap;
+}
+.divSelectEmployee span {
+  flex-wrap: nowrap;
+}
+.divSelectEmployee {
+  flex-basis: 50%;
+}
+.divSelectSupplier {
+  flex-basis: 50%;
+}
+.divStatusAndButtons {
+  flex-basis: 50%;
+  display: flex;
+  justify-content: end;
+  gap: 1em;
+}
+.divButtons {
+  display: flex;
+  justify-content: end;
+  gap: 1em;
+  margin: none;
+}
+
+.selectEmployee,
+.selectSupplier {
+  padding-inline: 15px;
+  padding-block: 17px;
+  width: 100%;
+  border-radius: 15px;
+  border: 1px solid var(--primary-dark);
+  outline: 0;
+  height: 60px;
+
+  /* Text */
+  color: var(--text-100);
+  font-family: Lato;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 150%; /* 24px */
+  text-align: left;
+  cursor: pointer;
+}
+
+.selectEmployee,
+.selectSupplier {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background: url(../../assets/icons/selectArrow.svg) no-repeat right center;
+  background-position: calc(100% - 1rem);
+  background-size: 2rem;
+}
+
+.isInvalid {
+  border-color: var(--system-danger);
+  background-color: #fff2f2;
+}
+
+/* ------------- PLACEHODER COLOR ------------- */
+
+::-webkit-input-placeholder {
+  color: var(--text-40);
+}
+:-moz-placeholder {
+  /* Firefox 18- */
+  color: var(--text-40);
+}
+
+::-moz-placeholder {
+  /* Firefox 19+ */
+  color: var(--text-40);
+}
+
+:-ms-input-placeholder {
+  color: var(--text-40);
+}
+
+@media (max-width: 768px) {
+  .hide-desktop {
+    display: block;
+    margin-left: 0.05em;
+  }
+  div.containerForm {
+    width: 98%;
+    margin: 0 auto;
+  }
+  h2.tabTitle {
+    text-align: center;
+    margin-left: none;
+    margin-block: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+  }
+  form.visibleformNewPurchasing {
+    display: flex;
+    flex-direction: column;
+  }
+
+  form.hiddenformNewPurchasing {
+    display: none;
+    flex-direction: column;
+  }
+
+  .fieldAddress {
+    grid-column: 1/3;
+  }
+
+  .isInvalid {
+    border-color: var(--system-danger);
+    background-color: #fff2f2;
+  }
+
+  .line {
+    grid-column: 1/3;
+    display: flex;
+    gap: inherit;
+    flex-direction: column;
+  }
+}

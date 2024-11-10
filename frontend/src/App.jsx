@@ -15,6 +15,7 @@ import AddEmployeePage from "./pages/addEmployeePage/AddEmployeePage";
 import ResetPassword from "./pages/ResetPassword/ResetPassword";
 import AddSupplierpage from './pages/addSupplierpage/AddSupplierpage' 
 import AddSaleRegister from "./pages/addSaleRegister/AddSaleRegister"
+import SupplyPurchasingPage from "./pages/SupplyPurchasingPage/SupplyPurchasingPage";
 
 function App() {
   const { isAuthenticated } = useAuth();
@@ -41,6 +42,14 @@ function App() {
             element={
               <ProtectedRoute isLoggedIn={isAuthenticated }>
                 <AddEmployeePage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/compraInsumos"
+            element={
+              <ProtectedRoute isLoggedIn={isAuthenticated }>
+                <SupplyPurchasingPage/>
               </ProtectedRoute>
             }
           />
