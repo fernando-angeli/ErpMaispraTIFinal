@@ -1,12 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
-function SelectField({
+function SelectFieldProduct({
   label,
   name,
   id,
   value,
   onInvalid,
   onChange,
+  onChangeValue,
   arrayOptions,
   required = true,
   placeholder = "Selecione...",
@@ -14,53 +15,38 @@ function SelectField({
   classnameDiv = "",
 }) {
   const [searchTerm, setSearchTerm] = useState("");
-const filteredOptions = arrayOptions.filter((option) =>
-  option.fullName.toLowerCase().includes(searchTerm.toLowerCase())
-);
+  const filteredOptions = (arrayOptions || []).filter((option) =>
+    option.name?.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
-const handleSelectChange = (e) => {
-  const selectedValue = e.target.value;
-  const parsedValue = JSON.parse(selectedValue); 
-  onChange(parsedValue);
-};
+  // Chama onChangeValue sempre que filteredOptions mudar
+  useEffect(() => {
+    onChangeValue(filteredOptions);
+  }, [searchTerm]);
 
-return (
-  <div className={classnameDiv}>
-    <label htmlFor={id} className="inputLabel">
-      <span className="inputDescription">{label}</span>
+  return (
+    <div className={classnameDiv}>
+      <label htmlFor={id} className="inputLabel">
+        <span className="inputDescription">{label}</span>
+        
+        <input 
+          list="products" 
+          placeholder="Digite..." 
+          onChange={(e) => setSearchTerm(e.target.value)} 
+          value={searchTerm}
+        />
 
-      <input
-        type="text"
-        placeholder="Buscar..."
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-        className="searchInput"
-      />
-
-      <select
-        name={name}
-        id={id}
-        value={JSON.stringify(value)} 
-        required={required}
-        onChange={handleSelectChange}
-        onInvalid={onInvalid}
-        className={`selectRole ${classNameSelect}`}
-      >
-        <option value="" disabled hidden>
-          {placeholder}
-        </option>
-        {filteredOptions.map((option) => (
-          <option
-            key={option.id}
-            value={JSON.stringify({ id: option.id, authority: option.fullName, price: option.price})} 
-          >
-            {option.fullName}
-          </option>
-        ))}
-      </select>
-    </label>
-  </div>
-);
+        <datalist id="products">
+          {filteredOptions.map((option) => (
+            <option
+              key={option.id}
+              value={option.name}
+            />
+          ))}
+        </datalist>
+      </label>
+    </div>
+  );
 }
 
-export default SelectField;
+export default SelectFieldProduct;

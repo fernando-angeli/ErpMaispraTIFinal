@@ -46,7 +46,7 @@ function App() {
             }
           />
           <Route
-            path="/compraInsumos"
+            path="/supplypurchasing"
             element={
               <ProtectedRoute isLoggedIn={isAuthenticated }>
                 <SupplyPurchasingPage/>

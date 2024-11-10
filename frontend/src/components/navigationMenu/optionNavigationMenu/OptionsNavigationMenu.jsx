@@ -29,7 +29,7 @@ function OptionsNavigationMenu() {
     {
       icon: newBuyIcon,
       description: "Compra de Insumos",
-      url: "/compraInsumos",
+      url: "/supplypurchasing",
     },
     {
       icon: newSaleIcon,
