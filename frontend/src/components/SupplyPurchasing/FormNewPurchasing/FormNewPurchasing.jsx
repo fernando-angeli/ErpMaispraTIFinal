@@ -3,12 +3,10 @@ import "./FormNewPurchasing.css";
 import { CgAdd, CgRemove } from "react-icons/cg";
 import axios from "axios";
 import { useAuth } from "../../AuthContext";
-import Viacep from "../../Viacep/Viacep";
 import InputField from "../../InputField/InputField";
-import RadioGroup from "../../RadioGroup/RadioGroup";
-import TextareaField from "../../TextareaField/TextareaField";
 import LoadingSpin from "../../LoadingSpin/LoadingSpin";
 import SelectField from "../../SelectField/SelectField";
+import { jwtDecode } from "jwt-decode";
 
 function FormNewPurchasing(dataPurchasing) {
   const apiUrl = import.meta.env.VITE_API_URL;
@@ -21,6 +19,8 @@ function FormNewPurchasing(dataPurchasing) {
   const [deliveryDate, setDeliveryDate] = useState("");
   const [expectedDate, setExpectedDate] = useState("");
   const [supplierSelect, setSupplierSelect] = useState("");
+  const [listSupplierSelect, setListSupplierSelect] = useState([]);
+
   const [employeeSelect, setEmployeeSelect] = useState("");
 
   const [UpdatePurchasingId, setUpdatePurchasingId] = useState();
@@ -30,7 +30,8 @@ function FormNewPurchasing(dataPurchasing) {
 
   const { JwtToken } = useAuth();
 
-  const supplierList = [];
+  const decoded = jwtDecode(JwtToken);
+
   const employeeList = [];
 
   const isInvalid = (e) => {
@@ -61,6 +62,33 @@ function FormNewPurchasing(dataPurchasing) {
     SetPostToUpdade(true);
     setError(null);
   };
+
+  useEffect(() => {
+    const handleShowSuppliers = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:8080/api/fornecedores",
+          {
+            headers: {
+              Authorization: `Bearer ${JwtToken}`,
+            },
+          }
+        );
+
+        const listSupplier = response.data.content.map((supplier) => ({
+          value: supplier.id,
+          label: supplier.fullName,
+        }));
+
+        setListSupplierSelect(listSupplier);
+        console.log(listSupplierSelect);
+      } catch (err) {
+        console.log(err);
+        alert("Erro ao puxar fornecedores!");
+      }
+    };
+    handleShowSuppliers();
+  }, []);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -242,21 +270,17 @@ function FormNewPurchasing(dataPurchasing) {
 
         <div className="line2 line">
           <div className="line2Left">
-            <SelectField
+            <InputField
               label={"Responsável pelo pedido"}
               name={"Employee"}
-              id={"Employee"}
-              classnameDiv={"divSelectEmployee"}
+              idInput={"Employee"}
+              classNameDiv={"divSelectEmployee"}
               classNameSelect={"selectEmployee"}
-              value={employeeSelect ? JSON.stringify(employeeSelect[0]) : ""}
+              value={decoded.fullName}
               onInvalid={(e) => selectIsInvalid(e)}
-              onChange={(e) => {
-                const selectedEmployee = JSON.parse(e.target.value);
-                setEmployeeSelect([selectedEmployee]);
-                isValid(e);
-              }}
-              arrayOptions={employeeList}
+              disabled={true}
             />
+
             <SelectField
               label={"Fornecedor:"}
               name={"Supplier"}
@@ -270,7 +294,7 @@ function FormNewPurchasing(dataPurchasing) {
                 setSupplierSelect([selectedSupplier]);
                 isValid(e);
               }}
-              arrayOptions={supplierList}
+              arrayOptions={listSupplierSelect}
             />
           </div>
           <div className="divStatusAndButtons">

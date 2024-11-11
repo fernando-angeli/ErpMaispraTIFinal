@@ -10,14 +10,14 @@ function SelectField({
   placeholder = "Selecione...",
   classNameSelect = "",
   classnameDiv = "",
-}) 
-{return (
+}) {
+  return (
     <div className={classnameDiv}>
       <label htmlFor={id} className="inputLabel">
         <span className="inputDescription">{label}</span>
         <select
           name={name}
-          id={id}
+          id={`select ${id}`}
           value={value}
           required={required}
           onChange={onChange}
@@ -28,7 +28,7 @@ function SelectField({
             {placeholder}
           </option>
           {arrayOptions.map((option) => (
-            <option
+            <option id="option"
               key={option.id}
               value={JSON.stringify({ id: option.id, authority: option.label })}
             >
