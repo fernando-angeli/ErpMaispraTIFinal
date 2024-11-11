@@ -108,6 +108,22 @@ public class ProductService {
         });
     }
 
-}
+    public void validPrice(BigDecimal price) {
+        if (price == null || price.compareTo(BigDecimal.ZERO) < 0) {
+            throw new InvalidValueException("O preço de custo do produto não pode ser nulo ou negativo.");
+        }
+    }
 
+    public void updateStockBySale(Long productId, BigDecimal quantitySold) {
+        verifyExistsId(productId);
+        try {
+            Product product = productRepository.getReferenceById(productId);
+            product.setReservedStock(product.getReservedStock().add(quantitySold));
+            productRepository.save(product);
+        } catch (DataIntegrityViolationException e) {
+            throw new DatabaseException("Não foi possível fazer a alteração neste produto.");
+        }
+    }
+
+}
 

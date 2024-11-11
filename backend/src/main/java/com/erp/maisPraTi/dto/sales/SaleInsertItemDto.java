@@ -15,7 +15,7 @@ public class SaleInsertItemDto {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Long id;
     private Long productId;
-    private Long quantitySold;
+    private BigDecimal quantitySold;
     private BigDecimal salePrice;
 
 }

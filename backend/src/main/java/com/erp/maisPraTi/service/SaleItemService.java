@@ -8,6 +8,7 @@ import com.erp.maisPraTi.model.Product;
 import com.erp.maisPraTi.model.Sale;
 import com.erp.maisPraTi.model.SaleItem;
 import com.erp.maisPraTi.repository.SaleItemRepository;
+import com.erp.maisPraTi.service.exceptions.ProductException;
 import com.erp.maisPraTi.service.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -39,6 +40,8 @@ public class SaleItemService {
 
         ProductDto productDto = productService.findById(saleInsertItemDto.getProductId())
                 .orElseThrow(() -> new ResourceNotFoundException("Produto não encontrado com ID: " + saleInsertItemDto.getProductId()));
+        verifyProductStock(productDto, saleInsertItemDto.getQuantitySold());
+        productService.updateStockBySale(saleInsertItemDto.getProductId(), saleInsertItemDto.getQuantitySold());
         Product product = convertToEntity(productDto, Product.class);
         product.setProductPrice(saleInsertItemDto.getSalePrice());
         newSaleItem.setProduct(product);
@@ -53,6 +56,13 @@ public class SaleItemService {
         newSaleItem.setQuantityDelivered(0L);
         newSaleItem = saleItemRepository.save(newSaleItem);
         return convertToDto(newSaleItem, SaleItemResponseDto.class);
+    }
+
+    private void verifyProductStock(ProductDto productDto, BigDecimal quantitySold) {
+        if(productDto.getAvailableForSale().compareTo(quantitySold) < 0)
+            throw new ProductException("Estoque insuficiente, falta(m): "
+                    + (new BigDecimal(String.valueOf(quantitySold.subtract(productDto.getAvailableForSale()))))
+                    + " " + productDto.getUnitOfMeasure().getDescription() + "(s)");
     }
 
     @Transactional(readOnly = true)
@@ -105,7 +115,7 @@ public class SaleItemService {
     }
 
     public void updateSaleTotalValue(Sale sale, SaleInsertItemDto saleInsertItemDto) {
-        BigDecimal addValue = BigDecimal.valueOf(saleInsertItemDto.getQuantitySold())
+        BigDecimal addValue = saleInsertItemDto.getQuantitySold()
                 .multiply(saleInsertItemDto.getSalePrice());
         BigDecimal newTotal = sale.getTotalSaleValue().add(addValue);
         sale.setTotalSaleValue(newTotal);

@@ -174,8 +174,35 @@ public class ClientServiceTest {
         verify(clientRepository).getReferenceById(id);
     }
 
+    @Test
+    void deveLancarErroAoAtualizarClienteComViolacaoDeIntegridade() {
+        // Arrange
+        Long id = 1L;
+        ClientUpdateDto clientUpdateDto = new ClientUpdateDto();
+        clientUpdateDto.setCpfCnpj("98765432100");
+        clientUpdateDto.setTypePfOrPj(TypePfOrPj.PJ);
+        clientUpdateDto.setStateRegistration("909/8328356");
 
+        Client client = new Client();
+        client.setId(id);
+        client.setCpfCnpj("12345678909");
 
+        when(clientRepository.existsById(id)).thenReturn(true);
+        when(clientRepository.getReferenceById(id)).thenReturn(client);
+
+        // Simula a violação de integridade ao salvar o cliente
+        when(clientRepository.save(any(Client.class))).thenThrow(new DataIntegrityViolationException("Erro"));
+
+        // Action & Assert
+        DatabaseException exception = assertThrows(DatabaseException.class, () -> {
+            clientService.update(id, clientUpdateDto);
+        });
+
+        assertEquals("Não foi possível fazer a alteração neste cliente.", exception.getMessage());
+
+        // Verifique se `save` foi chamado durante o teste
+        verify(clientRepository, times(1)).save(client);
+    }
 
     @Test
     void deveExcluirCliente() {
@@ -186,6 +213,37 @@ public class ClientServiceTest {
         assertDoesNotThrow(() -> clientService.delete(id));
         verify(clientRepository, times(1)).deleteById(id);
     }
+
+    @Test
+    void deveLancarErroGenericoAoExcluirCliente() {
+        Long id = 1L;
+        when(clientRepository.existsById(id)).thenReturn(true);
+
+        // Simulando uma exceção genérica ao tentar deletar o cliente
+        doThrow(new RuntimeException("Erro inesperado")).when(clientRepository).deleteById(id);
+
+        DatabaseException exception = assertThrows(DatabaseException.class, () -> {
+            clientService.delete(id);
+        });
+
+        assertEquals("Erro inesperado ao tentar excluir o cliente.", exception.getMessage());
+    }
+
+    @Test
+    void deveLancarResourceNotFoundExceptionQuandoIdNaoExistirNoVerifyExistsId() {
+        Long id = 1L;
+
+        // Configura o mock para retornar `false`, simulando que o ID não existe
+        when(clientRepository.existsById(id)).thenReturn(false);
+
+        // Verifica se o método lança a exceção `ResourceNotFoundException` com a mensagem esperada
+        ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class, () -> {
+            clientService.verifyExistsId(id);
+        });
+
+        assertEquals("Id não localizado: " + id, exception.getMessage());
+    }
+
 
     @Test
     void deveLancarErroAoExcluirClienteVinculado() {

@@ -47,4 +47,9 @@ public class ProductDto {
     private BigDecimal incomingStock = BigDecimal.ZERO;
 
     private List<SupplierSimpleDto> suppliers;
+
+    public BigDecimal getAvailableForSale(){
+        return this.stock.subtract(this.reservedStock);
+    }
+
 }

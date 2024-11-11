@@ -41,10 +41,10 @@ public class SaleItemController {
         return ResponseEntity.created(uri).body(newSaleItemDto);
     }
 
-    @Operation(summary = "Obtém um item de venda por ID")
+    @Operation(summary = "Obtém um item especifico da venda por ID")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Venda encontrada"),
-            @ApiResponse(responseCode = "404", description = "Venda não encontrada")
+            @ApiResponse(responseCode = "200", description = "Item encontrado"),
+            @ApiResponse(responseCode = "404", description = "Item não encontrado")
     })
     @GetMapping("/{saleId}/itens/{itemId}")
     public ResponseEntity<Optional<SaleItemResponseDto>> findById(@PathVariable Long saleId, @PathVariable Long itemId){
@@ -52,10 +52,10 @@ public class SaleItemController {
         return ResponseEntity.ok().body(saleItemDto);
     }
 
-    @Operation(summary = "Obtém uma lista páginada de vendas")
+    @Operation(summary = "Obtém uma venda e sua lista de itens e entregas")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Venda encontrada"),
-            @ApiResponse(responseCode = "404", description = "Venda não encontrada")
+            @ApiResponse(responseCode = "200", description = "Itens encontrados"),
+            @ApiResponse(responseCode = "404", description = "Itens não encontrados")
     })
     @GetMapping("/{saleId}/itens")
     public ResponseEntity<Page<SaleItemResponseDto>> findAll(@PathVariable Long saleId, Pageable pageable){
@@ -63,10 +63,10 @@ public class SaleItemController {
         return ResponseEntity.ok().body(sales);
     }
 
-    @Operation(summary = "Obtém uma lista páginada de vendas")
+    @Operation(summary = "Obtém uma lista páginada dos itens da venda filtrados pelo ID")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Venda encontrada"),
-            @ApiResponse(responseCode = "404", description = "Venda não encontrada")
+            @ApiResponse(responseCode = "200", description = "Itens encontrados"),
+            @ApiResponse(responseCode = "404", description = "Itens não encontrados")
     })
     @GetMapping("/{saleId}/itens/produtos/{productId}")
     public ResponseEntity<Page<SaleItemResponseDto>> findAllByProduct(@PathVariable Long saleId, @PathVariable Long productId, Pageable pageable){
