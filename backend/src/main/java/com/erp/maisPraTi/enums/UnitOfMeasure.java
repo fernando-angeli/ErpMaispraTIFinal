@@ -3,11 +3,11 @@ package com.erp.maisPraTi.enums;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum UnitOfMeasure {
-    UNIT("Unidade"),
-    BAR("Barra"),
-    KG("Quilo"),
-    LINEAR_METER("Metro linear"),
-    SQUARE_METER("Metro quadrado");
+    UNIT("unidade"),
+    BAR("barra"),
+    KG("quilo"),
+    LINEAR_METER("metro linear"),
+    SQUARE_METER("metro quadrado");
 
     private final String description;
 

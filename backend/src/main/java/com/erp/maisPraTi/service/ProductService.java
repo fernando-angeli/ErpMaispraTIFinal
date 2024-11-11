@@ -108,6 +108,17 @@ public class ProductService {
         }
     }
 
+    public void updateStockBySale(Long productId, BigDecimal quantitySold) {
+        verifyExistsId(productId);
+        try {
+            Product product = productRepository.getReferenceById(productId);
+            product.setReservedStock(product.getReservedStock().add(quantitySold));
+            productRepository.save(product);
+        } catch (DataIntegrityViolationException e) {
+            throw new DatabaseException("Não foi possível fazer a alteração neste produto.");
+        }
+    }
+
 }
 
 
