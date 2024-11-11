@@ -80,7 +80,7 @@ const ListEmployees = () => {
   useEffect(() => {
     const newFilteredEmployees =
       employees?.filter((employee) => {
-        console.log(employee.status)
+        console.log(employee.status);
         const matchesStatus =
           (showAtivos && employee.status === "ativo") ||
           (showInativos && employee.status === "inativo");
@@ -91,7 +91,9 @@ const ListEmployees = () => {
       }) || [];
 
     setFilteredEmployees(newFilteredEmployees);
-    setContEmployeePages(Math.ceil(newFilteredEmployees.length / maxEmployeesPerList));
+    setContEmployeePages(
+      Math.ceil(newFilteredEmployees.length / maxEmployeesPerList)
+    );
   }, [employees, showAtivos, showInativos, searchEmployees]);
 
   return (
@@ -103,7 +105,7 @@ const ListEmployees = () => {
           <div className="headerListEmployees">
             <div className="title">
               <BiSolidUser className="userIcon" size={75} />
-              <h3>Lista de Employeees</h3>
+              <h3>Lista de usuários</h3>
             </div>
             <section>
               <label className="searchEmployee">

@@ -42,6 +42,12 @@ public class ProductService {
         return convertToDto(product, ProductDto.class);
     }
 
+    public void validPrice(BigDecimal price) {
+        if (price == null || price.compareTo(BigDecimal.ZERO) < 0) {
+            throw new InvalidValueException("O preço de custo do produto não pode ser nulo ou negativo.");
+        }
+    }
+
     @Transactional(readOnly = true)
     public Optional<ProductDto> findById(Long id) {
         Product product = productRepository.findById(id)
@@ -120,5 +126,4 @@ public class ProductService {
     }
 
 }
-
 

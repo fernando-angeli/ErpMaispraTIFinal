@@ -26,7 +26,7 @@ const ListSaleRegisters = () => {
 
   const handleShowSaleRegisters = async () => {
     try {
-      const response = await axios.get(`${apiUrl}/api/saleRegisters`, {
+      const response = await axios.get(`${apiUrl}/api/vendas`, {
         headers: {
           Authorization: `Bearer ${JwtToken}`,
         },
@@ -39,11 +39,11 @@ const ListSaleRegisters = () => {
   };
 
   useEffect(() => {
-    handleShowSaleRegisters();
-  }, []);
-
+   handleShowSaleRegisters();
+   }, []);
+   
   const deleteSaleRegister = async (saleRegister) => {
-    setSaleRegisterNameShow(saleRegister.fullName);
+    setSaleRegisterNameShow(saleRegister.client.fullName);
     const confirmDelete = await new Promise((resolve) => {
       setShowModal(true);
       const handleConfirm = (choice) => {
@@ -56,7 +56,7 @@ const ListSaleRegisters = () => {
 
     setIsLoading(true);
     try {
-      await axios.delete(`${apiUrl}/api/saleRegisters/${saleRegister.id}`, {
+      await axios.delete(`${apiUrl}/api/vendas/${saleRegister.id}`, {
         headers: {
           Authorization: `Bearer ${JwtToken}`,
         },
@@ -74,11 +74,8 @@ const ListSaleRegisters = () => {
   };
 
   const filteredSaleRegisters = saleRegisters.filter((saleRegister) => {
-    const matchesStatus = 
-      (showActive && saleRegister.status === "ativo") ||
-      (showInactive && saleRegister.status === "inativo");
-    const matchesSearch = saleRegister.fullName.toLowerCase().includes(searchSaleRegister.toLowerCase());
-    return matchesStatus && matchesSearch;
+    const matchesSearch = saleRegister.client.fullName.toLowerCase().includes(searchSaleRegister.toLowerCase());
+    return matchesSearch;
   });
 
   const maxSaleRegistersPerList = 6;
@@ -163,7 +160,7 @@ const ListSaleRegisters = () => {
                   <button onClick={() => window.handleModalConfirm(false)}>Não</button>
                 </ModalYesOrNot>
                 <PageOfListSaleRegister 
-                  saleRegisters={filteredSaleRegisters} 
+                  SaleRegisters={filteredSaleRegisters} 
                   onEdit={ToFormUpdateSaleRegister} 
                   onDelete={deleteSaleRegister} 
                   maxSaleRegistersPerList={maxSaleRegistersPerList} 

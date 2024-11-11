@@ -12,11 +12,22 @@ function PageOfListSaleRegisters({
   maxSaleRegistersPerList,
   listSaleRegistersPageSelected,
 }) {
-
   const [showModalDetails, setshowModalDetails] = useState(false);
   const [selectedsaleRegister, setSelectedsaleRegister] = useState('');
-
   let SaleRegistersToList = ["2"];
+
+  function formatarDataBR(dataString) {
+    if(dataString){
+    const data = new Date(dataString);
+    const dia = String(data.getDate()).padStart(2, '0');
+    const mes = String(data.getMonth() + 1).padStart(2, '0'); // Mês começa do 0
+    const ano = data.getFullYear();
+    const horas = String(data.getHours()).padStart(2, '0');
+    return `${dia}/${mes}/${ano}`
+    }else{
+    return null
+  }
+  }
 
   // for (
   //   let i = (listSaleRegistersPageSelected - 1) * maxSaleRegistersPerList;
@@ -38,13 +49,13 @@ function PageOfListSaleRegisters({
       </ModalDetails>
 
 
-      {SaleRegistersToList.map((saleRegister) => (
+      {SaleRegisters && SaleRegisters.map((saleRegister) => (
         <tr key={saleRegister.id}>
-          <td className="td-fullName">{saleRegister.fullName}</td>
-          <td className="td-email">{saleRegister.email}</td>
-          <td className="td-phoneNumber">{saleRegister.phoneNumber}</td>
-          <td className="td-cpfCnpj">{saleRegister.cpfCnpj}</td>
-          <td className="td-cpfCnpj">{saleRegister.date}</td>
+          <td className="td-fullName">{saleRegister.saleNumber}</td>
+          <td className="td-email">{saleRegister.client.fullName}</td>
+          <td className="td-phoneNumber">{(saleRegister.saleStatus).toUpperCase()}</td>
+          <td className="td-cpfCnpj">{formatarDataBR(saleRegister.saleDate)}</td>
+          <td className="td-cpfCnpj">{formatarDataBR(saleRegister.saleDelivery)}</td>
           <td className="td-editLine">
             <Link onClick={() => {
               setSelectedsaleRegister(saleRegister)

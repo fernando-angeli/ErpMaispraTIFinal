@@ -23,9 +23,10 @@ function FormNewSaleRegister({ dataSaleRegister }) {
   const [NewSaleRegisterSaller, setNewSaleRegisterSaller] = useState('');
   const [NewSaleRegisterData, setNewSaleRegisterData] = useState('');
   const [NewSaleRegisterDataPrev, setNewSaleRegisterDataPrev] = useState('');
-  const [NewSaleRegisterProduct, setNewSaleRegisterProduct] = useState('');
+  const [NewSaleRegisterProduct, setNewSaleRegisterProduct] = useState();
   const [NewSaleRegisterQuant, setNewSaleRegisterQuant] = useState('');
   const [CardItems, setCardItems] = useState([]);
+  const [cardId, setCardId] = useState(1);
 
   const handleSubmit = async (event) => {
     try {
@@ -47,18 +48,24 @@ function FormNewSaleRegister({ dataSaleRegister }) {
     }
   };
 
-
-const handleAddtoCard = ()=>{
- const NewItemtoCard ={
-    productId:NewSaleRegisterProduct.id,
-    productName:NewSaleRegisterProduct.authority,
-    quant:NewSaleRegisterQuant,
-    price:NewSaleRegisterProduct.price,
-    subtotal:NewSaleRegisterProduct.price*NewSaleRegisterQuant
-    }
-    //setar pro componente de carrinho
-    setCardItems(CardItems.push(NewItemtoCard));
-}
+   const deleteCardItem = (idToDelete) => {
+    setCardItems((prevItems) => prevItems.filter(item => item.id !== idToDelete)); 
+    setCardId(cardId-1)
+  };
+  const handleAddtoCard = (e) => {
+    e.preventDefault();
+    const NewItemtoCard = {
+      id: cardId,  
+      productId: NewSaleRegisterProduct[0].id,
+      productName: NewSaleRegisterProduct[0].name,
+      quant: NewSaleRegisterQuant,
+      price: NewSaleRegisterProduct[0].productPrice,
+      subtotal: NewSaleRegisterProduct[0].productPrice * NewSaleRegisterQuant,
+    };
+    setCardItems((prevItems) => [...prevItems, NewItemtoCard]); 
+    setCardId(cardId + 1); 
+    setNewSaleRegisterQuant(''); 
+  };
 
   const handleGetClients = async () => {
     try {
@@ -74,11 +81,7 @@ const handleAddtoCard = ()=>{
       alert("Erro ao puxar clientes!");
     }
   };
-  useEffect(() => {
-    handleGetClients();
-  }, []);
-
-  const handleGetProducts = async (event) => {
+  const handleGetProducts = async () => {
     try {
       const response = await axios.get(`${apiUrl}/api/produtos`, {
         headers: {
@@ -89,11 +92,12 @@ const handleAddtoCard = ()=>{
       setListProducts(response.data.content);
     } catch (err) {
       console.log(err);
-      alert("Erro ao puxar clientes!");
+      alert("Erro ao puxar Produtos!");
     }
   };
   useEffect(() => {
     handleGetProducts();
+    handleGetClients();
   }, []);
 
   useEffect(() => {
@@ -102,7 +106,7 @@ const handleAddtoCard = ()=>{
       setPostToUpdate(false);
     }
   }, [ dataSaleRegister]);
- console.log(NewSaleRegisterClient)
+
   return (
     <div className="containerForm">
       <h2 className="tabTitle">
@@ -114,8 +118,6 @@ const handleAddtoCard = ()=>{
       <form
         className={ResponsiveSaleRegister ? "visibleformNewSaleRegister" : "hiddenformNewSaleRegister"}
         id="formSaleRegister"
-        onReset={''}
-        onSubmit={handleAddtoCard}
       >
         <div className="line1 line">
           <SelectFieldClient
@@ -124,7 +126,7 @@ const handleAddtoCard = ()=>{
           placeholder="Clientes"
           arrayOptions={ListClients}
           value={NewSaleRegisterClient}
-          onChange={(e)=>setNewSaleRegisterClient(e)}
+          onChange={(e)=>setNewSaleRegisterClient(e.target.value)}
           />
           
           <InputField
@@ -161,8 +163,9 @@ const handleAddtoCard = ()=>{
           placeholder="Produtos"
           arrayOptions={ListProducts}
           value={NewSaleRegisterProduct}
-          onChange={(e)=>setNewSaleRegisterProduct(e)}
-          />
+          onChangeValue={setNewSaleRegisterProduct}
+        />
+
 
         <InputField
             label="Quantidade:"
@@ -177,12 +180,12 @@ const handleAddtoCard = ()=>{
           {Success && <p className="success">{Success}</p>}
         </div>
 
-        {isLoading ? <LoadingSpin /> : <button type="submit" onClick={handleAddtoCard}>Registrar</button>}
+        {isLoading ? <LoadingSpin /> : <button type="submit" onClick={(e)=>handleAddtoCard(e)}>Registrar</button>}
         </div>
       </form>
       <CardSaleRegister
       saleRegisters={CardItems}
-        onDelete={''}
+        onDelete={deleteCardItem}
         onSubmitSale={handleSubmit}
       />
     </div>
