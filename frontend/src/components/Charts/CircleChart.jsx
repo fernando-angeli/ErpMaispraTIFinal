@@ -24,9 +24,9 @@ const CircleChart = ({title, total, totalActive, colorTotal, colorTotalActive}) 
     };
   
     return (
-      <div className='contentCircle'> 
+      <div className='contentCircle notSelectable'> 
         <div className='circleChart'>
-            <h3>{title}</h3>
+            <h4>{title}</h4>
             <Doughnut data={data} options={options} />
             <h2>{((totalActive / total) * 100).toFixed(0)}%</h2>
         </div> 

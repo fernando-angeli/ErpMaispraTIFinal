@@ -19,9 +19,11 @@ function getSaudacao() {
   }
     return (
         <div className="Homepage"> 
+        <div>
             <h1 style={{padding:"1em"}}>{getSaudacao()}, {decoded.fullName}</h1>
             <h4>Confira abaixo como anda o desempenho da tua empresa!</h4>
             <br/>
+        </div>
             <Dashbord/>
         </div>
 
