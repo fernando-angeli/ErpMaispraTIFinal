@@ -6,18 +6,27 @@
     border-radius: 1em;
     padding: 1.5em;
     height: 100%;
-    width: 100%;
-    
+    /* width: 100%;    */
+
 }
 
 .lineContent h3 {
     align-self: start;
-    padding-bottom: 0.8em;
-    padding-top: 0.3em;
-    padding-left: 0.5em;
+    padding-bottom: 0.8rem;
+    padding-top: 0.3rem;
+    padding-left: 0.5rem;
+}
+.div-lineChartGraph {
+    width: 100%;
+    height: 100%;
+    
+    position: relative;
+}
+.lineChartGraph {
+    
 }
 
-@media (max-width: 768px) {
+/* @media (max-width: 768px) {
     .lineContent h1 {
         font-size: 1.5em;
     }
@@ -32,4 +41,4 @@
         height: 100%;
         width: 25em;
     }
-}
+}  */

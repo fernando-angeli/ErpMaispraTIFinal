@@ -17,6 +17,7 @@ const CircleChart = ({title, total, totalActive, colorTotal, colorTotalActive}) 
   
     const options = {
       cutout: '70%', // Define o tamanho do círculo interno para criar o efeito de anel
+      
       rotation: 0, // Inicia o preenchimento no topo
       plugins: {
         tooltip: { enabled: true }, // Exibe a tooltip
