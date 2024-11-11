@@ -19,7 +19,7 @@ function SelectFieldProduct({
     option.name?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // Chama onChangeValue sempre que filteredOptions mudar
+
   useEffect(() => {
     onChangeValue(filteredOptions);
   }, [searchTerm]);

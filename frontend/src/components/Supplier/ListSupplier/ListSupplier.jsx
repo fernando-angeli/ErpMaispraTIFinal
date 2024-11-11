@@ -22,7 +22,7 @@ const ListSupplier = () => {
   const [supplierNameShow, setSupplierNameShow] = useState();
 
   const [listSuppliersPageSelected, setListSuppliersPage] = useState(1);
-console.log(suppliers)
+  
   const handleShowSuppliers = async () => {
     try {
       const response = await axios.get(`http://localhost:8080/api/fornecedores`, {

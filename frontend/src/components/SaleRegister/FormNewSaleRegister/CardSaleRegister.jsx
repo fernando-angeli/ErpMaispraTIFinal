@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import { MdDeleteOutline } from 'react-icons/md';
 
 const CardSaleRegister = ({ saleRegisters, onDelete, onSubmitSale }) => {
-  console.log(saleRegisters);
 
   const formatarReal = (valor) => {
     const formatado = (valor / 100).toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });

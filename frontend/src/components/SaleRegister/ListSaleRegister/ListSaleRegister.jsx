@@ -33,13 +33,13 @@ const ListSaleRegisters = () => {
       });
       setSaleRegisters(response.data.content);
     } catch (err) {
-      console.log(err);
       alert("Erro ao puxar registros de venda!");
     }
   };
 
   useEffect(() => {
    handleShowSaleRegisters();
+   console.log(filteredSaleRegisters)
    }, []);
    
   const deleteSaleRegister = async (saleRegister) => {

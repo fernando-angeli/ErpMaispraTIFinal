@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 function SelectFieldClient({
   label,
@@ -6,18 +6,29 @@ function SelectFieldClient({
   id,
   value,
   onInvalid,
-  onChange,
+  onUpdate,
   arrayOptions,
+  onChangeValue,
   required = true,
   placeholder = "Selecione...",
   classNameSelect = "",
   classnameDiv = "",
-}) {
-  const [searchTerm, setSearchTerm] = useState("");
+}) {  
+ const [searchTerm, setSearchTerm] = useState("");
+
   const filteredOptions = arrayOptions.filter((option) =>
     option.fullName?.toLowerCase().includes(searchTerm.toLowerCase())
   );
-  
+
+  useEffect(() => {
+    onChangeValue(filteredOptions);
+  }, [searchTerm]);
+
+  useEffect(() => {
+    if(value){
+      setSearchTerm(value)
+    }
+  }, [value]);
 
   return (
     <div className={classnameDiv}>

@@ -78,6 +78,7 @@ function ModalDetails({ show, onClose, content, title }) {
             <div>
               <div class="label">Status:</div>
               <div class="status">
+               <h5> Limite: {content && content.creditLimit}</h5>
                 {content && content.status.toUpperCase()}
               </div>
             </div>

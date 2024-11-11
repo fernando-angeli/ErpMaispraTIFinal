@@ -3,7 +3,9 @@
   text-decoration: none;
   color: black;
 }
-
+.salesuccess{
+  color: green;
+}
 div.containerForm {
   width: 80%;
   margin: 0 auto;
