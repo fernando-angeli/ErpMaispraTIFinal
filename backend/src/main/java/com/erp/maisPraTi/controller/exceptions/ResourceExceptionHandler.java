@@ -114,7 +114,16 @@ public class ResourceExceptionHandler {
         return ResponseEntity.status(status).body(error);
     }
 
-
-
+    @ExceptionHandler(ProductException.class)
+    public ResponseEntity<StandardError> insufficientStock(ProductException e, HttpServletRequest request){
+        HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
+        StandardError error = new StandardError();
+        error.setTimestamp(Instant.now());
+        error.setStatus(status.value());
+        error.setError("Insufficient stock");
+        error.setMessage(e.getMessage());
+        error.setPath(request.getRequestURI());
+        return ResponseEntity.status(status).body(error);
+    }
 
 }
