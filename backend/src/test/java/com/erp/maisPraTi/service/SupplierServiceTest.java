@@ -240,7 +240,25 @@ public class SupplierServiceTest {
 
         assertNull(normalized);
     }
+
+
+    @Test
+    void naoDeveLancarExcecaoQuandoDocumentosNaoExistem() {
+        String cpfCnpj = "123.456.789-00";
+        String stateRegistration = "ISENTO";
+        TypePfOrPj typePfOrPj = TypePfOrPj.PF;
+
+        when(supplierRepository.existsByCpfCnpj(cpfCnpj)).thenReturn(false);
+
+        assertDoesNotThrow(() -> supplierService.verifyExistsDocuments(cpfCnpj, stateRegistration, typePfOrPj));
+
+        verify(supplierRepository, times(1)).existsByCpfCnpj(cpfCnpj);
+        verify(supplierRepository, never()).existsByStateRegistration(stateRegistration); // Verificação de que não foi chamado
+    }
+
+
 }
+
 
 
 

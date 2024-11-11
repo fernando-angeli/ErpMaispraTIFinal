@@ -15,7 +15,7 @@ public class ProductFixture {
         product.setName("Produto Exemplo");
         product.setDescription("Descrição do produto exemplo.");
         product.setUnitOfMeasure(UnitOfMeasure.UNIT);  // Substitua por uma unidade válida de medida
-        product.setPrice(new BigDecimal("150.00"));
+        product.setProductPrice(new BigDecimal("150.00"));
         product.setStock(new BigDecimal("50"));
         product.setReservedStock(new BigDecimal("10"));
         product.setIncomingStock(new BigDecimal("20"));

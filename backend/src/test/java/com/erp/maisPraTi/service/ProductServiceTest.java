@@ -1,5 +1,7 @@
 package com.erp.maisPraTi.service;
 
+import com.erp.maisPraTi.dto.partyDto.suppliers.SupplierDto;
+import com.erp.maisPraTi.dto.partyDto.suppliers.SupplierSimpleDto;
 import com.erp.maisPraTi.dto.products.ProductDto;
 import com.erp.maisPraTi.dto.products.ProductUpdateDto;
 import com.erp.maisPraTi.fixture.ProductFixture;
@@ -17,6 +19,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 
 import java.math.BigDecimal;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -42,7 +45,7 @@ class ProductServiceTest {
     void deveInserirProdutoComSucesso() {
         ProductDto productDto = new ProductDto();
         productDto.setName("Produto Exemplo");
-        productDto.setPrice(new BigDecimal("150.00"));
+        productDto.setProductPrice(new BigDecimal("150.00"));
 
         Product product = ProductFixture.productFixture();
         when(productRepository.save(any(Product.class))).thenReturn(product);
@@ -53,10 +56,11 @@ class ProductServiceTest {
         assertEquals("Produto Exemplo", result.getName());
     }
 
+
     @Test
     void deveLancarExcecaoQuandoPrecoNegativo() {
         ProductDto productDto = new ProductDto();
-        productDto.setPrice(new BigDecimal("-10.00"));
+        productDto.setProductPrice(new BigDecimal("-10.00"));
 
         assertThrows(InvalidValueException.class, () -> productService.insert(productDto));
     }
@@ -78,6 +82,59 @@ class ProductServiceTest {
 
         assertThrows(ResourceNotFoundException.class, () -> productService.findById(1L));
     }
+
+    @Test
+    void deveLancarExcecaoQuandoPrecoForNulo() {
+        ProductDto productDto = new ProductDto();
+        productDto.setProductPrice(null);
+
+        assertThrows(InvalidValueException.class, () -> productService.insert(productDto));
+    }
+
+    @Test
+    void deveLancarExcecaoGenericaAoDeletarProduto() {
+        when(productRepository.existsById(anyLong())).thenReturn(true);
+        doThrow(RuntimeException.class).when(productRepository).deleteById(anyLong());
+
+        assertThrows(DatabaseException.class, () -> productService.delete(1L));
+    }
+
+
+
+    @Test
+    void deveAtualizarListaDeFornecedoresQuandoListaFornecida() {
+        // Criação do ProductDto
+        ProductDto productDto = new ProductDto();
+        productDto.setName("Produto Exemplo");
+        productDto.setProductPrice(new BigDecimal("150.00")); // Certifique-se de que o preço é válido
+
+        SupplierSimpleDto supplierDto = new SupplierSimpleDto();
+        supplierDto.setId(1L);
+        supplierDto.setFullName("Fornecedor Exemplo");
+
+        List<SupplierSimpleDto> suppliers = List.of(supplierDto);
+
+        productDto.setSuppliers(suppliers);
+
+        // Criação do SupplierDto esperado para o retorno
+        SupplierDto supplierDtoResult = new SupplierDto();
+        supplierDtoResult.setId(supplierDto.getId());
+        supplierDtoResult.setFullName(supplierDto.getFullName());
+
+        // Mock para o método supplierService.findById, retornando Optional
+        when(supplierService.findById(supplierDto.getId())).thenReturn(Optional.of(supplierDtoResult));
+
+        // Mock para o método productRepository.save
+        Product product = ProductFixture.productFixture();
+        when(productRepository.save(any(Product.class))).thenReturn(product);
+
+        // Chame o método de inserção
+        productService.insert(productDto);
+
+        // Verifique se o fornecedor foi chamado corretamente
+        verify(supplierService, times(1)).findById(supplierDto.getId());
+    }
+
 
     @Test
     void deveAtualizarProdutoComSucesso() {
@@ -107,6 +164,22 @@ class ProductServiceTest {
     }
 
     @Test
+    void deveLancarExcecaoDatabaseExceptionAoAtualizarProdutoComErroDeIntegridade() {
+        // Simulando que o ID existe no banco
+        when(productRepository.existsById(anyLong())).thenReturn(true);
+
+        // Simulando que o repositório lança DataIntegrityViolationException
+        when(productRepository.getReferenceById(anyLong())).thenThrow(DataIntegrityViolationException.class);
+
+        // Criação do ProductUpdateDto com dados fictícios
+        ProductUpdateDto updateDto = new ProductUpdateDto();
+        updateDto.setName("Produto Atualizado");
+
+        // Verificando se a exceção correta é lançada
+        assertThrows(DatabaseException.class, () -> productService.update(1L, updateDto));
+    }
+
+    @Test
     void deveDeletarProdutoComSucesso() {
         when(productRepository.existsById(anyLong())).thenReturn(true);
         doNothing().when(productRepository).deleteById(anyLong());
@@ -121,6 +194,8 @@ class ProductServiceTest {
 
         assertThrows(DatabaseException.class, () -> productService.delete(1L));
     }
+
+
 }
 
 
