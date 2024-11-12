@@ -34,7 +34,7 @@ public class Sale {
     @JoinColumn(nullable = false)
     private Client client;
 
-    @OneToMany(mappedBy = "sale", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "sale", cascade = CascadeType.ALL)
     private List<SaleItem> saleItems = new ArrayList<>();
 
     @Transient
@@ -44,11 +44,14 @@ public class Sale {
     @Column(nullable = false)
     private SaleStatus saleStatus;
 
+    @OneToMany(mappedBy = "sale", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Delivery> deliveries = new ArrayList<>();
+
     public BigDecimal getTotalSaleValue() {
         if(saleItems == null)
             return new BigDecimal(0);
         return saleItems.stream()
-                .map(item -> item.getSalePrice().multiply(new BigDecimal(item.getQuantitySold())))
+                .map(item -> item.getSalePrice().multiply(item.getQuantitySold()))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 }

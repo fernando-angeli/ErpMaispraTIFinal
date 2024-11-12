@@ -108,12 +108,6 @@ public class ProductService {
         });
     }
 
-    public void validPrice(BigDecimal price) {
-        if (price == null || price.compareTo(BigDecimal.ZERO) < 0) {
-            throw new InvalidValueException("O preço de custo do produto não pode ser nulo ou negativo.");
-        }
-    }
-
     public void updateStockBySale(Long productId, BigDecimal quantitySold) {
         verifyExistsId(productId);
         try {
