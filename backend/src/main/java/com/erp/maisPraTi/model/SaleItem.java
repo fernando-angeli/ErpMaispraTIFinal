@@ -20,7 +20,7 @@ public class SaleItem {
     private Product product;
 
     @Column(nullable = false)
-    private Long quantitySold;
+    private BigDecimal quantitySold;
 
     @Column(nullable = false)
     private BigDecimal salePrice;
@@ -29,14 +29,18 @@ public class SaleItem {
     @Enumerated(EnumType.STRING)
     private UnitOfMeasure unitOfMeasure;
 
-    private Long quantityDelivered;
+    private BigDecimal quantityDelivered;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sale_id")
     private Sale sale;
 
-    public Long getQuantityPending(){
-        return this.quantitySold - this.quantityDelivered;
+    public BigDecimal getQuantityPending(){
+        return this.quantitySold.subtract(this.quantityDelivered);
+    }
+
+    public void addToQuantityPending(BigDecimal addPending){
+        this.quantitySold = this.quantitySold.add(addPending);
     }
 
 }

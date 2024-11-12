@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
 
 import static com.erp.maisPraTi.util.EntityMapper.convertToDto;
@@ -36,26 +37,50 @@ public class SaleItemService {
 
     @Transactional
     public SaleItemResponseDto insert(Long saleId, SaleInsertItemDto saleInsertItemDto) {
-        SaleItem newSaleItem = convertToEntity(saleInsertItemDto, SaleItem.class);
+        SaleDto saleDto = saleService.findById(saleId)
+                .orElseThrow(() -> new ResourceNotFoundException("Venda não encontrada com ID:" + saleId));
+        Sale sale = convertToEntity(saleDto, Sale.class);
+
+        // Faz a verificação se já existe um item com o mesmo id e valor nessa venda
+        if(verifyExistsProduct(sale.getSaleItems(), saleInsertItemDto)){
+            getProductAndUpdateStock(saleInsertItemDto.getProductId(), saleInsertItemDto.getQuantitySold());
+            SaleItem saleItem = saleItemRepository.findByProductIdAndSaleIdAndSalePrice(saleInsertItemDto.getProductId(), saleId, saleInsertItemDto.getSalePrice())
+                            .orElseThrow(() -> new ResourceNotFoundException("Não foi localizado um item com o mesmo id e mesmo preço nessa mesma venda."));
+            saleItem.addToQuantityPending(saleInsertItemDto.getQuantitySold());
+            saleItem = saleItemRepository.save(saleItem);
+            return convertToDto(saleItem, SaleItemResponseDto.class);
+        }
 
         ProductDto productDto = productService.findById(saleInsertItemDto.getProductId())
                 .orElseThrow(() -> new ResourceNotFoundException("Produto não encontrado com ID: " + saleInsertItemDto.getProductId()));
         verifyProductStock(productDto, saleInsertItemDto.getQuantitySold());
         productService.updateStockBySale(saleInsertItemDto.getProductId(), saleInsertItemDto.getQuantitySold());
         Product product = convertToEntity(productDto, Product.class);
-        product.setProductPrice(saleInsertItemDto.getSalePrice());
-        newSaleItem.setProduct(product);
 
-        SaleDto saleDto = saleService.findById(saleId)
-                .orElseThrow(() -> new ResourceNotFoundException("Venda não encontrada com ID:" + saleId));
-        Sale sale = convertToEntity(saleDto, Sale.class);
+        product.setProductPrice(saleInsertItemDto.getSalePrice());
+        SaleItem newSaleItem = convertToEntity(saleInsertItemDto, SaleItem.class);
+        newSaleItem.setProduct(product);
         newSaleItem.setSale(sale);
+
 
         newSaleItem.setSalePrice(saleInsertItemDto.getSalePrice());
         newSaleItem.setUnitOfMeasure(product.getUnitOfMeasure());
-        newSaleItem.setQuantityDelivered(0L);
+        newSaleItem.setQuantityDelivered(new BigDecimal(0));
         newSaleItem = saleItemRepository.save(newSaleItem);
         return convertToDto(newSaleItem, SaleItemResponseDto.class);
+    }
+
+    private void getProductAndUpdateStock(Long productId, BigDecimal quantitySale){
+        ProductDto productDto = productService.findById(productId)
+                .orElseThrow(() -> new ResourceNotFoundException("Produto não encontrado com ID: " + productId));
+        verifyProductStock(productDto, quantitySale);
+        productService.updateStockBySale(productId, quantitySale);
+    }
+
+    private boolean verifyExistsProduct(List<SaleItem> saleItems, SaleInsertItemDto saleInsertItemDto) {
+        return saleItems.stream().anyMatch( sale ->
+                sale.getProduct().getId().equals(saleInsertItemDto.getProductId()) &&
+                saleInsertItemDto.getSalePrice().equals(sale.getSalePrice()));
     }
 
     private void verifyProductStock(ProductDto productDto, BigDecimal quantitySold) {
