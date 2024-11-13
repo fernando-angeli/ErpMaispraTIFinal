@@ -1,4 +1,4 @@
-package com.erp.maisPraTi.dto.sales;
+package com.erp.maisPraTi.dto.saleItems;
 
 import com.erp.maisPraTi.dto.products.ProductSimpleDto;
 import com.erp.maisPraTi.enums.UnitOfMeasure;

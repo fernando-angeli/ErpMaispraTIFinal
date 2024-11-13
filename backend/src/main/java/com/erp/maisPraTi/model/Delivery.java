@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -16,12 +17,12 @@ public class Delivery {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "sale_id", nullable = false)
+    @JoinColumn(name = "sale_id")
     private Sale sale;
 
     private LocalDateTime dateDelivery;
 
     @OneToMany(mappedBy = "delivery", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<DeliveryItem> deliveryItems;
+    private List<DeliveryItem> deliveryItems = new ArrayList<>();
 
 }

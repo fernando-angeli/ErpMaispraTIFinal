@@ -1,4 +1,4 @@
-package com.erp.maisPraTi.dto.sales;
+package com.erp.maisPraTi.dto.saleItems;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
