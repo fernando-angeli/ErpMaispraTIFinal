@@ -8,10 +8,12 @@ import com.erp.maisPraTi.model.Supplier;
 import com.erp.maisPraTi.repository.SupplierRepository;
 import com.erp.maisPraTi.service.exceptions.DatabaseException;
 import com.erp.maisPraTi.service.exceptions.ResourceNotFoundException;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -26,14 +28,19 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
-public class SupplierServiceTest {
+    @ExtendWith(MockitoExtension.class)
+    public class SupplierServiceTest {
 
     @Mock
     private SupplierRepository supplierRepository;
 
     @InjectMocks
     private SupplierService supplierService;
+
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+    }
 
     // Teste para verificar se o ID existe ou não
     @Test
@@ -169,29 +176,23 @@ public class SupplierServiceTest {
     void deveAtualizarFornecedorComSucesso() {
         Long id = 1L;
 
-        // Crie e configure o objeto SupplierUpdateDto
         SupplierUpdateDto updateDto = new SupplierUpdateDto();
         updateDto.setCpfCnpj("000.111.222.333-44");
         updateDto.setStateRegistration("909/8328356");
         updateDto.setTypePfOrPj(TypePfOrPj.PJ);
 
-        // Configure o objeto Supplier que será retornado pelo mock
         Supplier supplier = new Supplier();
-        supplier.setCpfCnpj("000.111.222.333-44"); // Define um CPF/CNPJ inicial para comparação
+        supplier.setCpfCnpj("000.111.222.333-44");
 
-        // Mocks do repositório
         when(supplierRepository.existsById(id)).thenReturn(true);
         when(supplierRepository.getReferenceById(id)).thenReturn(supplier);
         when(supplierRepository.save(any(Supplier.class))).thenReturn(supplier);
 
-        // Chamada do método update no serviço
         SupplierDto result = supplierService.update(id, updateDto);
 
-        // Asserções
         assertNotNull(result);
         verify(supplierRepository, times(1)).save(supplier);
     }
-
 
     @Test
     void deveLancarExcecaoQuandoErroDeIntegridadeAoAtualizarFornecedor() {
@@ -241,23 +242,53 @@ public class SupplierServiceTest {
         assertNull(normalized);
     }
 
-
     @Test
-    void naoDeveLancarExcecaoQuandoDocumentosNaoExistem() {
-        String cpfCnpj = "123.456.789-00";
-        String stateRegistration = "ISENTO";
-        TypePfOrPj typePfOrPj = TypePfOrPj.PF;
+    void deveLancarDatabaseExceptionQuandoOcorrerErroInesperado() {
+        Long supplierId = 1L;
 
-        when(supplierRepository.existsByCpfCnpj(cpfCnpj)).thenReturn(false);
+        // Mock para verificar a existência do fornecedor (caso queira verificar o comportamento antes da exclusão)
+        when(supplierRepository.existsById(supplierId)).thenReturn(true);
 
-        assertDoesNotThrow(() -> supplierService.verifyExistsDocuments(cpfCnpj, stateRegistration, typePfOrPj));
+        // Simula uma exceção genérica sendo lançada durante a execução do delete
+        doThrow(new RuntimeException("Erro inesperado")).when(supplierRepository).deleteById(supplierId);
 
-        verify(supplierRepository, times(1)).existsByCpfCnpj(cpfCnpj);
-        verify(supplierRepository, never()).existsByStateRegistration(stateRegistration); // Verificação de que não foi chamado
+        // Verifica se o método lança a DatabaseException
+        assertThrows(DatabaseException.class, () -> supplierService.delete(supplierId),
+                "Erro inesperado ao tentar excluir o fornecedor.");
+        }
+
+        @Test
+        public void deveLancarExcecaoQuandoFornecedorComDocumentosExistentesForAtualizado() {
+            Long id = 1L;
+            SupplierUpdateDto supplierUpdateDto = new SupplierUpdateDto();
+            supplierUpdateDto.setCpfCnpj("12345678901234");  // CPF/CNPJ que já existe
+            supplierUpdateDto.setStateRegistration("123456789"); // Inscrição Estadual
+            supplierUpdateDto.setTypePfOrPj(TypePfOrPj.PJ);  // Tipo PF ou PJ
+
+            // Garantir que o fornecedor com o ID existe
+            when(supplierRepository.existsById(id)).thenReturn(true);  // Simula que o fornecedor com ID 1 existe
+
+            // Simula a situação em que já existe um fornecedor com os mesmos documentos
+            when(supplierRepository.existsByCpfCnpjAndStateRegistrationAndTypePfOrPj(
+                    supplierUpdateDto.getCpfCnpj(),
+                    supplierUpdateDto.getStateRegistration(),
+                    String.valueOf(supplierUpdateDto.getTypePfOrPj())))
+                    .thenReturn(true);  // Retorna 'true', indicando que o fornecedor já existe
+
+            // Verificando que a exceção DatabaseException será lançada
+            DatabaseException exception = assertThrows(DatabaseException.class, () -> {
+                supplierService.update(id, supplierUpdateDto);
+            });
+
+            // Verificando a mensagem da exceção
+            assertEquals("Fornecedor com os mesmos documentos já existe.", exception.getMessage());
+        }
+
+
+
     }
 
 
-}
 
 
 
