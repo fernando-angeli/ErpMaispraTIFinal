@@ -1,6 +1,7 @@
 package com.erp.maisPraTi.dto.sales;
 
 import com.erp.maisPraTi.dto.partyDto.clients.ClientSimpleDto;
+import com.erp.maisPraTi.dto.saleItems.SaleItemRequestDto;
 import com.erp.maisPraTi.enums.SaleStatus;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -20,23 +21,15 @@ import java.util.List;
 public class SaleDto {
 
     private Long id;
-
     private Long saleNumber;
-
     private LocalDateTime saleDate;
-
     @NotNull(message = "Informe a data estimada para a entrega.")
     private LocalDate expectedDeliveryDate;
-
-    private LocalDateTime saleDelivery;
-
+    private LocalDateTime saleDeliveryDate;
     @NotNull(message = "É obrigatório informar o cliente.")
     private ClientSimpleDto client;
-
     private List<SaleItemRequestDto> saleItems;
-
     private BigDecimal totalSaleValue;
-
     @Enumerated(EnumType.STRING)
     private SaleStatus saleStatus;
 

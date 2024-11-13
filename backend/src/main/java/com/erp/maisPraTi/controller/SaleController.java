@@ -7,6 +7,7 @@ import com.erp.maisPraTi.service.SaleService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -14,14 +15,17 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
 import java.util.Optional;
 
+@Tag(name = "Vendas", description = "Operações relacionadas as vendas.")
 @RestController
 @CrossOrigin(origins = "http://localhost:5173")
 @RequestMapping(value = "api/vendas")
-public class SaleController {
+class SaleController {
 
     @Autowired
     private SaleService saleService;
@@ -81,7 +85,6 @@ public class SaleController {
             @ApiResponse(responseCode = "404", description = "Venda não encontrada"),
             @ApiResponse(responseCode = "409", description = "Para manter integridade do BD não permite a exclusão")
     })
-
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id){
         saleService.delete(id);

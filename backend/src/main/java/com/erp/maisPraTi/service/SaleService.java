@@ -70,7 +70,7 @@ public class SaleService {
             sale = saleRepository.save(sale);
             return convertToDto(sale, SaleDto.class);
         } catch (DataIntegrityViolationException e) {
-            throw new DatabaseException("Não foi possível fazer a alteração neste salee.");
+            throw new DatabaseException("Não foi possível fazer a alteração nesta venda.");
         }
     }
 

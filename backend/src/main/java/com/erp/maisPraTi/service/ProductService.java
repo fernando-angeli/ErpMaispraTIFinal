@@ -3,6 +3,8 @@ package com.erp.maisPraTi.service;
 import com.erp.maisPraTi.dto.products.ProductDto;
 import com.erp.maisPraTi.dto.products.ProductUpdateDto;
 import com.erp.maisPraTi.dto.partyDto.suppliers.SupplierSimpleDto;
+import com.erp.maisPraTi.dto.saleItems.SaleInsertItemDto;
+import com.erp.maisPraTi.dto.saleItems.SaleItemUpdateDto;
 import com.erp.maisPraTi.model.Product;
 import com.erp.maisPraTi.model.Supplier;
 import com.erp.maisPraTi.repository.ProductRepository;
@@ -87,7 +89,7 @@ public class ProductService {
     }
 
     private void verifyExistsId(Long id) {
-        if (!productRepository.existsById(id)) {
+        if (productRepository.findById(id).isEmpty()) {
             throw new ResourceNotFoundException("Id não localizado: " + id);
         }
     }
@@ -106,6 +108,29 @@ public class ProductService {
             supplier.setFullName(supplierDto.getFullName());
             product.getSuppliers().add(supplier);
         });
+    }
+
+    public void updateStockBySale(SaleInsertItemDto dto) {
+        verifyExistsId(dto.getProductId());
+        try {
+            Product product = productRepository.getReferenceById(dto.getProductId());
+            product.setReservedStock(product.getReservedStock().add(dto.getQuantitySold()));
+            productRepository.save(product);
+        } catch (DataIntegrityViolationException e) {
+            throw new DatabaseException("Não foi possível fazer a alteração neste produto.");
+        }
+    }
+
+    public void updateStockBySale(SaleItemUpdateDto dto) {
+        verifyExistsId(dto.getProductId());
+        try {
+            Product product = productRepository.findById(dto.getProductId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Produto não localizado."));
+            product.setReservedStock(dto.getQuantitySold());
+            productRepository.save(product);
+        } catch (DataIntegrityViolationException e) {
+            throw new DatabaseException("Não foi possível fazer a alteração neste produto.");
+        }
     }
 
     public void updateStockBySale(Long productId, BigDecimal quantitySold) {

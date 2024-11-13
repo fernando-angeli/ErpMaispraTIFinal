@@ -39,7 +39,7 @@ public class SaleItem {
         return this.quantitySold.subtract(this.quantityDelivered);
     }
 
-    public void addToQuantityPending(BigDecimal addPending){
+    public void addToQuantityPending(BigDecimal addPending) {
         this.quantitySold = this.quantitySold.add(addPending);
     }
 
