@@ -59,18 +59,26 @@ public class SupplierService {
     }
 
     @Transactional
-    public SupplierDto update(Long id, SupplierUpdateDto supplierUpdateDto){
+    public SupplierDto update(Long id, SupplierUpdateDto supplierUpdateDto) {
         verifyExistsId(id);
         try {
             Supplier supplier = supplierRepository.getReferenceById(id);
-            if(!supplier.getCpfCnpj().equals(supplierUpdateDto.getCpfCnpj()))
-                verifyExistsDocuments(supplierUpdateDto.getCpfCnpj(), supplierUpdateDto.getStateRegistration(), supplierUpdateDto.getTypePfOrPj());
+
+            // Verifique se já existe um fornecedor com o mesmo CPF/CNPJ, Inscrição Estadual e tipo (PF ou PJ)
+            if (supplierRepository.existsByCpfCnpjAndStateRegistrationAndTypePfOrPj(
+                    supplierUpdateDto.getCpfCnpj(),
+                    supplierUpdateDto.getStateRegistration(),
+                    String.valueOf(supplierUpdateDto.getTypePfOrPj()))) {
+                throw new DatabaseException("Fornecedor com os mesmos documentos já existe.");
+            }
+
+            // Continuar com a atualização
             supplierUpdateDto.setStateRegistration(stateRegistrationNormalize(supplierUpdateDto.getStateRegistration()));
             convertToEntity(supplierUpdateDto, supplier);
             supplier.setUpdatedAt(LocalDateTime.now());
             supplier = supplierRepository.save(supplier);
             return convertToDto(supplier, SupplierDto.class);
-        } catch (DataIntegrityViolationException e){
+        } catch (DataIntegrityViolationException e) {
             throw new DatabaseException("Não foi possível fazer a alteração neste fornecedor.");
         }
     }
