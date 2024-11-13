@@ -134,7 +134,7 @@ const Dashbord = () => {
 
           </div>
         </div>
-        <div>
+        <div className="small-slots">
 
           <div className="slot slot4 small-slot" data-swapy-slot="slot4">
             <div className="itemSwapy item4" data-swapy-item="item4">
