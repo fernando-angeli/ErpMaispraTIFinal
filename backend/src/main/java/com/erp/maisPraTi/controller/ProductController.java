@@ -6,6 +6,7 @@ import com.erp.maisPraTi.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,6 +17,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 import java.util.Optional;
 
+@Tag(name = "Produtos", description = "Operações relacionadas aos Produtos.")
 @RestController
 @CrossOrigin(origins = "http://localhost:5173")
 @RequestMapping(value = "api/produtos")

@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.net.URI;
 import java.util.Optional;
 
-@Tag(name = "Controlador de Vendas", description = "Operações relacionadas as vendas.")
+@Tag(name = "Vendas", description = "Operações relacionadas as vendas.")
 @RestController
 @CrossOrigin(origins = "http://localhost:5173")
 @RequestMapping(value = "api/vendas")
