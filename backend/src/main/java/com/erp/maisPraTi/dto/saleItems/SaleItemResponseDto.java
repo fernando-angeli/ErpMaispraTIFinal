@@ -16,7 +16,7 @@ public class SaleItemResponseDto {
     private Long id;
     private Long saleId;
     private ProductSimpleDto product;
-    private Long quantitySold;
+    private BigDecimal quantitySold;  // Alterado para BigDecimal
     private BigDecimal salePrice;
     private UnitOfMeasure unitOfMeasure;
     private Long quantityDelivered;

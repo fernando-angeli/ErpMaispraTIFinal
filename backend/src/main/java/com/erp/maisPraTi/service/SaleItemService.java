@@ -147,7 +147,7 @@ public class SaleItemService {
                     + " " + productDto.getUnitOfMeasure().getDescription() + "(s)");
     }
 
-    private void verifyQuantitySold(BigDecimal quantitySold){
+    void verifyQuantitySold(BigDecimal quantitySold){
         if(quantitySold.compareTo(BigDecimal.ZERO) <= 0)
             throw new ProductException("A quantidade de produtos deve ser maior que zero.");
     }
