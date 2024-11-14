@@ -99,15 +99,15 @@ public class SaleItemController {
         return ResponseEntity.ok().body(saleUpdatedDto);
     }
 
-//    @Operation(summary = "Deleta uma venda informando o ID")
-//    @ApiResponses(value = {
-//            @ApiResponse(responseCode = "204", description = "Venda deletada"),
-//            @ApiResponse(responseCode = "404", description = "Venda não encontrada"),
-//            @ApiResponse(responseCode = "409", description = "Para manter integridade do BD não permite a exclusão")
-//    })
-//    @DeleteMapping("/{id}")
-//    public ResponseEntity<Void> delete(@PathVariable Long id){
-//        saleItemService.delete(id);
-//        return ResponseEntity.noContent().build();
-//    }
+    @Operation(summary = "Deleta uma venda informando o ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Item deletado."),
+            @ApiResponse(responseCode = "404", description = "Item não encontrado"),
+            @ApiResponse(responseCode = "409", description = "Para manter integridade do BD não permite a exclusão")
+    })
+    @DeleteMapping("/itens/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id){
+        saleItemService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
 }
