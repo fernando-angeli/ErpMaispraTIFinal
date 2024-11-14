@@ -2,10 +2,10 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { MdDeleteOutline } from 'react-icons/md';
 
-const CardSaleRegister = ({ saleRegisters, onDelete, onSubmitSale }) => {
+const CardSaleRegister = ({ saleRegisters, onDelete}) => {
 
   const formatarReal = (valor) => {
-    const formatado = (valor / 100).toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    const formatado = (valor / 1).toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     return formatado;
 }
 let totalToShow = 0;
@@ -41,7 +41,6 @@ let totalToShow = 0;
       </table>
       <hr/>
       <h3>Total de items: {saleRegisters.length}</h3>   <h3>Valor Total: R$ {formatarReal(totalToShow)}</h3> 
-      <button type="submit" onClick={onSubmitSale}>Finalizar Pedido</button>
     </div>
   );
 };

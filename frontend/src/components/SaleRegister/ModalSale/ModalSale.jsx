@@ -23,6 +23,12 @@ function ModalDetails({ show, onClose, content, title }) {
     }
     return "00/00/0000";
   }
+
+  const formatarReal = (valor) => {
+    const formatado = (valor / 1).toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    return formatado;
+}
+
   const saleDate = formatDate(content.saleDate);
   const saleDeliveryDate = formatDate(content.saleDeliveryDate);
   return (
@@ -41,7 +47,7 @@ function ModalDetails({ show, onClose, content, title }) {
                 <div className="label">Produto:</div>
                 <div className="value">{item.product.name}</div>
                 <div className="label">Preço:</div>
-                <div className="value">{`R$ ${item.salePrice},00`}</div>
+                <div className="value">{`R$ ${formatarReal(item.salePrice)}`}</div>
                 <div className="label">Quantidade:</div>
                 <div className="value">{item.quantitySold}</div>
               </div>
@@ -71,7 +77,7 @@ function ModalDetails({ show, onClose, content, title }) {
             <div className="third columnSale">
               <div className="label">Valor Total:</div>
               <div className="value">
-                {content && `R$ ${content.totalSaleValue},00`}
+                {content && `R$ ${formatarReal(content.totalSaleValue)}`}
               </div>
             </div>
           </div>
