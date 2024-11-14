@@ -74,7 +74,6 @@ const LineChartGraph = ({ labelData1, labelData2, labels, dataLine1, dataLine2, 
           <Line data={data} options={options} id='lineChartGraph' />
         </div>
       </div>
-        
     </div>
   )
 };

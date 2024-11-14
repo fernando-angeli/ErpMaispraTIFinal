@@ -10,7 +10,12 @@ import NavigationListEmployees from "./NavigationListEmployees.jsx";
 import PageOfListEmployees from "./PageOfListEmployees.jsx";
 import LoadingSpin from "../../LoadingSpin/LoadingSpin.jsx";
 
-const ListEmployees = () => {
+const ListEmployees = ({onlyView}) => {
+
+  ListEmployees.defaultProps = {
+    onlyView: false,
+  };
+
   const apiUrl = import.meta.env.VITE_API_URL;
   const { JwtToken } = useAuth();
   const [employees, setEmployees] = useState();
@@ -99,7 +104,8 @@ const ListEmployees = () => {
   return (
     <>
       {isLoading && <LoadingSpin />}
-      <FormNewEmployee dataEmployee={employeeUpdate} />
+      {onlyView ? "" : <FormNewEmployee dataEmployee={employeeUpdate} />}
+      
       <div className="contentListEmployees">
         <div className="ListEmployees">
           <div className="headerListEmployees">
@@ -190,6 +196,7 @@ const ListEmployees = () => {
                   onDelete={deleteEmployee}
                   maxEmployeesPerList={maxEmployeesPerList}
                   listEmployeesPageSelected={listEmployeesPageSelected}
+                  onlyView={onlyView}
                 />
               </tbody>
             </table>
