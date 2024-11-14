@@ -1,17 +1,19 @@
 package com.erp.maisPraTi.service;
 
 import com.erp.maisPraTi.dto.products.ProductDto;
-import com.erp.maisPraTi.dto.sales.SaleDto;
 import com.erp.maisPraTi.dto.saleItems.SaleInsertItemDto;
 import com.erp.maisPraTi.dto.saleItems.SaleItemResponseDto;
 import com.erp.maisPraTi.dto.saleItems.SaleItemUpdateDto;
+import com.erp.maisPraTi.dto.sales.SaleDto;
 import com.erp.maisPraTi.model.Product;
 import com.erp.maisPraTi.model.Sale;
 import com.erp.maisPraTi.model.SaleItem;
 import com.erp.maisPraTi.repository.SaleItemRepository;
+import com.erp.maisPraTi.service.exceptions.DatabaseException;
 import com.erp.maisPraTi.service.exceptions.ProductException;
 import com.erp.maisPraTi.service.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -37,6 +39,7 @@ public class SaleItemService {
 
     @Transactional
     public SaleItemResponseDto insert(Long saleId, SaleInsertItemDto saleInsertItemDto) {
+        verifyQuantitySold(saleInsertItemDto.getQuantitySold());
         SaleDto saleDto = saleService.findById(saleId)
                 .orElseThrow(() -> new ResourceNotFoundException("Venda não encontrada com ID:" + saleId));
         Sale sale = convertToEntity(saleDto, Sale.class);
@@ -99,9 +102,13 @@ public class SaleItemService {
 
     @Transactional
     public SaleItemResponseDto update(Long id, SaleItemUpdateDto saleItemUpdateDto) {
-            SaleItem existsItem = saleItemRepository.findById(id)
-                    .orElseThrow(() -> new ResourceNotFoundException("Item não localizado pelo id informado."));
-
+        verifyQuantitySold(saleItemUpdateDto.getQuantitySold());
+        SaleItem existsItem = saleItemRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Item não localizado pelo id informado."));
+        if(saleItemUpdateDto.getQuantitySold().compareTo(existsItem.getQuantityDelivered()) < 0)
+            throw new ProductException("Não é possível atualizar a quantidade para um valor menor do que já foi entregue.");
+        BigDecimal updatedQuantitySold = saleItemUpdateDto.getQuantitySold().subtract(existsItem.getQuantitySold());
+        productService.updateStockByUpdateSale(saleItemUpdateDto.getProductId(), updatedQuantitySold);
         existsItem.setQuantitySold(saleItemUpdateDto.getQuantitySold());
         existsItem.setSalePrice(saleItemUpdateDto.getSalePrice());
 
@@ -109,18 +116,23 @@ public class SaleItemService {
         return convertToDto(updatedItem, SaleItemResponseDto.class);
     }
 
-//    @Transactional
-//    public void delete(Long id) {
-//        verifyExistsId(id);
-//        try {
-//            saleItemRepository.deleteById(id);
-//        } catch (DataIntegrityViolationException e) {
-//            throw new DatabaseException("Não foi possível excluir esta item. Ele pode estar vinculado a outros registros.");
-//        } catch (Exception e) {
-//            throw new DatabaseException("Erro inesperado ao tentar excluir este item.");
-//        }
-//    }
+    @Transactional
+    public void delete(Long id) {
+        try {
+            SaleItem saleItem = saleItemRepository.findById(id)
+                    .orElseThrow(() -> new ResourceNotFoundException("Venda de item não localizada."));
+            if(saleItem.getQuantityDelivered().compareTo(BigDecimal.ZERO) > 0)
+                throw new DatabaseException("Não é possível deletar um item que já unidades entregues.");
+            productService.updateDeletedItemToSaleItems(saleItem.getProduct().getId(), saleItem.getQuantitySold());
+            saleItemRepository.deleteById(id);
+        } catch (DataIntegrityViolationException e) {
+            throw new DatabaseException("Não foi possível excluir esta item. Ele pode estar vinculado a outros registros.");
+        } catch (Exception e) {
+            throw new DatabaseException("Erro inesperado ao tentar excluir este item.");
+        }
+    }
 
+    @Transactional
     private void getProductAndUpdateStock(Long productId, BigDecimal quantitySale){
         ProductDto productDto = productService.findById(productId)
                 .orElseThrow(() -> new ResourceNotFoundException("Produto não encontrado com ID: " + productId));
@@ -135,13 +147,9 @@ public class SaleItemService {
                     + " " + productDto.getUnitOfMeasure().getDescription() + "(s)");
     }
 
-    public void delete(Long id) {
-        // Verifica se o item existe
-        if (!saleItemRepository.existsById(id)) {
-            throw new ResourceNotFoundException("Item não localizado pelo id informado.");
-        }
-        // Exclui o item
-        saleItemRepository.deleteById(id);
+    private void verifyQuantitySold(BigDecimal quantitySold){
+        if(quantitySold.compareTo(BigDecimal.ZERO) <= 0)
+            throw new ProductException("A quantidade de produtos deve ser maior que zero.");
     }
 
 }
