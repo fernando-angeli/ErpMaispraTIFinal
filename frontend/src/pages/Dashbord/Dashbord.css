@@ -48,7 +48,7 @@
     flex-grow: 1;
     display: flex;
     justify-content: center;
-    border: solid 1px;
+    /* border: solid 1px; */
     align-items: center;
     
 
@@ -90,5 +90,4 @@
 
     
 }
-
 

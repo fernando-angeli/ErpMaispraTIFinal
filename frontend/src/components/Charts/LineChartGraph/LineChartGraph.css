@@ -8,6 +8,7 @@
     height: 100%;
     /* width: 100%;    */
 
+    container-type: size;
 }
 
 .lineContent h3 {
@@ -37,8 +38,10 @@
     
 }
 
-@container (max-width: 100px) {
-    
+@container (max-height: 250px) {
+    .lineContent h3 {
+        display: none;
+    }
 }
 
 /* @media (max-width: 768px) {
