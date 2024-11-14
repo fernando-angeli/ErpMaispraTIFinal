@@ -1,5 +1,6 @@
 package com.erp.maisPraTi.controller;
 
+import com.erp.maisPraTi.dto.users.CardDto;
 import com.erp.maisPraTi.dto.users.UserDto;
 import com.erp.maisPraTi.dto.users.UserInsertDto;
 import com.erp.maisPraTi.dto.users.UserUpdateDto;
@@ -83,6 +84,17 @@ public class UserController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id){
         userService.deleteById(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @Operation(summary = "Insere as informações de cards para cada usuário.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Informações inseridas."),
+            @ApiResponse(responseCode = "404", description = "Usuário não encontrado.")
+    })
+    @PostMapping("/{id}/cards")
+    public ResponseEntity<Void> insert(@PathVariable Long id, @RequestBody CardDto cardDto){
+        userService.insertCard(id, cardDto);
         return ResponseEntity.noContent().build();
     }
 
