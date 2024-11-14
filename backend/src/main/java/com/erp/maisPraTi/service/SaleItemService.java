@@ -135,4 +135,13 @@ public class SaleItemService {
                     + " " + productDto.getUnitOfMeasure().getDescription() + "(s)");
     }
 
+    public void delete(Long id) {
+        // Verifica se o item existe
+        if (!saleItemRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Item não localizado pelo id informado.");
+        }
+        // Exclui o item
+        saleItemRepository.deleteById(id);
+    }
+
 }
