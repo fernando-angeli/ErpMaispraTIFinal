@@ -1,10 +1,9 @@
 package com.erp.maisPraTi.service;
 
+import com.erp.maisPraTi.dto.partyDto.suppliers.SupplierSimpleDto;
 import com.erp.maisPraTi.dto.products.ProductDto;
 import com.erp.maisPraTi.dto.products.ProductUpdateDto;
-import com.erp.maisPraTi.dto.partyDto.suppliers.SupplierSimpleDto;
 import com.erp.maisPraTi.dto.saleItems.SaleInsertItemDto;
-import com.erp.maisPraTi.dto.saleItems.SaleItemUpdateDto;
 import com.erp.maisPraTi.model.Product;
 import com.erp.maisPraTi.model.Supplier;
 import com.erp.maisPraTi.repository.ProductRepository;
@@ -19,7 +18,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 import static com.erp.maisPraTi.util.EntityMapper.convertToDto;
 import static com.erp.maisPraTi.util.EntityMapper.convertToEntity;
@@ -88,12 +89,14 @@ public class ProductService {
         }
     }
 
+    @Transactional(readOnly = true)
     private void verifyExistsId(Long id) {
         if (productRepository.findById(id).isEmpty()) {
-            throw new ResourceNotFoundException("Id não localizado: " + id);
+            throw new ResourceNotFoundException("Produto não localizado.");
         }
     }
 
+    @Transactional
     private void insertOrUpdateSuppliers(List<SupplierSimpleDto> supplierDtos, Product product) {
         if (Objects.isNull(supplierDtos)) {
             return; // Ignorar a atualização dos fornecedores se a lista for nula
@@ -110,6 +113,7 @@ public class ProductService {
         });
     }
 
+    @Transactional
     public void updateStockBySale(SaleInsertItemDto dto) {
         verifyExistsId(dto.getProductId());
         try {
@@ -121,18 +125,7 @@ public class ProductService {
         }
     }
 
-    public void updateStockBySale(SaleItemUpdateDto dto) {
-        verifyExistsId(dto.getProductId());
-        try {
-            Product product = productRepository.findById(dto.getProductId())
-                    .orElseThrow(() -> new ResourceNotFoundException("Produto não localizado."));
-            product.setReservedStock(dto.getQuantitySold());
-            productRepository.save(product);
-        } catch (DataIntegrityViolationException e) {
-            throw new DatabaseException("Não foi possível fazer a alteração neste produto.");
-        }
-    }
-
+    @Transactional
     public void updateStockBySale(Long productId, BigDecimal quantitySold) {
         verifyExistsId(productId);
         try {
@@ -144,5 +137,28 @@ public class ProductService {
         }
     }
 
+    @Transactional
+    public void updateStockByUpdateSale(Long productId, BigDecimal updatedSold) {
+        try {
+            Product product = productRepository.findById(productId)
+                    .orElseThrow(() -> new ResourceNotFoundException("Produto não localizado."));
+            product.setReservedStock(product.getReservedStock().add(updatedSold));
+            productRepository.save(product);
+        } catch (DataIntegrityViolationException e) {
+            throw new DatabaseException("Não foi possível fazer a alteração neste produto.");
+        }
+    }
+
+    @Transactional
+    public void updateDeletedItemToSaleItems(Long productId, BigDecimal quantityUpdate) {
+        try {
+            Product product = productRepository.findById(productId)
+                    .orElseThrow(() -> new ResourceNotFoundException("Produto não localizado."));
+            product.setReservedStock(product.getReservedStock().subtract(quantityUpdate));
+            productRepository.save(product);
+        } catch (DataIntegrityViolationException e) {
+            throw new DatabaseException("Não foi possível fazer a alteração neste produto.");
+        }
+    }
 }
 
