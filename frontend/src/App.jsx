@@ -12,6 +12,7 @@ import HomePage from "./pages/HomePage";
 import Login from "./pages/LoginPage/Login";
 import { useAuth } from "./components/AuthContext";
 import AddEmployeePage from "./pages/addEmployeePage/AddEmployeePage";
+import AddProductPage from "./pages/addProductPage/addProductPage";
 import ResetPassword from "./pages/ResetPassword/ResetPassword";
 import AddSupplierpage from './pages/addSupplierpage/AddSupplierpage' 
 import AddSaleRegister from "./pages/addSaleRegister/AddSaleRegister"
@@ -44,6 +45,14 @@ function App() {
             element={
               <ProtectedRoute isLoggedIn={isAuthenticated }>
                 <AddEmployeePage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/produtos"
+            element={
+              <ProtectedRoute isLoggedIn={isAuthenticated }>
+                <AddProductPage />
               </ProtectedRoute>
             }
           />

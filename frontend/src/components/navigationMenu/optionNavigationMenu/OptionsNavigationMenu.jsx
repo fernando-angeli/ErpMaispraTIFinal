@@ -25,6 +25,7 @@ function OptionsNavigationMenu() {
     {
       icon: newProductIcon,
       description: "Novo Produto",
+      url: "/produtos",
     },
     {
       icon: newBuyIcon,
