@@ -6,6 +6,11 @@ function ModalDetails({ show, onClose, content, title }) {
   if (content) {
     formatedBDate = content.birthDate.split("-").reverse().join("/");
   }
+
+  const formatarReal = (valor) => {
+    const formatado = (valor / 1).toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    return formatado;
+}
   return (
     <div className="modalDetailsOverlayClient">
       <div className="modalDetailsContentClient">
@@ -69,6 +74,10 @@ function ModalDetails({ show, onClose, content, title }) {
             <div className="firstSecond columnClient">
               <div className="label">Notas:</div>
               <div className="value">{content && content.notes}</div>
+            </div>
+            <div className="firstSecond columnClient">
+              <div className="label">Limite de Credito:</div>
+              <div className="value">{content && formatarReal(content.creditLimit)}</div>
             </div>
             <div className="third columnClient">
               <div className="label">Status:</div>

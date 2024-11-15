@@ -3,6 +3,8 @@ import "./FormNewSaleRegister.css";
 import { CgAdd, CgRemove } from "react-icons/cg";
 import axios from "axios";
 import { useAuth } from "../../AuthContext";
+import { jwtDecode } from "jwt-decode";
+
 import InputField from "../../InputField/InputField";
 import LoadingSpin from '../../LoadingSpin/LoadingSpin';
 import SelectFieldClient from "../../SelectField/SelectFieldClient";
@@ -10,19 +12,20 @@ import SelectFieldProduct from "../../SelectField/SelectFieldProduct";
 import CardSaleRegister from './CardSaleRegister'
 
 function FormNewSaleRegister({ dataSaleRegister }) {
+   const { JwtToken } = useAuth();
+  const decoded = jwtDecode(JwtToken);
   const apiUrl = import.meta.env.VITE_API_URL;
   const [ResponsiveSaleRegister, setResponsiveSaleRegister] = useState(true);
   const [PostToUpdate, setPostToUpdate] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [Error, setError] = useState(null);
   const [Success, setSuccess] = useState(null);
-  const { JwtToken } = useAuth();
   const [ListClients, setListClients] = useState([]);
   const [ListProducts, setListProducts] = useState([]);
 
   const [NewSaleRegisterClientId, setNewSaleRegisterClientId] = useState(''); 
   const [NewSaleRegisterClient, setNewSaleRegisterClient] = useState('');
-  const [NewSaleRegisterSaller, setNewSaleRegisterSaller] = useState('');
+  const [NewSaleRegisterSaller, setNewSaleRegisterSaller] = useState(decoded.fullName);
   const [NewSaleRegisterData, setNewSaleRegisterData] = useState('');
   const [NewSaleRegisterDataPrev, setNewSaleRegisterDataPrev] = useState('');
   const [NewSaleRegisterProduct, setNewSaleRegisterProduct] = useState();
@@ -34,7 +37,7 @@ function FormNewSaleRegister({ dataSaleRegister }) {
     setCardItems([]);
     setNewSaleRegisterClientId(values.id);
     setNewSaleRegisterClient(values.client);
-    setNewSaleRegisterSaller('user do bd sempre');
+    setNewSaleRegisterSaller(decoded.fullName);
     setNewSaleRegisterDataPrev(values.expectedDeliveryDate);
     setNewSaleRegisterData('');
     setNewSaleRegisterProduct('');
@@ -74,7 +77,6 @@ function FormNewSaleRegister({ dataSaleRegister }) {
       );
 
       const clientData = response.data;
-      console.log(response.data);
   
       const saleRequests = CardItems.map((card) =>
         axios.post(
@@ -105,6 +107,47 @@ function FormNewSaleRegister({ dataSaleRegister }) {
     }
   };
 
+  const handleUpdate = async (event) => {
+    event.preventDefault();
+    setIsLoading(true);
+
+    const salePayload = {
+      saleDate: NewSaleRegisterData,
+      expectedDeliveryDate: NewSaleRegisterDataPrev,
+      // saleItems: CardItems.map((card) => ({
+      //   productId: card.productId,
+      //   quantitySold: card.quant,
+      //   salePrice: card.price,
+      // })),
+      saleStatus: "pendente",
+    };
+    console.log("Payload:", salePayload);
+
+    try {
+     const response = await axios.put( `${apiUrl}/api/vendas/${NewSaleRegisterClientId}`,
+        salePayload,
+        {
+          headers: {
+            Authorization: `Bearer ${JwtToken}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );  
+      console.log(response)
+      setSuccess("Venda Atualizada com sucesso!");
+      handleReset();
+    } catch (err) {
+      setError("Erro ao Atualizar itens de venda");
+      console.log("Erro:", err);
+      if (err.response && err.response.data) {
+        setError(`${err.response.data.message}`);
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  
+  
   const deleteCardItem = (idToDelete) => {
     setCardItems((prevItems) => prevItems.filter(item => item.id !== idToDelete)); 
     setCardId(cardId - 1);
@@ -166,7 +209,6 @@ function FormNewSaleRegister({ dataSaleRegister }) {
     setNewSaleRegisterDataPrev('');
     setNewSaleRegisterProduct('');
     setNewSaleRegisterQuant('');
-    setNewSaleRegisterSaller('');
     setCardItems([]);
     setCardId(1);
   };
@@ -180,6 +222,7 @@ function FormNewSaleRegister({ dataSaleRegister }) {
     if (dataSaleRegister) {
       ValuestoUpdate(dataSaleRegister);
       setPostToUpdate(false); 
+      console.log(dataSaleRegister)
     }
   }, [dataSaleRegister]);
 
@@ -208,11 +251,11 @@ function FormNewSaleRegister({ dataSaleRegister }) {
           
           <InputField
             classNameDiv="fieldName"
-            label="Vendedor:"
-            placeholder="Digite o nome do vendedor"
+            label="Vendedor Responsavel:"
+            placeholder=""
             name="sellerName"
-            value={NewSaleRegisterSaller}
-            onChange={(e)=>setNewSaleRegisterSaller(e.target.value)}
+            value={decoded.fullName}
+            disabled={true}
           />
           <InputField
           classNameDiv="fieldDate"
@@ -263,8 +306,10 @@ function FormNewSaleRegister({ dataSaleRegister }) {
       <CardSaleRegister
       saleRegisters={CardItems}
         onDelete={deleteCardItem}
-        onSubmitSale={handleSubmit}
       />
+    <button type="submit" onClick={PostToUpdate ? handleSubmit : handleUpdate}>
+      {PostToUpdate ? "Finalizar Pedido" : "Atualizar Pedido"}
+    </button>
     </div>
   );
 }

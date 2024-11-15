@@ -29,6 +29,7 @@ function FormNewClient(dataClient) {
   const [newClientBirthDate, setNewClientBirthDate] = useState("");
   const [newClientNotes, setNewClientNotes] = useState("");
   const [newClientStatus, setNewClientStatus] = useState("ativo");
+  const [newClientCreditLimit, setnewClientCreditLimit] = useState(100);
 
   const [newClientIE, setNewClientIE] = useState("");
   
@@ -130,6 +131,7 @@ function FormNewClient(dataClient) {
     setNewClientBirthDate('');
     setNewClientNotes("")
     setNewClientIE("")
+    setnewClientCreditLimit('')
     SetPostToUpdade(true)
     setError(null)
     };
@@ -155,7 +157,7 @@ function FormNewClient(dataClient) {
       state: newClientState,
       country: "Brasil",
       birthDate: newClientBirthDate,
-      creditLimit: 100.0,
+      creditLimit: newClientCreditLimit,
       notes: newClientNotes,
       status: newClientStatus,
     };
@@ -247,7 +249,7 @@ function FormNewClient(dataClient) {
       state: newClientState,
       country: "Brasil",
       birthDate: newClientBirthDate,
-      creditLimit: 100.0,
+      creditLimit:  newClientCreditLimit,
       notes: newClientNotes,
       status: newClientStatus,
     }
@@ -334,6 +336,7 @@ function FormNewClient(dataClient) {
    setNewClientCity(values.city)
    setOption(values.typePfOrPj.toLowerCase());
    setNewClientBirthDate(values.birthDate)
+   setnewClientCreditLimit(values.creditLimit)
    setNewClientState(values.state);
    setNewClientNotes(values.notes)
    
@@ -548,6 +551,20 @@ function FormNewClient(dataClient) {
               isValid(e);
             }}
             arrayOptions={cityList}
+          />
+
+      <InputField
+            label={"Limite Credito:"}
+            name={"Limite Credito"}
+            id={"newClientCreditLimit"}
+            classNameDiv={"divSelectCredit"}
+            classNameSelect={"selectCredit"}
+            value={newClientCreditLimit}
+            onInvalid={(e) => isInvalid(e)}
+            onChange={(e) => {
+              setnewClientCreditLimit(e.target.value);
+              isValid(e);
+            }}
           />
         </div>
 
