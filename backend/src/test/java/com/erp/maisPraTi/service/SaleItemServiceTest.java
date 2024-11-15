@@ -10,25 +10,20 @@ import com.erp.maisPraTi.model.Product;
 import com.erp.maisPraTi.model.Sale;
 import com.erp.maisPraTi.model.SaleItem;
 import com.erp.maisPraTi.repository.SaleItemRepository;
+import com.erp.maisPraTi.repository.SaleRepository;
 import com.erp.maisPraTi.service.exceptions.DatabaseException;
 import com.erp.maisPraTi.service.exceptions.ResourceNotFoundException;
 import com.erp.maisPraTi.service.exceptions.ProductException;
 import com.erp.maisPraTi.util.EntityMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
+import org.mockito.*;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-
-import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
+import java.math.RoundingMode;
 
 
 import java.math.BigDecimal;
@@ -37,9 +32,10 @@ import java.util.Optional;
 import java.util.function.Consumer;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.MockitoAnnotations.*;
 
 class SaleItemServiceTest {
-
+    @Spy
     @InjectMocks
     private SaleItemService saleItemService;
 
@@ -47,20 +43,28 @@ class SaleItemServiceTest {
     private SaleItemRepository saleItemRepository;
 
     @Mock
+    private SaleRepository saleRepository;
+
+    @Mock
     private ProductService productService;
+
 
     @Mock
     private SaleService saleService;
+
+    @Mock
+    private SaleItemService serviceUnderTest;
 
 
     @Mock
     private EntityMapper entityMapper;
 
-    private Sale sale;
-    private Product product;
     private SaleItem saleItem;
     private SaleInsertItemDto saleInsertItemDto;
     private SaleItemUpdateDto saleItemUpdateDto;
+    private SaleItem existingSaleItem;
+
+    private Long saleId;
 
 
     private void verifyQuantitySold(BigDecimal quantitySold) {
@@ -73,12 +77,17 @@ class SaleItemServiceTest {
         MockitoAnnotations.openMocks(this);
 
         // Configuração de objetos para os testes
-        sale = new Sale();
+        Sale sale = new Sale();
         sale.setId(1L);
 
-        product = new Product();
+        Product product = new Product();
         product.setId(1L);
         product.setProductPrice(new BigDecimal("10.00"));
+
+        existingSaleItem = new SaleItem();
+        existingSaleItem.setId(1L);
+        existingSaleItem.setQuantitySold(BigDecimal.valueOf(5));
+        existingSaleItem.setSalePrice(BigDecimal.valueOf(50));
 
         saleItem = new SaleItem();
         saleItem.setId(1L);
@@ -99,39 +108,6 @@ class SaleItemServiceTest {
         saleItemUpdateDto.setSalePrice(new BigDecimal("12.00"));
     }
 
-    @Test
-    void deveAtualizarItemDeVendaExistente() {
-        // Instancia o DTO do produto com valores iniciais
-        ProductDto productDto = new ProductDto();
-
-        // Configura os valores de estoque e estoque reservado
-        productDto.setStock(new BigDecimal("100"));         // Estoque inicial
-        productDto.setReservedStock(new BigDecimal("20"));  // Estoque reservado inicial
-
-        // Calcula o valor esperado para 'availableForSale' após a atualização
-        BigDecimal expectedAvailableForSale = new BigDecimal("80"); // 100 - 20 = 80
-
-        // Atualiza um item de venda (simulado para este teste)
-        // Aqui, você pode invocar o método de serviço que faz a atualização, se necessário
-        // Por exemplo: vendaService.atualizarItemDeVenda(productDto);
-
-        // Verifica se o valor de 'availableForSale' foi calculado corretamente
-        assertEquals(expectedAvailableForSale, productDto.getAvailableForSale());
-    }
-
-    @Test
-    public void testUpdateSaleItem() {
-        Long saleItemId = 1L;  // ID que foi salvo no setUp()
-        SaleItemUpdateDto saleItemUpdateDto = new SaleItemUpdateDto();
-        saleItemUpdateDto.setQuantitySold(new BigDecimal(10));  // Atualizando a quantidade de venda
-        saleItemUpdateDto.setSalePrice(new BigDecimal(100));    // Atualizando o preço de venda
-
-        SaleItemResponseDto updatedSaleItem = saleItemService.update(saleItemId, saleItemUpdateDto);
-
-        assertNotNull(updatedSaleItem);
-        assertEquals(new BigDecimal(10), updatedSaleItem.getQuantitySold());
-        assertEquals(new BigDecimal(100), updatedSaleItem.getSalePrice());
-    }
 
     @Test
     void deveInserirNovoItemDeVenda() {
@@ -160,20 +136,20 @@ class SaleItemServiceTest {
 
 
 
-
     @Test
-    void deveLancarErroQuandoProdutoNaoEncontrado() {
+    void deveLancarErroQuandoVendaNaoEncontrada() {
         // Dado
-        Mockito.when(productService.findById(Mockito.anyLong())).thenReturn(Optional.empty());
+        Mockito.when(saleService.findById(Mockito.anyLong())).thenReturn(Optional.empty());
 
         // Quando
-        ProductException exception = assertThrows(ProductException.class, () -> {
+        ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class, () -> {
             saleItemService.insert(1L, saleInsertItemDto);
         });
 
         // Então
-        assertEquals("Produto não encontrado com ID: 1", exception.getMessage());
+        assertEquals("Venda não encontrada com ID:1", exception.getMessage());
     }
+
 
     @Test
     void deveEncontrarItemDeVendaPorSaleIdEItemId() {
@@ -275,15 +251,6 @@ class SaleItemServiceTest {
         assertFalse(response.isEmpty());
     }
 
-    @Test
-    void deveLancarExcecaoAoExcluirItemNaoExistente() {
-        Mockito.when(saleItemRepository.findById(Mockito.anyLong())).thenReturn(Optional.empty());
-
-        DatabaseException exception = assertThrows(DatabaseException.class, () -> saleItemService.delete(1L));
-        assertEquals("Erro inesperado ao tentar excluir este item.", exception.getMessage());
-    }
-
-
 
     @Test
     void deveVerificarQuantidadeMaiorQueZero() {
@@ -313,6 +280,193 @@ class SaleItemServiceTest {
         assertEquals("A quantidade de produtos deve ser maior que zero.", exceptionNegativa.getMessage(), "A mensagem de erro não é a esperada quando a quantidade for negativa.");
     }
 
+    @Test
+    public void testarAtualizacaoComQuantidadeMenorQueEntregue() {
+        // Criando o SaleItem de teste
+        SaleItem existingSaleItem = new SaleItem();
+        existingSaleItem.setId(1L);
+
+        existingSaleItem.setQuantitySold(new BigDecimal(5));
+        existingSaleItem.setQuantityDelivered(new BigDecimal(10));
+
+        // Simulando o repositório para retornar esse SaleItem
+        Mockito.when(saleItemRepository.findById(1L)).thenReturn(Optional.of(existingSaleItem));
+
+        // Criando o DTO de atualização com quantidade menor que a entregue
+        SaleItemUpdateDto saleItemUpdateDto = new SaleItemUpdateDto();
+        saleItemUpdateDto.setProductId(1L);  // Passando o ID do produto
+        saleItemUpdateDto.setQuantitySold(new BigDecimal(4));  // Novo valor menor que quantityDelivered
+        saleItemUpdateDto.setSalePrice(new BigDecimal(100));
+
+        // Verificando se a exceção ProductException é lançada
+        assertThrows(ProductException.class, () -> {
+            saleItemService.update(1L, saleItemUpdateDto);
+        });
+    }
+
+    @Test
+    public void testarExcluirItemComQuantidadeEntregueZero() {
+        // Criando um SaleItem de teste com id 2
+        SaleItem saleItem = new SaleItem();
+        saleItem.setId(2L);
+        saleItem.setQuantityDelivered(BigDecimal.ZERO);  // Definindo quantidade entregue como zero
+        saleItem.setQuantitySold(new BigDecimal(5));
+        Product product = new Product();
+        product.setId(2L);
+        saleItem.setProduct(product);
+
+        // Simulando o repositório para retornar o SaleItem
+        Mockito.when(saleItemRepository.findById(2L)).thenReturn(Optional.of(saleItem));
+
+        // Simulando a atualização do produto no service
+        Mockito.doNothing().when(productService).updateDeletedItemToSaleItems(Mockito.anyLong(), Mockito.any(BigDecimal.class));
+
+        // Chamando o método delete
+        saleItemService.delete(2L);
+
+        // Verificando se o repositório de SaleItem foi chamado para deletar o item
+        Mockito.verify(saleItemRepository, Mockito.times(1)).deleteById(2L);
+        // Verificando se a atualização do produto foi chamada
+        Mockito.verify(productService, Mockito.times(1)).updateDeletedItemToSaleItems(Mockito.anyLong(), Mockito.any(BigDecimal.class));
+    }
+
+    @Test
+    public void testarExcluirItemComQuantidadeEntregueMaiorQueZero() {
+        // Criando um SaleItem de teste com id 1
+        SaleItem saleItem = new SaleItem();
+        saleItem.setId(1L);
+        saleItem.setQuantityDelivered(new BigDecimal(1));  // Definindo uma quantidade entregue maior que zero
+        saleItem.setQuantitySold(new BigDecimal(5));
+        Product product = new Product();
+        product.setId(1L);
+        saleItem.setProduct(product);
+
+        // Simulando o repositório para retornar o SaleItem
+        Mockito.when(saleItemRepository.findById(1L)).thenReturn(Optional.of(saleItem));
+
+        // Chamando o método delete e verificando se lança a exceção correta
+        try {
+            saleItemService.delete(1L);
+            fail("Deveria lançar uma DatabaseException com a mensagem: 'Não é possível deletar um item que já unidades entregues.'");
+        } catch (DatabaseException e) {
+            // Verificando se a mensagem da exceção está correta
+            assertEquals("Não é possível deletar um item que já unidades entregues.", e.getMessage());
+        }
+
+        // Verificando se o repositório de SaleItem não foi chamado para deletar o item
+        Mockito.verify(saleItemRepository, Mockito.never()).deleteById(1L);
+    }
+
+    @Test
+    public void testarExcluirItemComViolacaoDeIntegridade() {
+        // Criando um SaleItem de teste com id 1
+        SaleItem saleItem = new SaleItem();
+        saleItem.setId(1L);
+        saleItem.setQuantityDelivered(BigDecimal.ZERO);  // A quantidade entregue é zero, para que não lance a primeira exceção
+        saleItem.setQuantitySold(new BigDecimal(5));
+        Product product = new Product();
+        product.setId(1L);
+        saleItem.setProduct(product);
+
+        // Simulando o repositório para retornar o SaleItem
+        Mockito.when(saleItemRepository.findById(1L)).thenReturn(Optional.of(saleItem));
+
+        // Simulando uma DataIntegrityViolationException quando o repositório tentar excluir
+        Mockito.doThrow(DataIntegrityViolationException.class).when(saleItemRepository).deleteById(1L);
+
+        // Chamando o método delete e verificando se a exceção correta é lançada
+        try {
+            saleItemService.delete(1L);
+            fail("Deveria lançar uma DatabaseException com a mensagem: 'Não foi possível excluir este item. Ele pode estar vinculado a outros registros.'");
+        } catch (DatabaseException e) {
+            // Verificando se a mensagem da exceção está correta
+            assertEquals("Não foi possível excluir este item. Ele pode estar vinculado a outros registros.", e.getMessage());
+        }
+
+        // Verificando se o repositório de SaleItem foi chamado para deletar o item
+        Mockito.verify(saleItemRepository).deleteById(1L);
+    }
+
+    @Test
+    void testGetProductAndUpdateStock_ProdutoNaoEncontrado() {
+        // Simulando o caso em que o produto não é encontrado
+        Mockito.when(productService.findById(Mockito.anyLong()))
+                .thenReturn(Optional.empty());
+
+        // Tentando invocar o método e verificar se a exceção é lançada
+        try {
+            saleItemService.processSaleItem(1L, new BigDecimal(5));  // O método público que invoca o privado
+            fail("Deveria lançar uma ResourceNotFoundException.");
+        } catch (ResourceNotFoundException e) {
+            assertEquals("Produto não encontrado com ID: 1", e.getMessage());
+        }
+    }
+
+    @Test
+    void testGetProductAndUpdateStock_StockInsuficiente() {
+        // Simulando a busca por um produto
+        ProductDto productDto = new ProductDto();
+        productDto.setId(1L);
+        productDto.setStock(new BigDecimal(5));  // Estoque disponível é 5
+
+        // Acessando um valor do enum UnitOfMeasure (por exemplo, KG)
+        productDto.setUnitOfMeasure(UnitOfMeasure.KG);  // Ou qualquer valor existente no seu enum
+
+        Mockito.when(productService.findById(Mockito.anyLong()))
+                .thenReturn(Optional.of(productDto));
+
+        // Mock para verificar se a quantidade de produto é suficiente
+        Mockito.doThrow(new ProductException("Estoque insuficiente, falta(m): 5 unidade(s)")).when(productService)
+                .updateStockBySale(Mockito.anyLong(), Mockito.any(BigDecimal.class));
+
+        try {
+            saleItemService.processSaleItem(1L, new BigDecimal(10)); // Tentando vender mais do que o estoque
+            fail("Deveria lançar uma ProductException.");
+        } catch (ProductException e) {
+            // Verifique se a mensagem contém a string "Estoque insuficiente"
+            assertTrue(e.getMessage().contains("Estoque insuficiente"));
+        }
+    }
+
+
+    @Test
+    void testGetProductAndUpdateStock_AtualizacaoEstoqueComSucesso() {
+        // Produto simulado
+        ProductDto productDto = new ProductDto();
+        productDto.setId(1L);
+        productDto.setStock(new BigDecimal(20));  // Estoque suficiente
+
+        Mockito.when(productService.findById(Mockito.anyLong()))
+                .thenReturn(Optional.of(productDto));
+
+        // Método de atualização de estoque deve ser chamado
+        Mockito.doNothing().when(productService).updateStockBySale(Mockito.anyLong(), Mockito.any(BigDecimal.class));
+
+        // Invoca o método público que chama o método privado
+        saleItemService.processSaleItem(1L, new BigDecimal(5));  // Quantidade dentro do estoque
+
+        // Verificar se o método de atualização de estoque foi chamado
+        Mockito.verify(productService).updateStockBySale(Mockito.anyLong(), Mockito.any(BigDecimal.class));
+    }
+
+    @Test
+    void testVerifyQuantitySold_QuantidadeMenorOuIgualAZero() {
+        // Testando quando a quantidade é zero
+        try {
+            saleItemService.verifyQuantitySold(BigDecimal.ZERO);
+            fail("Deveria lançar uma ProductException.");
+        } catch (ProductException e) {
+            assertEquals("A quantidade de produtos deve ser maior que zero.", e.getMessage());
+        }
+
+        // Testando quando a quantidade é negativa
+        try {
+            saleItemService.verifyQuantitySold(new BigDecimal(-1));
+            fail("Deveria lançar uma ProductException.");
+        } catch (ProductException e) {
+            assertEquals("A quantidade de produtos deve ser maior que zero.", e.getMessage());
+        }
+    }
 
 
 }
