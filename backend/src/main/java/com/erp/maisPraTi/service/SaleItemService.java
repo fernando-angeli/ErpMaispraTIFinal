@@ -38,6 +38,11 @@ public class SaleItemService {
     private SaleService saleService;
 
     @Transactional
+    public void processSaleItem(Long productId, BigDecimal quantitySale) {
+        getProductAndUpdateStock(productId, quantitySale);
+    }
+
+    @Transactional
     public SaleItemResponseDto insert(Long saleId, SaleInsertItemDto saleInsertItemDto) {
         verifyQuantitySold(saleInsertItemDto.getQuantitySold());
         SaleDto saleDto = saleService.findById(saleId)
@@ -118,22 +123,26 @@ public class SaleItemService {
 
     @Transactional
     public void delete(Long id) {
+        SaleItem saleItem = saleItemRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Venda de item não localizada."));
+
+        // Verifica se a quantidade entregue é maior que zero
+        if (saleItem.getQuantityDelivered().compareTo(BigDecimal.ZERO) > 0) {
+            throw new DatabaseException("Não é possível deletar um item que já unidades entregues.");
+        }
+
         try {
-            SaleItem saleItem = saleItemRepository.findById(id)
-                    .orElseThrow(() -> new ResourceNotFoundException("Venda de item não localizada."));
-            if(saleItem.getQuantityDelivered().compareTo(BigDecimal.ZERO) > 0)
-                throw new DatabaseException("Não é possível deletar um item que já unidades entregues.");
+            // Caso a quantidade entregue seja zero ou menor, prossegue com a exclusão
             productService.updateDeletedItemToSaleItems(saleItem.getProduct().getId(), saleItem.getQuantitySold());
             saleItemRepository.deleteById(id);
         } catch (DataIntegrityViolationException e) {
-            throw new DatabaseException("Não foi possível excluir esta item. Ele pode estar vinculado a outros registros.");
-        } catch (Exception e) {
-            throw new DatabaseException("Erro inesperado ao tentar excluir este item.");
+            throw new DatabaseException("Não foi possível excluir este item. Ele pode estar vinculado a outros registros.");
         }
     }
 
+
     @Transactional
-    private void getProductAndUpdateStock(Long productId, BigDecimal quantitySale){
+    void getProductAndUpdateStock(Long productId, BigDecimal quantitySale){
         ProductDto productDto = productService.findById(productId)
                 .orElseThrow(() -> new ResourceNotFoundException("Produto não encontrado com ID: " + productId));
         verifyProductStock(productDto, quantitySale);
@@ -147,7 +156,7 @@ public class SaleItemService {
                     + " " + productDto.getUnitOfMeasure().getDescription() + "(s)");
     }
 
-    private void verifyQuantitySold(BigDecimal quantitySold){
+    void verifyQuantitySold(BigDecimal quantitySold){
         if(quantitySold.compareTo(BigDecimal.ZERO) <= 0)
             throw new ProductException("A quantidade de produtos deve ser maior que zero.");
     }

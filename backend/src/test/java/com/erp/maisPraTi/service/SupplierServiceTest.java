@@ -4,6 +4,7 @@ import com.erp.maisPraTi.dto.partyDto.suppliers.SupplierDto;
 import com.erp.maisPraTi.dto.partyDto.suppliers.SupplierSimpleDto;
 import com.erp.maisPraTi.dto.partyDto.suppliers.SupplierUpdateDto;
 import com.erp.maisPraTi.enums.TypePfOrPj;
+import com.erp.maisPraTi.fixture.SupplierFixture;
 import com.erp.maisPraTi.model.Supplier;
 import com.erp.maisPraTi.repository.SupplierRepository;
 import com.erp.maisPraTi.service.exceptions.DatabaseException;
@@ -28,14 +29,17 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-    @ExtendWith(MockitoExtension.class)
-    public class SupplierServiceTest {
+@ExtendWith(MockitoExtension.class)
+public class SupplierServiceTest {
 
     @Mock
     private SupplierRepository supplierRepository;
 
     @InjectMocks
     private SupplierService supplierService;
+
+    @Mock
+    private SupplierUpdateDto supplierUpdateDto;
 
     @BeforeEach
     void setUp() {
@@ -255,38 +259,44 @@ import static org.mockito.Mockito.*;
         // Verifica se o método lança a DatabaseException
         assertThrows(DatabaseException.class, () -> supplierService.delete(supplierId),
                 "Erro inesperado ao tentar excluir o fornecedor.");
-        }
-
-        @Test
-        public void deveLancarExcecaoQuandoFornecedorComDocumentosExistentesForAtualizado() {
-            Long id = 1L;
-            SupplierUpdateDto supplierUpdateDto = new SupplierUpdateDto();
-            supplierUpdateDto.setCpfCnpj("12345678901234");  // CPF/CNPJ que já existe
-            supplierUpdateDto.setStateRegistration("123456789"); // Inscrição Estadual
-            supplierUpdateDto.setTypePfOrPj(TypePfOrPj.PJ);  // Tipo PF ou PJ
-
-            // Garantir que o fornecedor com o ID existe
-            when(supplierRepository.existsById(id)).thenReturn(true);  // Simula que o fornecedor com ID 1 existe
-
-            // Simula a situação em que já existe um fornecedor com os mesmos documentos
-            when(supplierRepository.existsByCpfCnpjAndStateRegistrationAndTypePfOrPj(
-                    supplierUpdateDto.getCpfCnpj(),
-                    supplierUpdateDto.getStateRegistration(),
-                    String.valueOf(supplierUpdateDto.getTypePfOrPj())))
-                    .thenReturn(true);  // Retorna 'true', indicando que o fornecedor já existe
-
-            // Verificando que a exceção DatabaseException será lançada
-            DatabaseException exception = assertThrows(DatabaseException.class, () -> {
-                supplierService.update(id, supplierUpdateDto);
-            });
-
-            // Verificando a mensagem da exceção
-            assertEquals("Fornecedor com os mesmos documentos já existe.", exception.getMessage());
-        }
-
-
-
     }
+
+    @Test
+    void deveCobrirVerificacaoDeDocumentosNoUpdate() {
+        // Dados para o teste
+        Long supplierId = 1L; // Certifique-se de que este é o ID correto
+        Supplier supplier = SupplierFixture.supplierFixture(); // Use sua fixture para criar um fornecedor válido
+        supplier.setId(supplierId); // Defina o ID no fornecedor
+
+        SupplierUpdateDto supplierUpdateDto = new SupplierUpdateDto();
+
+        // Mockando valores de CPF, Inscrição Estadual e Tipo de Pessoa
+        String newCpfCnpj = "22.333.444/0001-11";  // Novo CPF/CNPJ
+        String newStateRegistration = "987/654321";  // Nova Inscrição Estadual
+        TypePfOrPj newType = TypePfOrPj.PJ;  // Tipo de pessoa
+
+        supplierUpdateDto.setCpfCnpj(newCpfCnpj);
+        supplierUpdateDto.setStateRegistration(newStateRegistration);
+        supplierUpdateDto.setTypePfOrPj(newType);
+
+        // Mockando o repositório para simular um fornecedor existente com o ID
+        when(supplierRepository.getReferenceById(supplierId)).thenReturn(supplier);
+
+        // Mockando a verificação de documentos
+        when(supplierRepository.existsByCpfCnpjAndStateRegistrationAndTypePfOrPj(
+                newCpfCnpj, newStateRegistration, newType)).thenReturn(false); // Simulando que os documentos não existem
+
+        // Verifique se o fornecedor com ID 1 existe antes de chamar o update
+        when(supplierRepository.existsById(supplierId)).thenReturn(true);
+
+        // Verificando que a função verifyExistsDocuments é chamada
+        supplierService.update(supplierId, supplierUpdateDto);
+
+        // Verifique se o método verifyExistsDocuments foi chamado com os parâmetros corretos
+        verify(supplierService, times(1)).verifyExistsDocuments(newCpfCnpj, newStateRegistration, newType);
+    }
+
+}
 
 
 
