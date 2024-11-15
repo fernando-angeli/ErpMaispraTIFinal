@@ -36,6 +36,7 @@ const LineChartGraph = ({ labelData1, labelData2, labels, dataLine1, dataLine2, 
   const options = {
     responsive: true,
     maintainAspectRatio: false,
+    
   
     plugins: {
       legend: {

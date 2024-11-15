@@ -12,7 +12,7 @@ import SelectFieldProduct from "../../SelectField/SelectFieldProduct";
 import CardSaleRegister from './CardSaleRegister'
 
 function FormNewSaleRegister({ dataSaleRegister }) {
-   const { JwtToken } = useAuth();
+  const { JwtToken } = useAuth();
   const decoded = jwtDecode(JwtToken);
   const apiUrl = import.meta.env.VITE_API_URL;
   const [ResponsiveSaleRegister, setResponsiveSaleRegister] = useState(true);

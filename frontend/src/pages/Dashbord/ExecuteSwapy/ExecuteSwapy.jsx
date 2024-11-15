@@ -1,38 +1,104 @@
 import { createSwapy } from 'swapy'
+import axios from 'axios';
+
+import { useAuth } from '../../../components/AuthContext';
+
+
+
+
+
+
+
+
+
 
 function ExecuteSwapy() {
-    const container = document.querySelector('#containerSwapy')
+  const { JwtToken } = useAuth();
+  const apiUrl = import.meta.env.VITE_API_URL;
 
-    const swapy = createSwapy(container)
-    
-    // You can disable and enable it anytime you want
-    swapy.enable(true)
-    
-    swapy.onSwap((event) => {
-        // console.log(event.data.object);
-        console.log(event.data.array);
-        // console.log(event.data.map);
-      
-        // event.data.object:
-        // {
-        //   'foo': 'a',
-        //   'bar': 'b',
-        //   'baz': 'c'
-        // }
-      
-        // event.data.array:
-        // [
-        //   { slot: 'foo', item: 'a' },
-        //   { slot: 'bar', item: 'b' },
-        //   { slot: 'baz', item: 'c' }
-        // ]
-      
-        // event.data.map:
-        // Map(3) {
-        // 'foo' => 'a',
-        // 'bar' => 'b',
-        // 'baz' => 'c'
-        // }
-      })
+  const container = document.querySelector('#containerSwapy')
+
+  const swapy = createSwapy(container)
+
+  // You can disable and enable it anytime you want
+  swapy.enable(true)
+
+
+  swapy.onSwap((event) => {
+
+    let items = []
+    const isValidSlots = () => {
+      for (let i in event.data.object) {
+        if (items.includes(event.data.object[i]) || !event.data.object[i]) {
+          return false
+        } else {
+          items.push(event.data.object[i])
+        }
+      }
+      return true
+    }
+
+    if (isValidSlots()) {
+      time(event.data.object)
+    }
+
+    // event.data.object:
+    // {
+    //   'foo': 'a',
+    //   'bar': 'b',
+    //   'baz': 'c'
+    // }
+
+  })
+
+  let timeOutSwap
+
+
+  let time = (obj) => {
+    if (timeOutSwap) {
+      clearTimeout(timeOutSwap)
+    }
+
+    timeOutSwap = setTimeout(() => {
+      apiResgisterSwap(2, obj)
+    }, 2000)
+  }
+
+
+  const apiResgisterSwap = async (userId, obj) => {
+    try {
+
+      const response = await axios.post(
+        `${apiUrl}/api/usuarios/${userId}/cards`,
+        obj,
+        {
+          headers: {
+            Authorization: `Bearer ${JwtToken}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+
+      console.log(response.status)
+      console.log('Dados do dashboard registrados:', obj);
+
+
+
+    } catch (err) {
+
+      console.error('Erro ao registrar dados do dashboard:', err);
+
+      if (err.response && err.response.data) {
+        console.error(`Erro: ${err.response.data.message}`);
+      } else {
+        console.error('Erro desconhecido');
+      }
+    }
+
+
+
+
+  }
 }
 export default ExecuteSwapy
