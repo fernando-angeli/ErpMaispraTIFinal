@@ -29,7 +29,7 @@ public class ClientService {
         verifyExistsDocuments(dto.getCpfCnpj(), dto.getStateRegistration(), dto.getTypePfOrPj());
         dto.setStateRegistration(stateRegistrationNormalize(dto.getStateRegistration()));
         Client client = new Client();
-        client = convertToDto(dto, Client.class);
+        client = convertToEntity(dto, Client.class);
         client.setCreatedAt(LocalDateTime.now());
         client.setUpdatedAt(LocalDateTime.now());
         client = clientRepository.save(client);

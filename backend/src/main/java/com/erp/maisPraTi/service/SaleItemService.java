@@ -102,11 +102,21 @@ public class SaleItemService {
 
     @Transactional
     public SaleItemResponseDto update(Long id, SaleItemUpdateDto saleItemUpdateDto) {
+        // Faz a validação da quantidade informada
         verifyQuantitySold(saleItemUpdateDto.getQuantitySold());
+
+        // Verifica se o item existe
         SaleItem existsItem = saleItemRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Item não localizado pelo id informado."));
+
+        // Valida se a quantidade foi reduzida para um valor menor do que o que já foi entregue
         if(saleItemUpdateDto.getQuantitySold().compareTo(existsItem.getQuantityDelivered()) < 0)
             throw new ProductException("Não é possível atualizar a quantidade para um valor menor do que já foi entregue.");
+
+        // Verifica a disponibilidade para venda desse item
+        verifyProductStockInUpdate(id, saleItemUpdateDto.getQuantitySold());
+
+        // Após as validações o processo de update é realizado
         BigDecimal updatedQuantitySold = saleItemUpdateDto.getQuantitySold().subtract(existsItem.getQuantitySold());
         productService.updateStockByUpdateSale(saleItemUpdateDto.getProductId(), updatedQuantitySold);
         existsItem.setQuantitySold(saleItemUpdateDto.getQuantitySold());
@@ -145,6 +155,18 @@ public class SaleItemService {
             throw new ProductException("Estoque insuficiente, falta(m): "
                     + (new BigDecimal(String.valueOf(quantitySold.subtract(productDto.getAvailableForSale()))))
                     + " " + productDto.getUnitOfMeasure().getDescription() + "(s)");
+    }
+
+    private void verifyProductStockInUpdate(Long saleItemId, BigDecimal quantitySold) {
+        Optional<SaleItem> saleItem = saleItemRepository.findById(saleItemId);
+        Optional<ProductDto> product = productService.findById(saleItem.get().getProduct().getId());
+
+        BigDecimal updateAvailableForSale = product.get().getAvailableForSale().add(saleItem.get().getQuantitySold());
+
+        if(updateAvailableForSale.compareTo(quantitySold) < 0)
+            throw new ProductException("Estoque insuficiente, falta(m): "
+                    + (new BigDecimal(String.valueOf(quantitySold.subtract(product.get().getAvailableForSale()))))
+                    + " " + product.get().getUnitOfMeasure().getDescription() + "(s)");
     }
 
     private void verifyQuantitySold(BigDecimal quantitySold){
