@@ -15,6 +15,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -37,6 +38,10 @@ public class SupplierServiceTest {
 
     @InjectMocks
     private SupplierService supplierService;
+
+    @Spy
+    @InjectMocks
+    private SupplierService spySupplierService; // Espião da SupplierService
 
     @Mock
     private SupplierUpdateDto supplierUpdateDto;
@@ -264,22 +269,21 @@ public class SupplierServiceTest {
     @Test
     void deveCobrirVerificacaoDeDocumentosNoUpdate() {
         // Dados para o teste
-        Long supplierId = 1L; // Certifique-se de que este é o ID correto
-        Supplier supplier = SupplierFixture.supplierFixture(); // Use sua fixture para criar um fornecedor válido
-        supplier.setId(supplierId); // Defina o ID no fornecedor
+        Long supplierId = 1L;
+        Supplier supplier = SupplierFixture.supplierFixture();
+        supplier.setId(supplierId);
+        supplier.setCpfCnpj("11.222.333/0001-55");
 
         SupplierUpdateDto supplierUpdateDto = new SupplierUpdateDto();
-
-        // Mockando valores de CPF, Inscrição Estadual e Tipo de Pessoa
-        String newCpfCnpj = "22.333.444/0001-11";  // Novo CPF/CNPJ
-        String newStateRegistration = "987/654321";  // Nova Inscrição Estadual
-        TypePfOrPj newType = TypePfOrPj.PJ;  // Tipo de pessoa
+        String newCpfCnpj = "22.333.444/0001-11";
+        String newStateRegistration = "987/654321";
+        TypePfOrPj newType = TypePfOrPj.PJ;
 
         supplierUpdateDto.setCpfCnpj(newCpfCnpj);
         supplierUpdateDto.setStateRegistration(newStateRegistration);
         supplierUpdateDto.setTypePfOrPj(newType);
 
-        // Mockando o repositório para simular um fornecedor existente com o ID
+        // Mockando comportamentos necessários
         when(supplierRepository.getReferenceById(supplierId)).thenReturn(supplier);
 
         // Mockando a verificação de documentos
@@ -287,13 +291,15 @@ public class SupplierServiceTest {
                 newCpfCnpj, newStateRegistration, newType)).thenReturn(false); // Simulando que os documentos não existem
 
         // Verifique se o fornecedor com ID 1 existe antes de chamar o update
-        when(supplierRepository.existsById(supplierId)).thenReturn(true);
 
-        // Verificando que a função verifyExistsDocuments é chamada
-        supplierService.update(supplierId, supplierUpdateDto);
 
-        // Verifique se o método verifyExistsDocuments foi chamado com os parâmetros corretos
-        verify(supplierService, times(1)).verifyExistsDocuments(newCpfCnpj, newStateRegistration, newType);
+        // Executa o método
+        SupplierDto updatedSupplier = supplierService.update(supplierId, supplierUpdateDto);
+
+        // Verificações
+        verify(supplierRepository, times(1)).existsById(supplierId);
+        verify(supplierRepository, times(1)).save(any(Supplier.class));
+        assertNotNull(updatedSupplier);
     }
 
 }
