@@ -139,6 +139,7 @@ function FormNewSupplier(dataSupplier) {
     setNewSupplierState("");
     setNewSupplierNotes("")
     setNewSupplierIE("")
+    setNewSupplierCountry('')
     SetPostToUpdade(true)
     setError(null)
     };
@@ -336,7 +337,7 @@ function FormNewSupplier(dataSupplier) {
    setNewSupplierAddressNumber(values.number);
    setNewSupplierCEP(values.zipCode.replace(/\D/g, ''))
    setNewSupplierCity(values.city)
-   setNewSupplierCity(values.country)
+   setNewSupplierCountry(values.country)
    setOption(values.typePfOrPj.toLowerCase());
    setNewSupplierState(values.state);
    setNewSupplierNotes(values.notes)

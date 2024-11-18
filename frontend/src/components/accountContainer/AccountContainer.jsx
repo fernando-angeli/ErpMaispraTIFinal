@@ -65,7 +65,7 @@ function AccountContainer({ isLoggedIn }) {
                 onClick={() => navigate("/notifications")}
               >
                 <AiOutlineMail className="menu-icon" />
-                Notificação
+                Notificações
               </div>
               <div className="menu-item">
                 <IoIosHelpCircleOutline className="menu-icon" />

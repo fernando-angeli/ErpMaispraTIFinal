@@ -37,7 +37,7 @@ function NotificationPage() {
     <div className="notification-page">
       <header className="notification-header">
         <div className="left">
-          <h1>Notificação</h1>
+          <h1>Notificações</h1>
         </div>
         <div className="right" onClick={handleBackClick}>
           <span>Voltar</span>
