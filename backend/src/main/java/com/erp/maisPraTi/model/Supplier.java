@@ -28,7 +28,8 @@ public class Supplier {
     private String fullName;
 
     @Enumerated(EnumType.STRING)
-    private TypePfOrPj typePfOrPj;
+    @Column(name = "typePfOrPj")
+    private TypePfOrPj typePfPj;
 
     @Column(unique = true)
     private String cpfCnpj;
