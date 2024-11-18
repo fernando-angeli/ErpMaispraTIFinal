@@ -36,6 +36,7 @@ const LineChartGraph = ({ labelData1, labelData2, labels, dataLine1, dataLine2, 
   const options = {
     responsive: true,
     maintainAspectRatio: false,
+    
   
     plugins: {
       legend: {
@@ -70,9 +71,10 @@ const LineChartGraph = ({ labelData1, labelData2, labels, dataLine1, dataLine2, 
     <div className='lineContent'>
       <h3>Histórico de vendas 2024</h3>
       <div className='div-lineChartGraph'>
-      <Line data={data} options={options} className='lineChartGraph' id='lineChartGraph' />
+        <div className='lineChartGraph'>
+          <Line data={data} options={options} id='lineChartGraph' />
+        </div>
       </div>
-        
     </div>
   )
 };

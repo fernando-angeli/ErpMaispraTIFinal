@@ -48,11 +48,28 @@
     flex-grow: 1;
     display: flex;
     justify-content: center;
-    border: solid 1px;
+    /* border: solid 1px; */
     align-items: center;
     
 
 }
+
+.small-slots {
+    display: flex;
+    height: 410px;
+
+    flex-direction: column;
+    gap: 10px;
+}
+
+@media (max-width: 1635px) {
+    .small-slots {
+        width: 100%;
+        flex-direction: row;
+        height: 205px;
+    }
+}
+
 
 .big-slot{
     width: 100%;
@@ -66,8 +83,11 @@
 }
 
 .small-slot{
+    /* width: 624px; */
     width: 624px;
     height: 205px;
-}
+    display: flex;
 
+    
+}
 

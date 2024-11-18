@@ -2,7 +2,7 @@ import "./App.css";
 import "./assets/css/texts.css";
 import "./assets/css/buttons.css";
 
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes, useNavigate } from "react-router-dom";
 
 import Header from "./components/header/header";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -12,10 +12,12 @@ import HomePage from "./pages/HomePage";
 import Login from "./pages/LoginPage/Login";
 import { useAuth } from "./components/AuthContext";
 import AddEmployeePage from "./pages/addEmployeePage/AddEmployeePage";
+import AddProductPage from "./pages/addProductPage/addProductPage";
 import ResetPassword from "./pages/ResetPassword/ResetPassword";
 import AddSupplierpage from './pages/addSupplierpage/AddSupplierpage' 
 import AddSaleRegister from "./pages/addSaleRegister/AddSaleRegister"
 import SupplyPurchasingPage from "./pages/SupplyPurchasingPage/SupplyPurchasingPage";
+
 
 function App() {
   const { isAuthenticated } = useAuth();
@@ -27,6 +29,7 @@ function App() {
           
         <Routes>
         {!isAuthenticated && <Route path="/" element={<Login />} />}
+        {isAuthenticated && <Route path="/" element={<HomePage/>} />}
           {!isAuthenticated && <Route path="/login" element={<Login />} />}
           {!isAuthenticated && <Route path="/resetpassword" element={<ResetPassword/>} />}
           <Route
@@ -42,6 +45,14 @@ function App() {
             element={
               <ProtectedRoute isLoggedIn={isAuthenticated }>
                 <AddEmployeePage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/produtos"
+            element={
+              <ProtectedRoute isLoggedIn={isAuthenticated }>
+                <AddProductPage />
               </ProtectedRoute>
             }
           />

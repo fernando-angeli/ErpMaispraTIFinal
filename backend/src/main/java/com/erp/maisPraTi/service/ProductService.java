@@ -90,7 +90,7 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    private void verifyExistsId(Long id) {
+    void verifyExistsId(Long id) {
         if (productRepository.findById(id).isEmpty()) {
             throw new ResourceNotFoundException("Produto não localizado.");
         }

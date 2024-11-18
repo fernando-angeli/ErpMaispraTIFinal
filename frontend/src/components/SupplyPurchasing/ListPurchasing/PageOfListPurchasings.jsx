@@ -1,7 +1,7 @@
 import { BiEdit, BiAt, BiPhone, BiFileBlank } from "react-icons/bi";
 
 import { MdDeleteOutline } from "react-icons/md";
-import ModalDetails from "../../ModalDetails/ModalDetails";
+import ModalDetails from "../ModalPurchasing/ModalPurchasing";
 import { BiDetail } from "react-icons/bi";
 import { Link } from "react-router-dom";
 import { useState } from "react";
@@ -32,7 +32,7 @@ function PageOfListPurchasings({
         show={showModalDetails}
         onClose={() => setshowModalDetails(false)}
         content={selectedPurchasing}
-        title="Detalhes Usuario"
+        title="Detalhes Compra Insumos"
       ></ModalDetails>
 
       {PurchasingsToList.map((Purchasing) => (
