@@ -52,17 +52,17 @@ function PageOfListEmployees({
             {employee.cpf}
           </td>
           <td className="td-editLine">
-            <Link
-              onClick={() => {
-                setSelectedEmployee(employee);
-                setshowModalDetails(true);
-              }}
-            >
-              <BiDetail className="editLine" size={30} />
-            </Link>
 
             {onlyView ? "" : (
               <>
+                <Link
+                  onClick={() => {
+                    setSelectedEmployee(employee);
+                    setshowModalDetails(true);
+                  }}
+                >
+                  <BiDetail className="editLine" size={30} />
+                </Link>
                 <a href="#" onClick={() => onEdit(employee)}>
                   <BiEdit className="editLine" size={30} />
                 </a>
