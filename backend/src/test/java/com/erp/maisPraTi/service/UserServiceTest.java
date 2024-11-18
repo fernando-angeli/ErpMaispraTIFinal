@@ -1,9 +1,6 @@
 package com.erp.maisPraTi.service;
 
-import com.erp.maisPraTi.dto.users.RoleDto;
-import com.erp.maisPraTi.dto.users.UserDto;
-import com.erp.maisPraTi.dto.users.UserInsertDto;
-import com.erp.maisPraTi.dto.users.UserUpdateDto;
+import com.erp.maisPraTi.dto.users.*;
 import com.erp.maisPraTi.fixture.UserFixture;
 import com.erp.maisPraTi.model.User;
 import com.erp.maisPraTi.repository.UserRepository;
@@ -30,6 +27,9 @@ public class UserServiceTest {
     @InjectMocks
     private UserService userService;
 
+    private User user;
+    private CardDto cardDto;
+
     @Mock
     private UserRepository userRepository;
 
@@ -39,12 +39,18 @@ public class UserServiceTest {
     @Mock
     private BCryptPasswordEncoder passwordEncoder;  // Mock do BCryptPasswordEncoder
 
-    private User user;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
         user = UserFixture.userAdmin();  // Certifique-se de que o UserFixture esteja correto
+
+
+// Criação do CardDto usando o construtor padrão e definindo os valores com setters
+        cardDto = new CardDto();  // Usando o construtor sem parâmetros
+        cardDto.setSlot1("cardSlot1");  // Usando o setter para definir slot1
+        cardDto.setSlot2("cardSlot2");  // Usando o setter para definir slot2
+        cardDto.setSlot3("cardSlot3");  // Usando o setter para definir slot3
     }
 
     @Test
@@ -223,6 +229,35 @@ public class UserServiceTest {
 
         assertThrows(ResourceNotFoundException.class, () -> userService.deleteById(1L));
     }
+
+    @Test
+    void deveInserirCartaoParaUsuario() {
+        // Criação do usuário mock
+        user = new User();
+        user.setId(1L);
+
+        // Criação do CardDto e definindo os valores com os setters
+        cardDto = new CardDto();  // Usando o construtor sem parâmetros gerado pelo Lombok
+        cardDto.setSlot1("cardSlot1");  // Usando o setter para definir o slot1
+        cardDto.setSlot2("cardSlot2");  // Usando o setter para definir o slot2
+        cardDto.setSlot3("cardSlot3");  // Usando o setter para definir o slot3
+
+        // Configuração do mock do repositório para retornar um usuário
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+
+        // Chamando o método a ser testado
+        userService.insertCard(1L, cardDto);
+
+        // Verificando se os métodos foram chamados corretamente
+        verify(userRepository, times(1)).findById(1L);
+        verify(userRepository, times(1)).save(user);
+
+        // Verificando se os cartões foram corretamente atribuídos
+        assertEquals("cardSlot1", user.getCards().get("slot1"));
+        assertEquals("cardSlot2", user.getCards().get("slot2"));
+        assertEquals("cardSlot3", user.getCards().get("slot3"));
+    }
+
 }
 
 
