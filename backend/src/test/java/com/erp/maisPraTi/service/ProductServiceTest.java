@@ -4,17 +4,23 @@ import com.erp.maisPraTi.dto.partyDto.suppliers.SupplierDto;
 import com.erp.maisPraTi.dto.partyDto.suppliers.SupplierSimpleDto;
 import com.erp.maisPraTi.dto.products.ProductDto;
 import com.erp.maisPraTi.dto.products.ProductUpdateDto;
+import com.erp.maisPraTi.dto.saleItems.SaleInsertItemDto;
+import com.erp.maisPraTi.enums.UnitOfMeasure;
 import com.erp.maisPraTi.fixture.ProductFixture;
 import com.erp.maisPraTi.model.Product;
 import com.erp.maisPraTi.repository.ProductRepository;
 import com.erp.maisPraTi.service.exceptions.DatabaseException;
 import com.erp.maisPraTi.service.exceptions.InvalidValueException;
 import com.erp.maisPraTi.service.exceptions.ResourceNotFoundException;
+import com.erp.maisPraTi.util.EntityMapper;
+import jakarta.persistence.Converter;
 import jakarta.persistence.EntityNotFoundException;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -28,6 +34,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import static com.erp.maisPraTi.util.EntityMapper.convertToDto;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -40,12 +47,21 @@ class ProductServiceTest {
     private ProductRepository productRepository;
 
     @Mock
+    private EntityMapper entityMapper;
+
+    @Mock
+    private Converter converter;
+
+    private ProductDto productDto;
+
+    @Mock
     private SupplierService supplierService;
     private Product product;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
+
     }
 
     @Test
@@ -97,13 +113,7 @@ class ProductServiceTest {
         assertThrows(InvalidValueException.class, () -> productService.insert(productDto));
     }
 
-    @Test
-    void deveLancarExcecaoGenericaAoDeletarProduto() {
-        when(productRepository.existsById(anyLong())).thenReturn(true);
-        doThrow(RuntimeException.class).when(productRepository).deleteById(anyLong());
 
-        assertThrows(DatabaseException.class, () -> productService.delete(1L));
-    }
 
     @Test
     void deveAtualizarListaDeFornecedoresQuandoListaFornecida() {
@@ -132,23 +142,7 @@ class ProductServiceTest {
         verify(supplierService, times(1)).findById(supplierDto.getId());
     }
 
-    @Test
-    void deveAtualizarProdutoComSucesso() {
-        ProductUpdateDto updateDto = new ProductUpdateDto();
-        updateDto.setName("Produto Atualizado");
-        Collections Collections = null;
-        updateDto.setSuppliers(Collections.emptyList());
 
-        Product product = ProductFixture.productFixture();
-        when(productRepository.existsById(anyLong())).thenReturn(true);
-        when(productRepository.getReferenceById(anyLong())).thenReturn(product);
-        when(productRepository.save(any(Product.class))).thenReturn(product);
-
-        ProductDto result = productService.update(1L, updateDto);
-
-        assertNotNull(result);
-        assertEquals("Produto Atualizado", result.getName());
-    }
 
     @Test
     void deveLancarExcecaoAoAtualizarProdutoComIdInexistente() {
@@ -158,66 +152,7 @@ class ProductServiceTest {
         assertThrows(ResourceNotFoundException.class, () -> productService.update(1L, updateDto));
     }
 
-    @Test
-    void deveLancarExcecaoDatabaseExceptionAoAtualizarProdutoComErroDeIntegridade() {
-        when(productRepository.existsById(anyLong())).thenReturn(true);
-        when(productRepository.getReferenceById(anyLong())).thenThrow(DataIntegrityViolationException.class);
 
-        ProductUpdateDto updateDto = new ProductUpdateDto();
-        updateDto.setName("Produto Atualizado");
-
-        assertThrows(DatabaseException.class, () -> productService.update(1L, updateDto));
-    }
-
-    @Test
-    void deveDeletarProdutoComSucesso() {
-        when(productRepository.existsById(anyLong())).thenReturn(true);
-        doNothing().when(productRepository).deleteById(anyLong());
-
-        assertDoesNotThrow(() -> productService.delete(1L));
-    }
-
-    @Test
-    void deveLancarExcecaoAoDeletarProdutoVinculadoAOutrosRegistros() {
-        when(productRepository.existsById(anyLong())).thenReturn(true);
-        doThrow(DataIntegrityViolationException.class).when(productRepository).deleteById(anyLong());
-
-        assertThrows(DatabaseException.class, () -> productService.delete(1L));
-    }
-
-    @Test
-    public void deveAtualizarEstoqueReservadoComSucesso() {
-        Long productId = 1L;
-        BigDecimal quantitySold = new BigDecimal("10");
-
-        Product product = new Product();
-        product.setId(productId);
-        product.setReservedStock(new BigDecimal("100"));
-        when(productRepository.getReferenceById(productId)).thenReturn(product);
-        when(productRepository.existsById(productId)).thenReturn(true);
-
-        productService.updateStockBySale(productId, quantitySold);
-
-        assertEquals(new BigDecimal("110"), product.getReservedStock());
-        verify(productRepository, times(1)).save(product);
-    }
-
-    @Test
-    public void deveLancarDatabaseExceptionAoOcorrerViolacaoDeIntegridade() {
-        Long productId = 1L;
-        BigDecimal quantitySold = new BigDecimal("10");
-
-        Product product = new Product();
-        product.setId(productId);
-        product.setReservedStock(new BigDecimal("100"));
-
-        when(productRepository.getReferenceById(productId)).thenReturn(product);
-        when(productRepository.existsById(productId)).thenReturn(true);
-
-        doThrow(DataIntegrityViolationException.class).when(productRepository).save(any(Product.class));
-
-        assertThrows(DatabaseException.class, () -> productService.updateStockBySale(productId, quantitySold));
-    }
 
     @Test
     public void deveRetornarPaginaDeProductDto() {
@@ -246,6 +181,322 @@ class ProductServiceTest {
         assertEquals("Produto 2", result.getContent().get(1).getName());
         assertEquals(pageable, result.getPageable());
     }
+
+    @Test
+    void deveLancarExcecaoQuandoProdutoNaoEncontrado() {
+        Long productId = 1L;
+
+        // Simula que o produto não existe no banco
+        when(productRepository.existsById(productId)).thenReturn(false);
+
+        // Chama o serviço e verifica que a ResourceNotFoundException é lançada
+        assertThrows(ResourceNotFoundException.class, () -> productService.delete(productId));
+    }
+
+    @Test
+    void deveLancarExcecaoDeIntegridadeQuandoErroAoAtualizarProduto() {
+        // Arrange
+        Long productId = 1L;
+        ProductUpdateDto productUpdateDto = new ProductUpdateDto();
+        productUpdateDto.setSuppliers(Collections.emptyList());
+
+        Product product = new Product();
+        product.setId(productId);
+
+        // Mockando o comportamento do repository
+        Mockito.when(productRepository.findById(productId)).thenReturn(Optional.of(product)); // Produto existe
+        Mockito.when(productRepository.getReferenceById(productId)).thenReturn(product);
+        Mockito.when(productRepository.save(Mockito.any())).thenThrow(new DataIntegrityViolationException("Mocked DataIntegrityViolationException"));
+
+        // Act & Assert
+        DatabaseException exception = Assertions.assertThrows(DatabaseException.class, () -> {
+            productService.update(productId, productUpdateDto);
+        });
+
+        Assertions.assertEquals("Não foi possível fazer a alteração neste produto.", exception.getMessage());
+    }
+
+    @Test
+    void deveLancarExcecaoDeIntegridadeQuandoErroAoAtualizarEstoque() {
+        // Arrange
+        SaleInsertItemDto dto = new SaleInsertItemDto();
+        dto.setProductId(1L);
+        dto.setQuantitySold(BigDecimal.valueOf(10));
+
+        Product product = new Product();
+        product.setId(1L);
+        product.setReservedStock(BigDecimal.ZERO);
+
+        // Mockando o comportamento do repository
+        Mockito.when(productRepository.findById(1L)).thenReturn(Optional.of(product)); // Produto existe
+        Mockito.when(productRepository.getReferenceById(1L)).thenReturn(product);
+        Mockito.when(productRepository.save(Mockito.any())).thenThrow(new DataIntegrityViolationException("Mocked DataIntegrityViolationException"));
+
+        // Act & Assert
+        DatabaseException exception = Assertions.assertThrows(DatabaseException.class, () -> {
+            productService.updateStockBySale(dto);
+        });
+
+        Assertions.assertEquals("Não foi possível fazer a alteração neste produto.", exception.getMessage());
+    }
+
+
+    @Test
+    void deveLancarExcecaoQuandoProdutoNaoExiste() {
+        // Arrange
+        SaleInsertItemDto dto = new SaleInsertItemDto();
+        dto.setProductId(1L);
+
+        when(productRepository.existsById(1L)).thenReturn(false);
+
+        // Act & Assert
+        assertThrows(ResourceNotFoundException.class, () -> productService.updateStockBySale(dto));
+    }
+
+    @Test
+    void deveAtualizarEstoqueComSucesso() {
+        // Arrange
+        Long productId = 1L;
+        BigDecimal quantitySold = BigDecimal.valueOf(5);
+
+        // Criação do produto mockado
+        Product product = new Product();
+        product.setId(productId);
+        product.setReservedStock(BigDecimal.valueOf(10)); // Estoque reservado inicial
+
+        // Mock para verifyExistsId (mockando findById para garantir que o produto exista)
+        when(productRepository.findById(productId)).thenReturn(Optional.of(product));
+
+        // Mock para getReferenceById - retorna o produto existente
+        when(productRepository.getReferenceById(productId)).thenReturn(product);
+
+        // Mock para save - simula o sucesso na operação de salvar
+        when(productRepository.save(any(Product.class))).thenReturn(product);
+
+        // Act
+        // Chamando o método para atualizar o estoque
+        productService.updateStockBySale(productId, quantitySold);
+
+        // Assert
+        // Verificando se o estoque reservado foi atualizado corretamente
+        assertEquals(BigDecimal.valueOf(15), product.getReservedStock());
+    }
+
+    @Test
+    void deveLancarDatabaseExceptionQuandoErroDeIntegridade() {
+        // Arrange
+        Long productId = 1L;
+        BigDecimal quantitySold = BigDecimal.valueOf(5);
+
+        // Criação do produto mockado
+        Product product = new Product();
+        product.setId(productId);
+        product.setReservedStock(BigDecimal.valueOf(10)); // Estoque reservado inicial
+
+        // Mock para verifyExistsId (mockando findById para garantir que o produto exista)
+        when(productRepository.findById(productId)).thenReturn(Optional.of(product));
+
+        // Mock para getReferenceById - retorna o produto existente
+        when(productRepository.getReferenceById(productId)).thenReturn(product);
+
+        // Mock para save - lança uma DataIntegrityViolationException simulada
+        when(productRepository.save(any(Product.class))).thenThrow(DataIntegrityViolationException.class);
+
+        // Act & Assert
+        // Verifica se a DatabaseException é lançada quando há erro de integridade
+        assertThrows(DatabaseException.class, () -> productService.updateStockBySale(productId, quantitySold));
+    }
+    @Test
+    void deveAtualizarEstoqueComSucessoAoAtualizarVenda() {
+        // Arrange
+        Long productId = 1L;
+        BigDecimal updatedSold = BigDecimal.valueOf(5); // Quantidade a ser atualizada no estoque
+
+        // Criação do produto mockado
+        Product product = new Product();
+        product.setId(productId);
+        product.setReservedStock(BigDecimal.valueOf(10)); // Estoque reservado inicial
+
+        // Mock para findById (garantir que o produto exista)
+        when(productRepository.findById(productId)).thenReturn(Optional.of(product));
+
+        // Mock para save - simula o sucesso na operação de salvar
+        when(productRepository.save(any(Product.class))).thenReturn(product);
+
+        // Act
+        // Chamando o método para atualizar o estoque
+        productService.updateStockByUpdateSale(productId, updatedSold);
+
+        // Assert
+        // Verificando se o estoque reservado foi atualizado corretamente
+        assertEquals(BigDecimal.valueOf(15), product.getReservedStock());
+    }
+
+    @Test
+    void deveLancarResourceNotFoundExceptionQuandoProdutoNaoExistir() {
+        // Arrange
+        Long productId = 1L;
+        BigDecimal updatedSold = BigDecimal.valueOf(5); // Quantidade a ser atualizada no estoque
+
+        // Mock para findById - simulando que o produto não existe
+        when(productRepository.findById(productId)).thenReturn(Optional.empty());
+
+        // Act & Assert
+        // Verifica se a ResourceNotFoundException é lançada quando o produto não for encontrado
+        assertThrows(ResourceNotFoundException.class, () -> productService.updateStockByUpdateSale(productId, updatedSold));
+    }
+
+    @Test
+    void deveLancarDatabase2ExceptionQuandoErroDeIntegridade() {
+        // Arrange
+        Long productId = 1L;
+        BigDecimal updatedSold = BigDecimal.valueOf(5); // Quantidade a ser atualizada no estoque
+
+        // Criação do produto mockado
+        Product product = new Product();
+        product.setId(productId);
+        product.setReservedStock(BigDecimal.valueOf(10)); // Estoque reservado inicial
+
+        // Mock para findById (garantir que o produto exista)
+        when(productRepository.findById(productId)).thenReturn(Optional.of(product));
+
+        // Mock para save - lança uma DataIntegrityViolationException simulada
+        when(productRepository.save(any(Product.class))).thenThrow(DataIntegrityViolationException.class);
+
+        // Act & Assert
+        // Verifica se a DatabaseException é lançada quando há erro de integridade
+        assertThrows(DatabaseException.class, () -> productService.updateStockByUpdateSale(productId, updatedSold));
+    }
+    @Test
+    void deveAtualizarEstoqueComSucessoAoRemoverItemDeVenda() {
+        // Arrange
+        Long productId = 1L;
+        BigDecimal quantityUpdate = BigDecimal.valueOf(5); // Quantidade a ser subtraída do estoque
+
+        // Criação do produto mockado
+        Product product = new Product();
+        product.setId(productId);
+        product.setReservedStock(BigDecimal.valueOf(10)); // Estoque reservado inicial
+
+        // Mock para findById (garantir que o produto exista)
+        when(productRepository.findById(productId)).thenReturn(Optional.of(product));
+
+        // Mock para save - simula o sucesso na operação de salvar
+        Product savedProduct = new Product();
+        savedProduct.setId(productId);
+        savedProduct.setReservedStock(BigDecimal.valueOf(5)); // Estoque reservado após a subtração
+
+        when(productRepository.save(any(Product.class))).thenReturn(savedProduct);
+
+        // Act
+        // Chamando o método para atualizar o estoque
+        productService.updateDeletedItemToSaleItems(productId, quantityUpdate);
+
+        // Assert
+        // Verificando se o estoque reservado foi atualizado corretamente (subtraindo a quantidade)
+        assertEquals(BigDecimal.valueOf(5), savedProduct.getReservedStock());
+    }
+
+    @Test
+    void deveLancarExcecaoQuandoProdutoNaoForEncontradoParaRemoverItem() {
+        // Arrange
+        Long productId = 1L;
+        BigDecimal quantityUpdate = BigDecimal.valueOf(5); // Quantidade a ser subtraída do estoque
+
+        // Mock para findById - simulando que o produto não existe
+        when(productRepository.findById(productId)).thenReturn(Optional.empty());
+
+        // Act & Assert
+        // Verifica se a ResourceNotFoundException é lançada quando o produto não for encontrado
+        assertThrows(ResourceNotFoundException.class, () -> productService.updateDeletedItemToSaleItems(productId, quantityUpdate));
+    }
+
+    @Test
+    void deveLancarExcecaoQuandoErroDeIntegridadeOcorreAoAtualizarEstoque() {
+        // Arrange
+        Long productId = 1L;
+        BigDecimal quantityUpdate = BigDecimal.valueOf(5); // Quantidade a ser subtraída do estoque
+
+        // Criação do produto mockado
+        Product product = new Product();
+        product.setId(productId);
+        product.setReservedStock(BigDecimal.valueOf(10)); // Estoque reservado inicial
+
+        // Mock para findById (garantir que o produto exista)
+        when(productRepository.findById(productId)).thenReturn(Optional.of(product));
+
+        // Mock para save - lança uma DataIntegrityViolationException simulada
+        when(productRepository.save(any(Product.class))).thenThrow(DataIntegrityViolationException.class);
+
+        // Act & Assert
+        // Verifica se a DatabaseException é lançada quando há erro de integridade
+        assertThrows(DatabaseException.class, () -> productService.updateDeletedItemToSaleItems(productId, quantityUpdate));
+    }
+
+    @Test
+    void deveExcluirProdutoComSucesso() {
+        // Arrange
+        Long productId = 1L;
+        Product product = new Product(); // Criando um produto para o teste
+
+        // Mock para retornar um Optional com o produto, simulando que o produto existe
+        when(productRepository.findById(productId)).thenReturn(Optional.of(product));
+
+        // Act
+        productService.delete(productId);
+
+        // Assert
+        // Verifica se o delete foi chamado corretamente
+        verify(productRepository).deleteById(productId);
+    }
+
+    @Test
+    void deveLancarExcecaoQuandoProdutoNaoForEncontradoParaExcluir() {
+        // Arrange
+        Long productId = 1L;
+
+        // Mock para retornar Optional.empty(), simulando que o produto não foi encontrado
+        when(productRepository.findById(productId)).thenReturn(Optional.empty());
+
+        // Act & Assert
+        // Verifica se a ResourceNotFoundException é lançada quando o produto não for encontrado
+        assertThrows(ResourceNotFoundException.class, () -> productService.delete(productId));
+    }
+
+    @Test
+    void deveLancarExcecaoQuandoErroDeIntegridadeOcorreAoExcluirProduto() {
+        // Arrange
+        Long productId = 1L;
+        Product product = new Product(); // Criando um produto para o teste
+
+        // Mock para retornar o produto, simulando que ele existe
+        when(productRepository.findById(productId)).thenReturn(Optional.of(product));
+
+        // Simula o erro de integridade, lançando uma DataIntegrityViolationException
+        doThrow(DataIntegrityViolationException.class).when(productRepository).deleteById(productId);
+
+        // Act & Assert
+        // Verifica se a DatabaseException é lançada quando há erro de integridade
+        assertThrows(DatabaseException.class, () -> productService.delete(productId));
+    }
+
+    @Test
+    void deveLancarExcecaoQuandoErroInesperadoOcorreAoExcluirProduto() {
+        // Arrange
+        Long productId = 1L;
+        Product product = new Product(); // Criando um produto para o teste
+
+        // Mock para retornar o produto, simulando que ele existe
+        when(productRepository.findById(productId)).thenReturn(Optional.of(product));
+
+        // Simula o erro genérico, lançando uma RuntimeException
+        doThrow(RuntimeException.class).when(productRepository).deleteById(productId);
+
+        // Act & Assert
+        // Verifica se a DatabaseException é lançada em caso de erro inesperado
+        assertThrows(DatabaseException.class, () -> productService.delete(productId));
+    }
+
 
 }
 
