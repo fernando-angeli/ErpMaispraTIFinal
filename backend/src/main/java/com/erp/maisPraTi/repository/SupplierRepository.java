@@ -12,5 +12,5 @@ public interface SupplierRepository extends JpaRepository<Supplier, Long> {
     boolean existsByStateRegistration(String stateRegistration);
 
 
-    boolean existsByCpfCnpjAndStateRegistrationAndTypePfOrPj(String cpfCnpj, String stateRegistration, TypePfOrPj typePfOrPj);
+    boolean existsByCpfCnpjAndStateRegistrationAndTypePfPj(String cpfCnpj, String stateRegistration, TypePfOrPj typePfOrPj);
 }

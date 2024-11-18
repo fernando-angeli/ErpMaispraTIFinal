@@ -1,0 +1,80 @@
+.notification-item {
+  background-color: #c9c9ca;
+  padding: 2em 3em;
+  margin-bottom: 10px;
+  border-radius: 1em;
+  display: flex;
+  flex-direction: column;
+}
+
+.notification-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.notification-item-header h3 {
+  font-size: 1em;
+}
+.div-content {
+  display: flex;
+  align-items: start;
+  justify-content: start;
+  padding-right: 1em;
+  max-height: 3rem;
+  transition: all 0.5s ease;
+}
+
+.div-content.expanded {
+  max-height: 100rem;
+}
+
+.notification-content {
+  display: flex;
+  align-items: start;
+  justify-content: start;
+  margin: 0.5em 0;
+  font-size: 1em;
+  color: #555;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  text-align: left;
+}
+
+.notification-content.expanded {
+  overflow: visible;
+  white-space: normal;
+}
+
+.toggle-btn {
+  min-width: fit-content;
+  padding: 0.5em 0.3em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-self: end;
+  font-size: 1em;
+  background-color: transparent;
+  color: #2a153b;
+  border: 2px solid #2a153b;
+  border-radius: 1em;
+  cursor: pointer;
+  gap: 0.3em;
+}
+
+.icon-arrow {
+  font-size: 1.5em;
+  transition: transform 1s ease;
+}
+
+.icon-arrow.rotated {
+  transform: rotate(180deg);
+}
+
+.delete-icon {
+  cursor: pointer;
+  font-size: 2em;
+}
+@media (max-width: 768px) {
+}
