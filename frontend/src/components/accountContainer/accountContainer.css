@@ -61,6 +61,8 @@ p {
 .account-menu .menu-item {
   font-size: 1.25rem;
   display: flex;
+  align-items: center;
+  justify-content: start;
   color: #0e1d25;
   gap: 8px;
   padding: 12px 8px;

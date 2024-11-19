@@ -1,5 +1,5 @@
 
-import "./ModalYesOrNot.css"; // Para estilização do modal
+import "./ModalYesOrNot.css"; 
 
 function ModalYesOrNot({ show, onClose, title, children }) {
   if (!show) return null;

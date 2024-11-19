@@ -9,7 +9,7 @@ import RadioGroup from "../../RadioGroup/RadioGroup";
 import TextareaField from "../../TextareaField/TextareaField";
 import LoadingSpin from '../../LoadingSpin/LoadingSpin'
 
-function FormNewSupplier(dataSupplier) {
+function FormNewSupplier({ dataSupplier, onSubmitSuccess }) {
   
 
   const [ResponsiveSupplier, setResponsiveSupplier] = useState(true);
@@ -217,7 +217,9 @@ function FormNewSupplier(dataSupplier) {
       handleReset();
       setSuccess("Supplier adicionado com sucesso!");
       setIsLoading(false);
-      window.location.reload;
+      if (onSubmitSuccess) {
+        onSubmitSuccess();
+      }
     } catch (err) {
       setIsLoading(false);
       console.error(err);
@@ -308,7 +310,9 @@ function FormNewSupplier(dataSupplier) {
       setIsLoading(!isLoading)
       setError(null);
       SetPostToUpdade(true)
-      window.location.reload()
+      if (onSubmitSuccess) {
+        onSubmitSuccess();
+      }
     } catch (err) {
       setIsLoading(!isLoading);
       if (err.response && err.response.data) {
@@ -348,11 +352,9 @@ function FormNewSupplier(dataSupplier) {
    
   };
 
-
-
   useEffect(() => {
-  if(dataSupplier.dataSupplier){
-    SetValuestoUpdate(dataSupplier.dataSupplier);
+  if(dataSupplier){
+    SetValuestoUpdate(dataSupplier);
     SetPostToUpdade(false)
   }
 }, [dataSupplier]);
@@ -599,6 +601,9 @@ function FormNewSupplier(dataSupplier) {
           
         </div>
       </form>
+      <div className={
+          ResponsiveSupplier ? "show" : "hidden"
+        }>
       <div className="errorsOrSuccess" style={{paddingTop:'1em'}}>
               <p style={{ color: "red" }}>{Error && Error}</p>
               <p style={{ color: "green" }}>{Success && Success}</p>
@@ -619,6 +624,7 @@ function FormNewSupplier(dataSupplier) {
                 Cancelar
               </button>
             </div>
+      </div>
             
       {isLoading && <LoadingSpin/>}
     </div>

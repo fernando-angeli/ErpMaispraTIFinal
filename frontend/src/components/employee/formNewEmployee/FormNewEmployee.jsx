@@ -8,7 +8,7 @@ import InputField from "../../InputField/InputField";
 import SelectField from "../../SelectField/SelectField";
 import RadioGroup from "../../RadioGroup/RadioGroup";
 import LoadingSpin from "../../LoadingSpin/LoadingSpin";
-function FormNewEmployee(dataEmployee) {
+function FormNewEmployee({ dataEmployee, onSubmitSuccess }) {
   const apiUrl = import.meta.env.VITE_API_URL;
 
   const [ResponsiveEmployee, setResponsiveEmployee] = useState(true);
@@ -131,7 +131,6 @@ const CheckCpf = (cpf) => {
     setError(null);
   };
 
-  
 
   const handleSubmit = async (event) => {
     setIsLoading(true);
@@ -164,11 +163,12 @@ const CheckCpf = (cpf) => {
           },
         }
       );
-      console.log(response);
-      handleReset();
       setSuccess("Usuário adicionado com sucesso!");
-      setIsLoading(false);
-      window.location.reload;
+      setIsLoading(false);  
+      handleReset();
+      if (onSubmitSuccess) {
+        onSubmitSuccess();
+      }
     } catch (err) {
       setIsLoading(false);
       console.error(err);
@@ -226,8 +226,6 @@ const CheckCpf = (cpf) => {
       status: newEmployeeStatus,
       password: "12345",
     };
-    console.log(newEmployeeData);
-    console.log(updateEmployeeId);
     const TelephoneRegex =
       /^\(?\+?(\d{1,3})?\)?[-.\s]?(\d{2})[-.\s]?(\d{4,5})[-.\s]?(\d{4})$/;
     if (TelephoneRegex.test(newEmployeeData.phoneNumber)) {
@@ -249,12 +247,14 @@ const CheckCpf = (cpf) => {
           },
         }
       );
-      handleReset();
       setSuccess("Usuario Atualizado com sucesso!");
       setIsLoading(false);
-      window.location.reload();
+      if (onSubmitSuccess) {
+        onSubmitSuccess();
+      }
       setError(null);
-      SetPostToUpdade(true);
+      SetPostToUpdade(true); 
+      handleReset();
     } catch (err) {
       setIsLoading(false);
       console.error(err);
@@ -268,8 +268,8 @@ const CheckCpf = (cpf) => {
   };
 
   useEffect(() => {
-    if (dataEmployee.dataEmployee) {
-      SetValuestoUpdate(dataEmployee.dataEmployee);
+    if (dataEmployee) {
+      SetValuestoUpdate(dataEmployee);
       SetPostToUpdade(false);
     }
   }, [dataEmployee]);
@@ -364,6 +364,7 @@ const CheckCpf = (cpf) => {
             value={newEmployeeCPF}
             onChange={(e) => {
               setNewEmployeeCPF(e.target.value);
+              console.log(e.target.value)
               isValid(e);
               CheckCpf(e.target.value);
             }}

@@ -73,7 +73,11 @@
     
 }
 
-/* @media (max-width: 768px) {
+ @media (max-width: 768px) {
+    .chartValue-container {
+        flex-wrap: wrap;
+    }
+
     .BoxChartValue {
         display: flex;
         flex-direction: row;
@@ -109,4 +113,4 @@
         text-align: start;
     }
 
-} */
+} 

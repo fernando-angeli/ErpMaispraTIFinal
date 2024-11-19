@@ -1,6 +1,6 @@
 import { createSwapy } from 'swapy'
 import axios from 'axios';
-
+import { useEffect } from 'react';
 import { useAuth } from '../../../components/AuthContext';
 
 import { debounce } from 'lodash';
@@ -8,11 +8,10 @@ import { debounce } from 'lodash';
 
 
 
-
-
-
-
 function ExecuteSwapy() {
+useEffect(() => {
+  console.log('')
+}, []);
   const { JwtToken } = useAuth();
   const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -58,6 +57,33 @@ function ExecuteSwapy() {
     }, 2000)
   }
 
+  const apiGetSwap = async (userId, obj) => {
+    try {
+      const response = await axios.get(
+        `${apiUrl}/api/usuarios/${userId}/cards`,
+        obj,
+        {
+          headers: {
+            Authorization: `Bearer ${JwtToken}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      console.log(response.status)
+      console.log('Dados do dashboard Baixados:', obj);
+    } catch (err) {
+      console.error('Erro ao baixar dados do dashboard:', err);
+
+      if (err.response && err.response.data) {
+        console.error(`Erro: ${err.response.data.message}`);
+      } else {
+        console.error('Erro desconhecido');
+      }
+    }
+
+  }
+
 
   const apiResgisterSwap = async (userId, obj) => {
     try {
@@ -73,12 +99,8 @@ function ExecuteSwapy() {
         }
       );
 
-
       console.log(response.status)
       console.log('Dados do dashboard registrados:', obj);
-
-
-
     } catch (err) {
 
       console.error('Erro ao registrar dados do dashboard:', err);
@@ -90,9 +112,8 @@ function ExecuteSwapy() {
       }
     }
 
-
-
-
   }
+
+
 }
 export default ExecuteSwapy
