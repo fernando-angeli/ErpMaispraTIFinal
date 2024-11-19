@@ -12,7 +12,7 @@ function SelectFieldProduct({
   required = true,
   placeholder = "Selecione...",
   classNameSelect = "",
-  classnameDiv = "",
+  classNameDiv = "",
 }) {
   const [searchTerm, setSearchTerm] = useState("");
   const filteredOptions = (arrayOptions || []).filter((option) =>
@@ -24,7 +24,7 @@ function SelectFieldProduct({
   }, [searchTerm]);
 
   return (
-    <div className={classnameDiv}>
+    <div className={classNameDiv}>
       <label htmlFor={id} className="inputLabel">
         <span className="inputDescription">{label}</span>
         
@@ -33,6 +33,7 @@ function SelectFieldProduct({
           placeholder="Digite..." 
           onChange={(e) => setSearchTerm(e.target.value)} 
           value={searchTerm}
+          
         />
 
         <datalist id="products">

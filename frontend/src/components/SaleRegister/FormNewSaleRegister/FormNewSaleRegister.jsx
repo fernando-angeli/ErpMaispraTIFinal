@@ -23,7 +23,7 @@ function FormNewSaleRegister({ dataSaleRegister }) {
   const [ListClients, setListClients] = useState([]);
   const [ListProducts, setListProducts] = useState([]);
 
-  const [NewSaleRegisterClientId, setNewSaleRegisterClientId] = useState(''); 
+  const [NewSaleRegisterClientId, setNewSaleRegisterClientId] = useState('');
   const [NewSaleRegisterClient, setNewSaleRegisterClient] = useState('');
   const [NewSaleRegisterSaller, setNewSaleRegisterSaller] = useState(decoded.fullName);
   const [NewSaleRegisterData, setNewSaleRegisterData] = useState('');
@@ -43,7 +43,7 @@ function FormNewSaleRegister({ dataSaleRegister }) {
     setNewSaleRegisterProduct('');
     setNewSaleRegisterQuant('');
     setCardId(1);
-    
+
     values.saleItems.forEach((value, index) => {
       const NewItemtoCard = {
         id: index + 1,
@@ -60,7 +60,7 @@ function FormNewSaleRegister({ dataSaleRegister }) {
   const handleSubmit = async (event) => {
     event.preventDefault();
     setIsLoading(true);
-  
+
     try {
       const response = await axios.post(
         `${apiUrl}/api/vendas`,
@@ -77,10 +77,10 @@ function FormNewSaleRegister({ dataSaleRegister }) {
       );
 
       const clientData = response.data;
-  
+
       const saleRequests = CardItems.map((card) =>
         axios.post(
-          `${apiUrl}/api/vendas/${clientData.id}/itens`, 
+          `${apiUrl}/api/vendas/${clientData.id}/itens`,
           {
             productId: card.productId,
             quantitySold: card.quant,
@@ -119,13 +119,13 @@ function FormNewSaleRegister({ dataSaleRegister }) {
       //   quantitySold: card.quant,
       //   salePrice: card.price,
       // })),
-      saleItems:[],
+      saleItems: [],
       saleStatus: "pendente",
     };
     console.log("Payload:", salePayload);
 
     try {
-     const response = await axios.put( `${apiUrl}/api/vendas/${NewSaleRegisterClientId}`,
+      const response = await axios.put(`${apiUrl}/api/vendas/${NewSaleRegisterClientId}`,
         salePayload,
         {
           headers: {
@@ -133,7 +133,7 @@ function FormNewSaleRegister({ dataSaleRegister }) {
             "Content-Type": "application/json",
           },
         }
-      );  
+      );
       console.log(response)
       setSuccess("Venda Atualizada com sucesso!");
       handleReset();
@@ -147,9 +147,11 @@ function FormNewSaleRegister({ dataSaleRegister }) {
       setIsLoading(false);
     }
   };
-  
-  
+
+
   const deleteCardItem = (idToDelete) => {
+    setCardItems((prevItems) => prevItems.filter(item => item.id !== idToDelete));
+    setCardId(cardId - 1);
     setCardItems((prevItems) => {
       const itemToDelete = prevItems.find(item => item.id === idToDelete);
       if (!itemToDelete) return prevItems
@@ -199,6 +201,7 @@ function FormNewSaleRegister({ dataSaleRegister }) {
       setError("O preço deve ser preenchido e ser um número positivo.");
       return;
     }
+
     const updatedProducts = ListProducts.map((prod) => {
       if (prod.id === NewSaleRegisterProduct[0].id) {
         return {
@@ -260,7 +263,7 @@ function FormNewSaleRegister({ dataSaleRegister }) {
   useEffect(() => {
     if (dataSaleRegister) {
       ValuestoUpdate(dataSaleRegister);
-      setPostToUpdate(false); 
+      setPostToUpdate(false);
       console.log(dataSaleRegister)
     }
   }, [dataSaleRegister]);
@@ -280,14 +283,14 @@ function FormNewSaleRegister({ dataSaleRegister }) {
       >
         <div className="line1 line">
           <SelectFieldClient
-          classNameDiv="fieldName"
-          label={"Clientes"}
-          placeholder="Clientes"
-          arrayOptions={ListClients}
-          value={!PostToUpdate && NewSaleRegisterClient.fullName}
-          onChangeValue={setNewSaleRegisterClient}
+            classNameDiv="fieldName"
+            label={"Clientes"}
+            placeholder="Clientes"
+            arrayOptions={ListClients}
+            value={!PostToUpdate && NewSaleRegisterClient.fullName}
+            onChangeValue={setNewSaleRegisterClient}
           />
-          
+
           <InputField
             classNameDiv="fieldName"
             label="Vendedor Responsavel:"
@@ -297,58 +300,66 @@ function FormNewSaleRegister({ dataSaleRegister }) {
             disabled={true}
           />
           <InputField
-          classNameDiv="fieldDate"
+            classNameDiv="fieldDate"
             label="Data de Entrega:"
             name="deliveryDate"
             type="date"
             value={NewSaleRegisterData}
-            onChange={(e)=>setNewSaleRegisterData(e.target.value)}
+            onChange={(e) => setNewSaleRegisterData(e.target.value)}
           />
 
           <InputField
-              classNameDiv="fieldDate"
+            classNameDiv="fieldDate"
             label="Data Prevista:"
             name="deliveryDate"
             type="date"
             value={NewSaleRegisterDataPrev}
-            onChange={(e)=>setNewSaleRegisterDataPrev(e.target.value)}
+            onChange={(e) => setNewSaleRegisterDataPrev(e.target.value)}
           />
         </div>
 
-        <div className="line4 line">
+        <div className="line">
 
-        <SelectFieldProduct
-          label={"Produtos"}
-          placeholder="Produtos"
-          arrayOptions={ListProducts}
-          value={NewSaleRegisterProduct}
-          onChangeValue={setNewSaleRegisterProduct}
-        />
+          <SelectFieldProduct
+            classNameDiv="fieldProduct"
+            label={"Produtos"}
+            placeholder="Produtos"
+            arrayOptions={ListProducts}
+            value={NewSaleRegisterProduct}
+            onChangeValue={setNewSaleRegisterProduct}
+          />
 
 
-        <InputField
+          <InputField
+            classNameDiv="fieldQuantity"
             label="Quantidade:"
             name="quantity"
             placeholder="0"
             value={NewSaleRegisterQuant}
-            onChange={(e)=>setNewSaleRegisterQuant(e.target.value)}
+            onChange={(e) => setNewSaleRegisterQuant(e.target.value)}
           />
           
-          <div className="errorsOrSuccess">
-          {Error && <p className="error">{Error}</p>}
-          {Success && <p className="salesuccess">{Success}</p>}
-        </div>
 
-        {isLoading ? <LoadingSpin /> : <button type="submit" onClick={(e)=>handleAddtoCard(e)}>Registrar</button>}
+            <div className="divRegisterButton">
+              {isLoading ? <LoadingSpin /> : <button type="submit" className="registerButton" onClick={(e) => handleAddtoCard(e)}>Registrar</button>}
+            </div>
+          
+
+
         </div>
+            <div className="errorsOrSuccess">
+              {Error && <p className="error">{Error}</p>}
+              {Success && <p className="salesuccess">{Success}</p>}
+            </div>
       </form>
       <CardSaleRegister
-      saleRegisters={CardItems}
+        saleRegisters={CardItems}
         onDelete={deleteCardItem}
+        PostToUpdate={PostToUpdate}
+        handleSubmit={handleSubmit}
+        handleUpdate={handleUpdate}
       />
-    <button type="submit" onClick={PostToUpdate ? handleSubmit : handleUpdate}>
-      {PostToUpdate ? "Finalizar Pedido" : "Atualizar Pedido"}
-    </button>
+      
     </div>
   );
 }
