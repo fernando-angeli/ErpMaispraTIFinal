@@ -12,7 +12,7 @@ function SelectFieldClient({
   required = true,
   placeholder = "Selecione...",
   classNameSelect = "",
-  classnameDiv = "",
+  classNameDiv = "",
 }) {  
  const [searchTerm, setSearchTerm] = useState("");
 
@@ -31,7 +31,7 @@ function SelectFieldClient({
   }, [value]);
 
   return (
-    <div className={classnameDiv}>
+    <div className={classNameDiv}>
       <label htmlFor={id} className="inputLabel">
         <span className="inputDescription">{label}</span>
         
@@ -40,6 +40,7 @@ function SelectFieldClient({
           placeholder="Digite..." 
           onChange={(e) => setSearchTerm(e.target.value)} 
           value={searchTerm}
+          
         />
 
         <datalist id="clients">

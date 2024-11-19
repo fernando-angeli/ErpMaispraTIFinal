@@ -2,7 +2,7 @@ import './CircleChart.css';
 import { FaCircle } from "react-icons/fa";
 import { Doughnut } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
-import React, { useMemo, useState, useEffect } from 'react';
+import React, { useMemo, useState, useEffect, useRef } from 'react';
 import ListClients from '../Client/ListClients/ListClients';
 import ListSupplier from '../Supplier/ListSupplier/ListSupplier';
 
@@ -68,8 +68,34 @@ const CircleChart = ({ title, total, totalActive, colorTotal, colorTotalActive }
     return ((delayedTotalActive / delayedTotal) * 100).toFixed(0);
   }, [delayedTotal, delayedTotalActive]);
 
+  // Usando useRef para garantir o acesso seguro ao DOM
+  const contentCircleRef = useRef(null); // Referência para o contêiner
+
+  const [size, setSize] = useState({ width: 0, height: 0 });
+
+  useEffect(() => {
+    // Verifica se o ref foi atribuído
+    if (contentCircleRef.current) {
+      const handleResize = () => {
+        // Verifica o tamanho do contêiner sempre que houver mudança
+        const width = contentCircleRef.current.offsetWidth;
+        const height = contentCircleRef.current.offsetHeight;
+        
+        setSize({ width, height });
+      };
+
+      const resizeObserver = new ResizeObserver(handleResize); // Cria o ResizeObserver
+      resizeObserver.observe(contentCircleRef.current); // Inicia a observação no contêiner
+
+      // Cleanup: Desfaz a observação quando o componente for desmontado
+      return () => {
+        resizeObserver.disconnect();
+      };
+    }
+  }, []); // O useEffect é executado apenas uma vez, após o componente ser montado
+
   return (
-    <div className="contentCircle notSelectable">
+    <div className="contentCircle notSelectable" ref={contentCircleRef}>
       <h4>{title}</h4>
       <div className="contentGraph">
         <div className="divGraph">
@@ -86,7 +112,7 @@ const CircleChart = ({ title, total, totalActive, colorTotal, colorTotalActive }
             </span>
           </div>
         </div>
-        <div className="list">{listComponent}</div>
+        <div className="list">{size.height > 700 ? listComponent : ""}</div>
       </div>
     </div>
   );
