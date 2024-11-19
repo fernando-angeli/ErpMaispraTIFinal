@@ -19,7 +19,6 @@ function SelectFieldProduct({
     option.name?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-
   useEffect(() => {
     onChangeValue(filteredOptions);
   }, [searchTerm]);
@@ -40,7 +39,8 @@ function SelectFieldProduct({
           {filteredOptions.map((option) => (
             <option
               key={option.id}
-              value={option.name}
+              value={option.name} 
+              label={`Disponivel: ${option.availableForSale} -Reservado: ${option.reservedStock} - R$ ${option.productPrice.toFixed(2)}`} 
             />
           ))}
         </datalist>
