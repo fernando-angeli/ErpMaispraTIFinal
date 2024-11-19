@@ -285,8 +285,13 @@ public class SupplierServiceTest {
 
         // Mockando comportamentos necessários
         when(supplierRepository.getReferenceById(supplierId)).thenReturn(supplier);
-        when(supplierRepository.existsById(supplierId)).thenReturn(true);
-        when(supplierRepository.save(any(Supplier.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        // Mockando a verificação de documentos
+        when(supplierRepository.existsByCpfCnpjAndStateRegistrationAndTypePfPj(
+                newCpfCnpj, newStateRegistration, newType)).thenReturn(false); // Simulando que os documentos não existem
+
+        // Verifique se o fornecedor com ID 1 existe antes de chamar o update
+
 
         // Executa o método
         SupplierDto updatedSupplier = supplierService.update(supplierId, supplierUpdateDto);

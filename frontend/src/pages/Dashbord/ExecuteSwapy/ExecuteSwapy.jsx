@@ -3,7 +3,7 @@ import axios from 'axios';
 
 import { useAuth } from '../../../components/AuthContext';
 
-
+import { debounce } from 'lodash';
 
 
 
@@ -24,32 +24,26 @@ function ExecuteSwapy() {
   swapy.enable(true)
 
 
-  swapy.onSwap((event) => {
-
-    let items = []
+  const handleSwap = debounce((event) => {
+    let items = [];
     const isValidSlots = () => {
       for (let i in event.data.object) {
         if (items.includes(event.data.object[i]) || !event.data.object[i]) {
-          return false
+          return false;
         } else {
-          items.push(event.data.object[i])
+          items.push(event.data.object[i]);
         }
       }
-      return true
-    }
-
+      return true;
+    };
+  
     if (isValidSlots()) {
-      time(event.data.object)
+      time(event.data.object);
     }
+  }, 200);
 
-    // event.data.object:
-    // {
-    //   'foo': 'a',
-    //   'bar': 'b',
-    //   'baz': 'c'
-    // }
+  swapy.onSwap(handleSwap);
 
-  })
 
   let timeOutSwap
 

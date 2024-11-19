@@ -119,6 +119,7 @@ function FormNewSaleRegister({ dataSaleRegister }) {
       //   quantitySold: card.quant,
       //   salePrice: card.price,
       // })),
+      saleItems:[],
       saleStatus: "pendente",
     };
     console.log("Payload:", salePayload);
