@@ -78,6 +78,10 @@ function ModalDetails({ show, onClose, content, title }) {
               <div className="label">Notas:</div>
               <div className="value">{content && content.notes}</div>
             </div>
+            <div className="firstSecond columnClient">
+              <div className="label">Pais:</div>
+              <div className="value">{content && content.country}</div>
+            </div>
             <div className="third columnSupplier">
               <div className="label">Status:</div>
               <div className="value statusSupplier">

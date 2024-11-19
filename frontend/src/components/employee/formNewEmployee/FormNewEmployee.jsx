@@ -26,7 +26,7 @@ function FormNewEmployee(dataEmployee) {
   const [newEmployeeRole, setNewEmployeeRole] = useState("");
   const [newEmployeeState, setNewEmployeeState] = useState("");
   const [newEmployeeBirthDate, setNewEmployeeBirthDate] = useState("");
-  const [newEmployeeStatus, setNewEmployeeStatus] = useState("active");
+  const [newEmployeeStatus, setNewEmployeeStatus] = useState("ativo");
   const [isLoading, setIsLoading] = useState(false);
   const [updateEmployeeId, setUpdateEmployeeId] = useState();
 
@@ -96,6 +96,17 @@ function FormNewEmployee(dataEmployee) {
     }
   };
 
+const CheckCpf = (cpf) => {
+    const cpfRegex =
+      /^(?!.*(\d)(?:-?\1){10})\d{3}\.\d{3}\.\d{3}-\d{2}$|^(\d{11})$/;
+    if (cpfRegex.test(cpf)) {
+      setError(null);
+    } else {
+      setError("Formato de Cpf Inválido!");
+      return;
+    }
+  };
+
   const handleReset = () => {
     let form = document.getElementById("formNewEmployee");
     let elements = form.getElementsByClassName("isInvalid");
@@ -120,16 +131,7 @@ function FormNewEmployee(dataEmployee) {
     setError(null);
   };
 
-  const CheckCpf = (cpf) => {
-    const cpfRegex =
-      /^(?!.*(\d)(?:-?\1){10})\d{3}\.\d{3}\.\d{3}-\d{2}$|^(\d{11})$/;
-    if (cpfRegex.test(cpf)) {
-      setError(null);
-    } else {
-      setError("Formato de Telefone Inválido!");
-      return;
-    }
-  };
+  
 
   const handleSubmit = async (event) => {
     setIsLoading(true);
@@ -148,7 +150,7 @@ function FormNewEmployee(dataEmployee) {
       state: newEmployeeState,
       country: "Brasil",
       roles: newEmployeeRole,
-      status: "ativo",
+      status: newEmployeeStatus,
       password: "12345",
     };
     try {
@@ -221,7 +223,7 @@ function FormNewEmployee(dataEmployee) {
       state: newEmployeeState,
       country: "Brasil",
       roles: newEmployeeRole,
-      status: "ativo",
+      status: newEmployeeStatus,
       password: "12345",
     };
     console.log(newEmployeeData);
@@ -474,7 +476,7 @@ function FormNewEmployee(dataEmployee) {
                   <RadioGroup
                     name={"ativoInativo"}
                     options={statusOptions}
-                    defaultValue={"ativo"}
+                    defaultValue={newEmployeeStatus}
                     onChange={(selectedValue) =>
                       setNewEmployeeStatus(selectedValue)
                     }

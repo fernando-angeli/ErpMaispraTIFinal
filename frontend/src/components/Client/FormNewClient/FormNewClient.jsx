@@ -105,7 +105,7 @@ function FormNewClient(dataClient) {
   if (cpfRegex.test(cpf)) {
     setError(null);
   } else {
-    setError('Formato de Telefone Inválido!');
+    setError('Formato de Cpf Inválido!');
     return
   }
   }

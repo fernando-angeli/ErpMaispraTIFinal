@@ -12,7 +12,11 @@ import PageOfListClients from "./PageOfListClients.jsx";
 import LoadingSpin from "../../LoadingSpin/LoadingSpin.jsx";
 
 
-const ListClients = () => {
+const ListClients = ({onlyView}) => {
+
+  ListClients.defaultProps = {
+    onlyView: false,
+  };
   const apiUrl = import.meta.env.VITE_API_URL;
   const { JwtToken } = useAuth();
   const [clients, setClients] = useState();
@@ -100,7 +104,8 @@ const ListClients = () => {
     
     <>
       {isLoading && <LoadingSpin />}
-      <FormNewClient dataClient={clientUpdate} />
+      {onlyView ? "" : <FormNewClient dataClient={clientUpdate} />}
+      
       <div className="contentListClients">
         <div className="ListClients">
           <div className="headerListClients">
@@ -178,7 +183,8 @@ const ListClients = () => {
                 onEdit={ToFormUpdateClient} 
                 onDelete={deleteClient} 
                 maxClientsPerList={maxClientsPerList} 
-                listClientsPageSelected={listClientsPageSelected}/>
+                listClientsPageSelected={listClientsPageSelected}
+                onlyView={onlyView}/>
 
               </tbody>
 
