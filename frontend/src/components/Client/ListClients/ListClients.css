@@ -7,6 +7,10 @@
     
 }
 
+.None{
+    display:none;
+}
+
 .hide-desktop {
     display: none;
     text-decoration: none;
