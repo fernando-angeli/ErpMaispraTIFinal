@@ -80,13 +80,17 @@
 
 }
 
-.list .contentListEmployees {
+.list > div {
      margin: 0;
      width: 100%;
      height: max-content;
 }
+.list > div tbody tr td:last-child {
+     border-radius: 0rem 1rem 1rem 0rem; 
+     text-align: start;   
+}
 
-
+/* small slot */
 @container (max-height: 250px) {
      .contentCircle {
           flex-direction: row;
@@ -97,6 +101,7 @@
      }
 }
 
+/* small slot */
 @container (max-height: 250px) {
      .circleChart {
           height: 10em;
@@ -145,12 +150,13 @@
      }
      
 }
+/* small slot responsive */
 @container (max-height: 250px) and (max-width: 490px) {
      .circleChartData {
           display: none;
      }
 }
-
+/* big slot responsive */
 @container (min-height: 500px) and (min-width: 900px) {
      .circleChart {
           height: 18em;

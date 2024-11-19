@@ -10,7 +10,12 @@ import NavigationListSupplier from "./NavigationListSupplier.jsx";
 import PageOfListSupplier from "./PageOfListSupplier.jsx";
 import LoadingSpin from "../../LoadingSpin/LoadingSpin.jsx";
 
-const ListSupplier = () => {
+const ListSupplier = ({onlyView}) => {
+
+  ListSupplier.defaultProps = {
+    onlyView: false,
+  };
+
   const { JwtToken } = useAuth();
   const [suppliers, setSuppliers] = useState();
   const [supplierUpdate, setSupplierUpdate] = useState(null);
@@ -87,7 +92,8 @@ const ListSupplier = () => {
   return (
     <>
       {isLoading && <LoadingSpin />}
-      <FormNewSupplier dataSupplier={supplierUpdate} />
+      {onlyView ? "" : <FormNewSupplier dataSupplier={supplierUpdate} />}
+      
       <div className="contentListSuppliers">
         <div className="ListSuppliers">
           <div className="headerListSuppliers">
@@ -171,6 +177,7 @@ const ListSupplier = () => {
                   onDelete={deleteSupplier}
                   maxSuppliersPerList={maxSuppliersPerList}
                   listSuppliersPageSelected={listSuppliersPageSelected}
+                  onlyView={onlyView}
                 />
               </tbody>
             </table>
