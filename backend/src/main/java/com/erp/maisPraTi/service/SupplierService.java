@@ -100,8 +100,10 @@ public class SupplierService {
             throw new DatabaseException("Inscrição estadual já cadastrada no sistema.");
     }
 
-    String stateRegistrationNormalize(String stateRegistration){
+    private String stateRegistrationNormalize(String stateRegistration){
         return stateRegistration != null ? stateRegistration.toLowerCase() : null;
     }
+
+
 
 }
