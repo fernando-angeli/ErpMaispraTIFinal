@@ -38,7 +38,7 @@ public class Product {
     private BigDecimal reservedStock = BigDecimal.ZERO;
     private BigDecimal incomingStock = BigDecimal.ZERO;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(
             name = "tb_product_supplier",
             joinColumns = @JoinColumn(name = "product_id"),

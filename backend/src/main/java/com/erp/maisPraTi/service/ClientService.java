@@ -15,8 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.Optional;
-import static com.erp.maisPraTi.util.EntityMapper.convertToDto;
-import static com.erp.maisPraTi.util.EntityMapper.convertToEntity;
+import static com.erp.maisPraTi.util.EntityMapper.*;
 
 @Service
 public class ClientService {

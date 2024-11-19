@@ -51,7 +51,13 @@ public class Sale {
         if(saleItems == null)
             return new BigDecimal(0);
         return saleItems.stream()
-                .map(item -> item.getSalePrice().multiply(item.getQuantitySold()))
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+            .map(item -> item.getSalePrice().multiply(item.getQuantitySold()))
+            .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    public BigDecimal getTotalPendingDelivery(){
+        return saleItems.stream()
+                .map(SaleItem::getQuantityPending)
+            .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 }

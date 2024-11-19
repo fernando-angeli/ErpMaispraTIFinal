@@ -52,7 +52,7 @@ public class SaleItemService {
         // Faz a verificação se já existe um item com o mesmo id e valor nessa venda
         Optional<SaleItem> existingSaleItem = saleItemRepository.findByProductIdAndSaleIdAndSalePrice(saleInsertItemDto.getProductId(), saleId, saleInsertItemDto.getSalePrice());
 
-        // Se o item existir atualizad o mesmo
+        // Se o item existir atualiza com o mesmo valor vai atualizar o mesmo
         if(existingSaleItem.isPresent()){
             SaleItem saleItem = existingSaleItem.get();
             getProductAndUpdateStock(saleInsertItemDto.getProductId(), saleInsertItemDto.getQuantitySold());
@@ -85,6 +85,12 @@ public class SaleItemService {
         SaleItem saleItem = saleItemRepository.findByIdAndSaleId(itemId, saleId)
                 .orElseThrow(() -> new ResourceNotFoundException("Item não localizado"));
         return Optional.of(convertToDto(saleItem, SaleItemResponseDto.class));
+    }
+
+    @Transactional(readOnly = true)
+    public SaleItemResponseDto findById(Long saleId) {
+        Optional<SaleItem> saleItem = saleItemRepository.findById(saleId);
+        return convertToDto(saleItem, SaleItemResponseDto.class);
     }
 
     @Transactional(readOnly = true)
@@ -145,16 +151,22 @@ public class SaleItemService {
         productService.updateStockBySale(productId, quantitySale);
     }
 
-    private void verifyProductStock(ProductDto productDto, BigDecimal quantitySold) {
+    public void verifyProductStock(ProductDto productDto, BigDecimal quantitySold) {
         if(productDto.getAvailableForSale().compareTo(quantitySold) < 0)
             throw new ProductException("Estoque insuficiente, falta(m): "
                     + (new BigDecimal(String.valueOf(quantitySold.subtract(productDto.getAvailableForSale()))))
                     + " " + productDto.getUnitOfMeasure().getDescription() + "(s)");
     }
 
-    private void verifyQuantitySold(BigDecimal quantitySold){
+    public void verifyQuantitySold(BigDecimal quantitySold){
         if(quantitySold.compareTo(BigDecimal.ZERO) <= 0)
             throw new ProductException("A quantidade de produtos deve ser maior que zero.");
     }
 
+    public void updateItemDeliveryQuantity(Long saleItemId, BigDecimal quantityDelivery) {
+        SaleItem saleItem = saleItemRepository.findById(saleItemId)
+                .orElseThrow(() -> new ResourceNotFoundException("Item não localizado pelo id informado."));
+        saleItem.setQuantityDelivered(quantityDelivery);
+        saleItemRepository.save(saleItem);
+    }
 }
