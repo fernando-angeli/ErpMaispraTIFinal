@@ -12,7 +12,6 @@ const ButtonBackPage = () => {
     
   return (
     <div className="right" onClick={handleBackClick}>
-    <span>Voltar</span>
     <AiOutlineRollback className="icon-back" />
   </div>
 )}

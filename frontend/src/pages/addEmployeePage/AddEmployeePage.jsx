@@ -3,6 +3,7 @@ import ListEmployees from "../../components/Employee/ListEmployee/ListEmployees"
 import { useAuth } from "../../components/AuthContext";
 import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
+import ButtonBackPage from "../../components/ButtonBackPage/ButtonBackPage";
 
 function AddEmployeePage() {
   const navigate = useNavigate();
@@ -15,6 +16,7 @@ function AddEmployeePage() {
   }
   return (
     <>
+    <ButtonBackPage/>
       <ListEmployees/>
     </>
   );

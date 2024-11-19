@@ -45,7 +45,6 @@ const ListClients = ({onlyView}) => {
       alert("Erro ao puxar clientes!");
     }
   };
-  
   useEffect(() => {
     handleShowClients();
   }, []);
