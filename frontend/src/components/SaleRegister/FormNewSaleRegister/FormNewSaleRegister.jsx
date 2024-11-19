@@ -152,7 +152,25 @@ function FormNewSaleRegister({ dataSaleRegister }) {
   const deleteCardItem = (idToDelete) => {
     setCardItems((prevItems) => prevItems.filter(item => item.id !== idToDelete));
     setCardId(cardId - 1);
+    setCardItems((prevItems) => {
+      const itemToDelete = prevItems.find(item => item.id === idToDelete);
+      if (!itemToDelete) return prevItems
+      setListProducts((prevProducts) =>
+        prevProducts.map((prod) => {
+          if (prod.id === itemToDelete.productId) {
+            return {
+              ...prod,
+              availableForSale: Number(prod.availableForSale) + Number(itemToDelete.quant), 
+            };
+          }
+          return prod;
+        })
+      );
+      return prevItems.filter(item => item.id !== idToDelete);
+    });
+    setCardId((prevId) => prevId - 1);
   };
+  
 
   const handleAddtoCard = (e) => {
     e.preventDefault();
@@ -164,19 +182,42 @@ function FormNewSaleRegister({ dataSaleRegister }) {
       price: NewSaleRegisterProduct[0].productPrice,
       subtotal: NewSaleRegisterProduct[0].productPrice * NewSaleRegisterQuant,
     };
-
+  
+    if (NewSaleRegisterQuant > NewSaleRegisterProduct[0].availableForSale) {
+      setError(
+        NewSaleRegisterProduct[0].availableForSale === 0
+          ? "Produto sem estoque disponível!"
+          : "Quantidade maior que o estoque disponível!"
+      );
+      return;
+    }
+  
     if (!NewItemtoCard.quant || isNaN(NewItemtoCard.quant) || NewItemtoCard.quant <= 0) {
       setError("A quantidade deve ser preenchida e ser um número positivo.");
       return;
-    } else if (!NewItemtoCard.price || isNaN(NewItemtoCard.price) || NewItemtoCard.price <= 0) {
+    }
+  
+    if (!NewItemtoCard.price || isNaN(NewItemtoCard.price) || NewItemtoCard.price <= 0) {
       setError("O preço deve ser preenchido e ser um número positivo.");
       return;
     }
 
+    const updatedProducts = ListProducts.map((prod) => {
+      if (prod.id === NewSaleRegisterProduct[0].id) {
+        return {
+          ...prod,
+          availableForSale: prod.availableForSale - NewSaleRegisterQuant,
+        };
+      }
+      return prod;
+    });
+    setListProducts(updatedProducts);
     setCardItems((prevItems) => [...prevItems, NewItemtoCard]);
     setCardId(cardId + 1);
-    setNewSaleRegisterQuant('');
+    setNewSaleRegisterQuant("");
+    setError("");
   };
+  
 
   const handleGetClients = async () => {
     try {

@@ -9,21 +9,19 @@ import ListSupplier from '../Supplier/ListSupplier/ListSupplier';
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 const CircleChart = ({ title, total, totalActive, colorTotal, colorTotalActive }) => {
-  // Estado intermediário para limitar a frequência de atualizações nos dados
   const [delayedTotal, setDelayedTotal] = useState(total);
   const [delayedTotalActive, setDelayedTotalActive] = useState(totalActive);
 
-  // Atualiza os dados com um pequeno atraso
   useEffect(() => {
     const timer = setTimeout(() => {
       setDelayedTotal(total);
       setDelayedTotalActive(totalActive);
-    }, 300); // Atualização com atraso de 300ms
+    }, 100); 
 
-    return () => clearTimeout(timer); // Limpa o timer ao desmontar o componente
+    return () => clearTimeout(timer); 
   }, [total, totalActive]);
 
-  // Configurações do gráfico e seus dados
+
   const data = useMemo(() => ({
     datasets: [
       {
@@ -37,20 +35,18 @@ const CircleChart = ({ title, total, totalActive, colorTotal, colorTotalActive }
   const options = useMemo(() => ({
     responsive: true,
     maintainAspectRatio: false,
-    cutout: '70%', // Define o tamanho do círculo interno para criar o efeito de anel
+    cutout: '70%', 
     rotation: 0,
     plugins: {
       tooltip: { enabled: true },
     },
     animation: {
-      duration: 500, // Reduz a duração da animação para testar
+      duration: 200, // Reduz a duração da animação para testar
       easing: 'easeInOutQuad',
-      animateRotate: false, // Desativa a rotação de animação
-      animateScale: false, // Desativa a animação de escala
+      animateRotate: false,
+      animateScale: false, 
     },
   }), []);
-
-  // Seleciona o componente de lista apropriado com base no título
   const listComponent = useMemo(() => {
     switch (title) {
       case "Clientes":
@@ -118,4 +114,4 @@ const CircleChart = ({ title, total, totalActive, colorTotal, colorTotalActive }
   );
 };
 
-export default React.memo(CircleChart); // Evita renderizações desnecessárias
+export default React.memo(CircleChart); 

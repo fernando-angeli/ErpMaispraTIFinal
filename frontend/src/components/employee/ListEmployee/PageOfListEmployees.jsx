@@ -45,7 +45,7 @@ function PageOfListEmployees({
           </td>
           <td className="td-phoneNumber">
             <BiPhone className="td-icon" size={16} />
-            {employee.phoneNumber}
+            {employee.phoneNumber.replace(/\D/g, "").replace(/(\d{2})(\d{5})(\d{4})/, "($1) $2-$3")}
           </td>
           <td className="td-cpf">
             <BiFileBlank className="td-icon-2" size={16} />
