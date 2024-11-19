@@ -3,6 +3,8 @@ package com.erp.maisPraTi.model;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.math.BigDecimal;
+
 @Entity
 @Data
 @Table(name = "tb_delivery_items")
@@ -20,7 +22,7 @@ public class DeliveryItem {
     @JoinColumn(name = "sale_item_id")
     private SaleItem saleItem;
 
-    private int quantityDelivered;
+    private BigDecimal quantityDelivery;
 
 }
 

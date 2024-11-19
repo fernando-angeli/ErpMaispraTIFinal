@@ -21,15 +21,24 @@ import java.util.List;
 public class SaleDto {
 
     private Long id;
+
     private Long saleNumber;
+
     private LocalDateTime saleDate;
     @NotNull(message = "Informe a data estimada para a entrega.")
     private LocalDate expectedDeliveryDate;
+
     private LocalDateTime saleDeliveryDate;
+
     @NotNull(message = "É obrigatório informar o cliente.")
     private ClientSimpleDto client;
+
     private List<SaleItemRequestDto> saleItems;
+
     private BigDecimal totalSaleValue;
+
+    private BigDecimal getTotalPendingDelivery;
+
     @Enumerated(EnumType.STRING)
     private SaleStatus saleStatus;
 

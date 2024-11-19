@@ -12,8 +12,8 @@ import com.erp.maisPraTi.model.SaleItem;
 import com.erp.maisPraTi.repository.SaleItemRepository;
 import com.erp.maisPraTi.repository.SaleRepository;
 import com.erp.maisPraTi.service.exceptions.DatabaseException;
-import com.erp.maisPraTi.service.exceptions.ResourceNotFoundException;
 import com.erp.maisPraTi.service.exceptions.ProductException;
+import com.erp.maisPraTi.service.exceptions.ResourceNotFoundException;
 import com.erp.maisPraTi.util.EntityMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,9 +22,6 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import static org.mockito.Mockito.*;
-import java.math.RoundingMode;
-
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -32,7 +29,6 @@ import java.util.Optional;
 import java.util.function.Consumer;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.MockitoAnnotations.*;
 
 class SaleItemServiceTest {
     @Spy
@@ -281,7 +277,7 @@ class SaleItemServiceTest {
     }
 
     @Test
-    public void testarAtualizacaoComQuantidadeMenorQueEntregue() {
+    void testarAtualizacaoComQuantidadeMenorQueEntregue() {
         // Criando o SaleItem de teste
         SaleItem existingSaleItem = new SaleItem();
         existingSaleItem.setId(1L);
@@ -305,7 +301,7 @@ class SaleItemServiceTest {
     }
 
     @Test
-    public void testarExcluirItemComQuantidadeEntregueZero() {
+    void testarExcluirItemComQuantidadeEntregueZero() {
         // Criando um SaleItem de teste com id 2
         SaleItem saleItem = new SaleItem();
         saleItem.setId(2L);
@@ -331,7 +327,7 @@ class SaleItemServiceTest {
     }
 
     @Test
-    public void testarExcluirItemComQuantidadeEntregueMaiorQueZero() {
+    void testarExcluirItemComQuantidadeEntregueMaiorQueZero() {
         // Criando um SaleItem de teste com id 1
         SaleItem saleItem = new SaleItem();
         saleItem.setId(1L);
@@ -358,7 +354,7 @@ class SaleItemServiceTest {
     }
 
     @Test
-    public void testarExcluirItemComViolacaoDeIntegridade() {
+    void testarExcluirItemComViolacaoDeIntegridade() {
         // Criando um SaleItem de teste com id 1
         SaleItem saleItem = new SaleItem();
         saleItem.setId(1L);
@@ -467,7 +463,6 @@ class SaleItemServiceTest {
             assertEquals("A quantidade de produtos deve ser maior que zero.", e.getMessage());
         }
     }
-
 
 }
 

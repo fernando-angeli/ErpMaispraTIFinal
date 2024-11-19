@@ -160,5 +160,13 @@ public class ProductService {
             throw new DatabaseException("Não foi possível fazer a alteração neste produto.");
         }
     }
+
+    public void updateItemDeliveryQuantity(Long productId, BigDecimal quantityDelivery) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new ResourceNotFoundException("Produto não localizado."));
+        product.setReservedStock(product.getReservedStock().subtract(quantityDelivery));
+        product.setStock(product.getStock().subtract(quantityDelivery));
+        productRepository.save(product);
+    }
 }
 
