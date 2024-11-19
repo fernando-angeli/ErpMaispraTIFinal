@@ -15,7 +15,7 @@ function AddEmployeePage() {
   }
   return (
     <>
-      <ListEmployees></ListEmployees>
+      <ListEmployees/>
     </>
   );
 }

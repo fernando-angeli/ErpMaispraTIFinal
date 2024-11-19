@@ -1,9 +1,6 @@
 package com.erp.maisPraTi.controller.exceptions;
 
-import com.erp.maisPraTi.service.exceptions.DatabaseException;
-import com.erp.maisPraTi.service.exceptions.InvalidDocumentException;
-import com.erp.maisPraTi.service.exceptions.InvalidValueException;
-import com.erp.maisPraTi.service.exceptions.ResourceNotFoundException;
+import com.erp.maisPraTi.service.exceptions.*;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -69,6 +66,18 @@ public class ResourceExceptionHandler {
         return ResponseEntity.status(status).body(error);
     }
 
+    @ExceptionHandler(AuthenticationUserException.class)
+    public ResponseEntity<StandardError> authenticationUser(AuthenticationUserException e, HttpServletRequest request){
+        HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
+        StandardError error = new StandardError();
+        error.setTimestamp(Instant.now());
+        error.setStatus(status.value());
+        error.setError("Authentication error");
+        error.setMessage(e.getMessage());
+        error.setPath(request.getRequestURI());
+        return ResponseEntity.status(status).body(error);
+    }
+
     @ExceptionHandler(InvalidValueException.class)
     public ResponseEntity<StandardError> invalidValue(InvalidValueException e, HttpServletRequest request){
         HttpStatus status = HttpStatus.BAD_REQUEST;
@@ -88,6 +97,30 @@ public class ResourceExceptionHandler {
         error.setTimestamp(Instant.now());
         error.setStatus(status.value());
         error.setError("Document invalid");
+        error.setMessage(e.getMessage());
+        error.setPath(request.getRequestURI());
+        return ResponseEntity.status(status).body(error);
+    }
+
+    @ExceptionHandler(NotActivateException.class)
+    public ResponseEntity<StandardError> invalidDocuments(NotActivateException e, HttpServletRequest request){
+        HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
+        StandardError error = new StandardError();
+        error.setTimestamp(Instant.now());
+        error.setStatus(status.value());
+        error.setError("Not active status");
+        error.setMessage(e.getMessage());
+        error.setPath(request.getRequestURI());
+        return ResponseEntity.status(status).body(error);
+    }
+
+    @ExceptionHandler(ProductException.class)
+    public ResponseEntity<StandardError> insufficientStock(ProductException e, HttpServletRequest request){
+        HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
+        StandardError error = new StandardError();
+        error.setTimestamp(Instant.now());
+        error.setStatus(status.value());
+        error.setError("Insufficient stock");
         error.setMessage(e.getMessage());
         error.setPath(request.getRequestURI());
         return ResponseEntity.status(status).body(error);

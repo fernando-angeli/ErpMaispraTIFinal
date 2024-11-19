@@ -6,11 +6,16 @@ header.header {
     align-items: center;
     grid-column: 1/4;
     padding-inline: 100px;
+    text-decoration: none;
 }
 h1.logo {
     color: var(--secondary-light);
-    
+    text-decoration: none;
 }
+.link{
+    text-decoration: none;
+}
+
 
 @media (max-width: 768px) {
     header.header {

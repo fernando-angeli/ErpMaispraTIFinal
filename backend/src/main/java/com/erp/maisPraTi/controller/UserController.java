@@ -1,5 +1,6 @@
 package com.erp.maisPraTi.controller;
 
+import com.erp.maisPraTi.dto.users.CardDto;
 import com.erp.maisPraTi.dto.users.UserDto;
 import com.erp.maisPraTi.dto.users.UserInsertDto;
 import com.erp.maisPraTi.dto.users.UserUpdateDto;
@@ -7,6 +8,7 @@ import com.erp.maisPraTi.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,6 +19,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 import java.util.Optional;
 
+@Tag(name = "Usuários", description = "Operações relacionadas aos Usuários do sistema.")
 @RestController
 @RequestMapping("/api/usuarios")
 public class UserController {
@@ -81,6 +84,17 @@ public class UserController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id){
         userService.deleteById(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @Operation(summary = "Insere as informações de cards para cada usuário.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Informações inseridas."),
+            @ApiResponse(responseCode = "404", description = "Usuário não encontrado.")
+    })
+    @PostMapping("/{id}/cards")
+    public ResponseEntity<Void> insert(@PathVariable Long id, @RequestBody CardDto cardDto){
+        userService.insertCard(id, cardDto);
         return ResponseEntity.noContent().build();
     }
 

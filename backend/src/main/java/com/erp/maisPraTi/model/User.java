@@ -9,7 +9,9 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Data
 @Entity
@@ -68,5 +70,14 @@ public class User {
     private String resetPasswordToken;
 
     private LocalDateTime tokenExpiration;
-    
+
+    @ElementCollection
+    @CollectionTable(name = "tb_user_cards", joinColumns = @JoinColumn(name = "user_id"))
+    @MapKeyColumn(name = "card_name")
+    @Column(name = "card_description")
+    private Map<String, String> cards = new HashMap<>();
+
+    public void addCards(String slot, String cardName){
+        this.cards.put(slot, cardName);
+    }
 }

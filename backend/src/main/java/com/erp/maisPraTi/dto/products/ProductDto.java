@@ -36,9 +36,10 @@ public class ProductDto {
     private UnitOfMeasure unitOfMeasure;
 
     @NotNull(message = "Informe o valor do produto.")
-    private BigDecimal price;
+    private BigDecimal productPrice;
 
     private BigDecimal stock = BigDecimal.ZERO;
+
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private BigDecimal reservedStock = BigDecimal.ZERO;
 
@@ -46,4 +47,9 @@ public class ProductDto {
     private BigDecimal incomingStock = BigDecimal.ZERO;
 
     private List<SupplierSimpleDto> suppliers;
+
+    public BigDecimal getAvailableForSale(){
+        return this.stock.subtract(this.reservedStock);
+    }
+
 }

@@ -9,8 +9,8 @@ import RadioGroup from "../../RadioGroup/RadioGroup";
 import TextareaField from "../../TextareaField/TextareaField";
 import LoadingSpin from '../../LoadingSpin/LoadingSpin'
 
-function FormNewClient(dataClient) {
-  
+function FormNewClient( { dataClient, onSubmitSuccess }) {
+  const apiUrl = import.meta.env.VITE_API_URL;
 
   const [ResponsiveCliente, setResponsiveCliente] = useState(true);
   const [PostToUpdate, SetPostToUpdade] = useState(true)
@@ -29,6 +29,7 @@ function FormNewClient(dataClient) {
   const [newClientBirthDate, setNewClientBirthDate] = useState("");
   const [newClientNotes, setNewClientNotes] = useState("");
   const [newClientStatus, setNewClientStatus] = useState("ativo");
+  const [newClientCreditLimit, setnewClientCreditLimit] = useState(100);
 
   const [newClientIE, setNewClientIE] = useState("");
   
@@ -104,7 +105,7 @@ function FormNewClient(dataClient) {
   if (cpfRegex.test(cpf)) {
     setError(null);
   } else {
-    setError('Formato de Telefone Inválido!');
+    setError('Formato de Cpf Inválido!');
     return
   }
   }
@@ -130,20 +131,22 @@ function FormNewClient(dataClient) {
     setNewClientBirthDate('');
     setNewClientNotes("")
     setNewClientIE("")
+    setnewClientCreditLimit('')
     SetPostToUpdade(true)
     setError(null)
     };
-
-
+    
   const handleSubmit = async (event) => {
     event.preventDefault();
     const newClientData = {
       fullName: newClientName,
       typePfOrPj: CPForCNPJ === "cpf" ? "PF" : "PJ",
       gender: "NAO INFORMADO",
-      cpfCnpj: newClientCPForCNPJ,
+       cpfCnpj: CPForCNPJ === "cpf" 
+      ? newClientCPForCNPJ.replace(/\D/g, "").replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4")
+      : newClientCPForCNPJ.replace(/\D/g, "").replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, "$1.$2.$3/$4-$5"),
       stateRegistration: newClientIE,
-      phoneNumber: newClientPhone,
+      phoneNumber: newClientPhone.replace(/\D/g, "").replace(/(\d{2})(\d{5})(\d{4})/, "($1) $2-$3"),
       email: newClientEmail,
       address: newClientAddress,
       number: newClientAddressNumber,
@@ -153,32 +156,50 @@ function FormNewClient(dataClient) {
       state: newClientState,
       country: "Brasil",
       birthDate: newClientBirthDate,
-      creditLimit: 100.0,
+      creditLimit: newClientCreditLimit,
       notes: newClientNotes,
       status: newClientStatus,
     };
   
     
     const cpfRegex = /^(?!.*(\d)(?:-?\1){10})\d{3}\.\d{3}\.\d{3}-\d{2}$|^(\d{11})$/;
-    if(!document.getElementById("formNewClient").reportValidity()) {
-      setError("Preencha todos os campos!")
-      return 
-    }
-      setIsLoading(true)
+    const cnpjRegex = /^(\d{2}\.\d{3}\.\d{3}\/\d{4}-\d{2}|\d{14})$/;
+    if (CPForCNPJ === "cpf") {
+      if (!document.getElementById("formNewClient").reportValidity()) {
+        setError("Preencha todos os campos!");
+        return;
+      }
+      
+      setIsLoading(true);
+      
       if (cpfRegex.test(newClientData.cpfCnpj)) {
         setError(null);
-     
-    if (cpfRegex.test(newClientData.cpfCnpj)) {
-      setError(null);
+      } else {
+        setIsLoading(false);
+        setError('Formato de CPF Inválido');
+        return;
+      }
+      
     } else {
-      setIsLoading(false) 
-      setError('Formato de Cpf Invalido');
-      return
+      if (!document.getElementById("formNewClient").reportValidity()) {
+        setError("Preencha todos os campos!");
+        return;
+      }
+      
+      setIsLoading(true);
+      
+      if (cnpjRegex.test(newSupplierData.cpfCnpj)) {
+        setError(null);
+      } else {
+        setIsLoading(false);
+        setError('Formato de CNPJ Inválido');
+        return;
+      }
     }
 
     try {
       const response = await axios.post(
-        `http://localhost:8080/api/clientes`,
+        `${apiUrl}/api/clientes`,
         newClientData,
         {
           headers: {
@@ -190,7 +211,9 @@ function FormNewClient(dataClient) {
       handleReset();
       setSuccess("Cliente adicionado com sucesso!");
       setIsLoading(false);
-      window.location.reload;
+      if (onSubmitSuccess) {
+        onSubmitSuccess();
+      }
     } catch (err) {
       setIsLoading(false);
       console.error(err);
@@ -203,7 +226,7 @@ function FormNewClient(dataClient) {
         return
       }
     }
-      }
+      
   }
   const handleUpdate = async (event) => {
     setIsLoading(true)
@@ -213,9 +236,11 @@ function FormNewClient(dataClient) {
       fullName: newClientName,
       typePfOrPj: CPForCNPJ === "cpf" ? "PF" : "PJ",
       gender: "NAO INFORMADO",
-      cpfCnpj: newClientCPForCNPJ,
+      cpfCnpj: CPForCNPJ === "cpf" 
+      ? newClientCPForCNPJ.replace(/\D/g, "").replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4")
+      : newClientCPForCNPJ.replace(/\D/g, "").replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, "$1.$2.$3/$4-$5"),
       stateRegistration: newClientIE,
-      phoneNumber: newClientPhone,
+      phoneNumber: newClientPhone.replace(/\D/g, "").replace(/(\d{2})(\d{5})(\d{4})/, "($1) $2-$3"),
       email: newClientEmail,
       address: newClientAddress,
       number: newClientAddressNumber,
@@ -225,24 +250,49 @@ function FormNewClient(dataClient) {
       state: newClientState,
       country: "Brasil",
       birthDate: newClientBirthDate,
-      creditLimit: 100.0,
+      creditLimit:  newClientCreditLimit,
       notes: newClientNotes,
       status: newClientStatus,
     }
     ;
-
     const cpfRegex = /^(?!.*(\d)(?:-?\1){10})\d{3}\.\d{3}\.\d{3}-\d{2}$|^(\d{11})$/;
-    if (cpfRegex.test(newClientData.cpfCnpj)) {
-      setError(null);
+    const cnpjRegex = /^(\d{2}\.\d{3}\.\d{3}\/\d{4}-\d{2}|\d{14})$/;
+    if (CPForCNPJ === "cpf") {
+      if (!document.getElementById("formNewClient").reportValidity()) {
+        setError("Preencha todos os campos!");
+        return;
+      }
+      
+      setIsLoading(true);
+      
+      if (cpfRegex.test(newClientData.cpfCnpj)) {
+        setError(null);
+      } else {
+        setIsLoading(false);
+        setError('Formato de CPF Inválido');
+        return;
+      }
+      
     } else {
-      setIsLoading(false)
-      console.log('falso')
-      setError('Formato de Cpf Invalido');
-      return
+      if (!document.getElementById("formNewClient").reportValidity()) {
+        setError("Preencha todos os campos!");
+        return;
+      }
+      
+      setIsLoading(true);
+      
+      if (cnpjRegex.test(newSupplierData.cpfCnpj)) {
+        setError(null);
+      } else {
+        setIsLoading(false);
+        setError('Formato de CNPJ Inválido');
+        return;
+      }
     }
+
     try {
       const response = await axios.put(
-        `http://localhost:8080/api/clientes/${UpdateClientId}`,
+        `${apiUrl}/api/clientes/${UpdateClientId}`,
         newClientData,
         {
           headers: {
@@ -256,7 +306,9 @@ function FormNewClient(dataClient) {
       setIsLoading(!isLoading)
       setError(null);
       SetPostToUpdade(true)
-      window.location.reload()
+      if (onSubmitSuccess) {
+        onSubmitSuccess();
+      }
     } catch (err) {
       setIsLoading(!isLoading);
       if (err.response && err.response.data) {
@@ -270,9 +322,11 @@ function FormNewClient(dataClient) {
     }
 
   };
+
   const resposiveClienteShow = () => {
     setResponsiveCliente(!ResponsiveCliente);
   };
+  
  const SetValuestoUpdate = (values) => {
    setUpdateClientId(values.id)
    setNewClientName(values.fullName);
@@ -280,13 +334,14 @@ function FormNewClient(dataClient) {
    setNewClientIE(values.stateRegistration)
    setNewClientAddress(values.address);
    setNewClientDistrict(values.district)
-   setNewClientPhone(values.phoneNumber);
+   setNewClientPhone((values.phoneNumber.replace(/\D/g, "").replace(/(\d{2})(\d{5})(\d{4})/, "($1) $2-$3")));
    setNewClientCPForCNPJ(values.cpfCnpj);
    setNewClientAddressNumber(values.number);
    setNewClientCEP(values.zipCode.replace(/\D/g, ''))
    setNewClientCity(values.city)
    setOption(values.typePfOrPj.toLowerCase());
    setNewClientBirthDate(values.birthDate)
+   setnewClientCreditLimit(values.creditLimit)
    setNewClientState(values.state);
    setNewClientNotes(values.notes)
    
@@ -297,11 +352,9 @@ function FormNewClient(dataClient) {
    
   };
 
-
-
   useEffect(() => {
-  if(dataClient.dataClient){
-    SetValuestoUpdate(dataClient.dataClient);
+  if(dataClient){
+    SetValuestoUpdate(dataClient);
     SetPostToUpdade(false)
   }
 }, [dataClient]);
@@ -312,7 +365,6 @@ function FormNewClient(dataClient) {
       <h2 className="tabTitle">
         Adicionar Cliente
         <a className="hide-desktop" onClick={resposiveClienteShow}>
-          {" "}
           {!ResponsiveCliente ? <CgAdd size={45} /> : <CgRemove size={45} />}
         </a>
       </h2>
@@ -415,6 +467,7 @@ function FormNewClient(dataClient) {
               type={"text"}
               placeholder={"Digite a Inscrição Estadual"}
               name={"IE"}
+              label={"Inscrição Estadual:"}
               idInput={"newClientIE"}
               value={newClientIE}
               onInvalid={(e) => isInvalid(e)}
@@ -422,7 +475,6 @@ function FormNewClient(dataClient) {
                 setNewClientIE(e.target.value);
                 isValid(e);
               }}
-              label={""}
               classNameDiv="inputFieldNoLabel"
             /></div>}
         </div>
@@ -502,6 +554,20 @@ function FormNewClient(dataClient) {
               isValid(e);
             }}
             arrayOptions={cityList}
+          />
+
+      <InputField
+            label={"Limite Credito:"}
+            name={"Limite Credito"}
+            id={"newClientCreditLimit"}
+            classNameDiv={"divSelectCredit"}
+            classNameSelect={"selectCredit"}
+            value={newClientCreditLimit}
+            onInvalid={(e) => isInvalid(e)}
+            onChange={(e) => {
+              setnewClientCreditLimit(e.target.value);
+              isValid(e);
+            }}
           />
         </div>
 

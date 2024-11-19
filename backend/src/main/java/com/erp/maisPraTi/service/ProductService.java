@@ -1,8 +1,9 @@
 package com.erp.maisPraTi.service;
 
+import com.erp.maisPraTi.dto.partyDto.suppliers.SupplierSimpleDto;
 import com.erp.maisPraTi.dto.products.ProductDto;
 import com.erp.maisPraTi.dto.products.ProductUpdateDto;
-import com.erp.maisPraTi.dto.partyDto.suppliers.SupplierSimpleDto;
+import com.erp.maisPraTi.dto.saleItems.SaleInsertItemDto;
 import com.erp.maisPraTi.model.Product;
 import com.erp.maisPraTi.model.Supplier;
 import com.erp.maisPraTi.repository.ProductRepository;
@@ -17,7 +18,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 import static com.erp.maisPraTi.util.EntityMapper.convertToDto;
 import static com.erp.maisPraTi.util.EntityMapper.convertToEntity;
@@ -33,13 +36,19 @@ public class ProductService {
 
     @Transactional
     public ProductDto insert(ProductDto productDto) {
-        validPrice(productDto.getPrice());
+        validPrice(productDto.getProductPrice());
         Product product = convertToEntity(productDto, Product.class);
         insertOrUpdateSuppliers(productDto.getSuppliers(), product);
         if(productDto.getStock() != null)
             product.setStock(productDto.getStock());
         product = productRepository.save(product);
         return convertToDto(product, ProductDto.class);
+    }
+
+    public void validPrice(BigDecimal price) {
+        if (price == null || price.compareTo(BigDecimal.ZERO) < 0) {
+            throw new InvalidValueException("O preço de custo do produto não pode ser nulo ou negativo.");
+        }
     }
 
     @Transactional(readOnly = true)
@@ -65,8 +74,6 @@ public class ProductService {
             return convertToDto(product, ProductDto.class);
         } catch (DataIntegrityViolationException e) {
             throw new DatabaseException("Não foi possível fazer a alteração neste produto.");
-        } catch (Exception e) {
-            throw new DatabaseException("Erro inesperado ao tentar atualizar produto.");
         }
     }
 
@@ -82,25 +89,84 @@ public class ProductService {
         }
     }
 
-    private void verifyExistsId(Long id) {
-        if (!productRepository.existsById(id)) {
-            throw new ResourceNotFoundException("Id não localizado: " + id);
+    @Transactional(readOnly = true)
+    void verifyExistsId(Long id) {
+        if (productRepository.findById(id).isEmpty()) {
+            throw new ResourceNotFoundException("Produto não localizado.");
         }
     }
 
+    @Transactional
     private void insertOrUpdateSuppliers(List<SupplierSimpleDto> supplierDtos, Product product) {
-        if(Objects.nonNull(product) && Objects.nonNull(product.getSuppliers())) product.getSuppliers().clear();
-        supplierDtos.stream().forEach(supplierDto -> {
+        if (Objects.isNull(supplierDtos)) {
+            return; // Ignorar a atualização dos fornecedores se a lista for nula
+        }
+        // Limpa a lista de fornecedores do produto, se não for nula
+        if (Objects.nonNull(product) && Objects.nonNull(product.getSuppliers())) {
+            product.getSuppliers().clear();
+        }
+        // Itera sobre os SupplierSimpleDto fornecidos
+        supplierDtos.forEach(supplierDto -> {
             Supplier supplier = convertToEntity(supplierService.findById(supplierDto.getId()), Supplier.class);
+            supplier.setFullName(supplierDto.getFullName());
             product.getSuppliers().add(supplier);
         });
     }
 
-    public void validPrice(BigDecimal price){
-        if(price.compareTo(BigDecimal.ZERO) < 0)
-            throw new InvalidValueException("O preço de custo do produto não pode ser negativo.");
+    @Transactional
+    public void updateStockBySale(SaleInsertItemDto dto) {
+        verifyExistsId(dto.getProductId());
+        try {
+            Product product = productRepository.getReferenceById(dto.getProductId());
+            product.setReservedStock(product.getReservedStock().add(dto.getQuantitySold()));
+            productRepository.save(product);
+        } catch (DataIntegrityViolationException e) {
+            throw new DatabaseException("Não foi possível fazer a alteração neste produto.");
+        }
     }
 
-}
+    @Transactional
+    public void updateStockBySale(Long productId, BigDecimal quantitySold) {
+        verifyExistsId(productId);
+        try {
+            Product product = productRepository.getReferenceById(productId);
+            product.setReservedStock(product.getReservedStock().add(quantitySold));
+            productRepository.save(product);
+        } catch (DataIntegrityViolationException e) {
+            throw new DatabaseException("Não foi possível fazer a alteração neste produto.");
+        }
+    }
 
+    @Transactional
+    public void updateStockByUpdateSale(Long productId, BigDecimal updatedSold) {
+        try {
+            Product product = productRepository.findById(productId)
+                    .orElseThrow(() -> new ResourceNotFoundException("Produto não localizado."));
+            product.setReservedStock(product.getReservedStock().add(updatedSold));
+            productRepository.save(product);
+        } catch (DataIntegrityViolationException e) {
+            throw new DatabaseException("Não foi possível fazer a alteração neste produto.");
+        }
+    }
+
+    @Transactional
+    public void updateDeletedItemToSaleItems(Long productId, BigDecimal quantityUpdate) {
+        try {
+            Product product = productRepository.findById(productId)
+                    .orElseThrow(() -> new ResourceNotFoundException("Produto não localizado."));
+            product.setReservedStock(product.getReservedStock().subtract(quantityUpdate));
+            productRepository.save(product);
+        } catch (DataIntegrityViolationException e) {
+            throw new DatabaseException("Não foi possível fazer a alteração neste produto.");
+        }
+    }
+
+    public void updateItemDeliveryQuantity(Long productId, BigDecimal quantityDelivery) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new ResourceNotFoundException("Produto não localizado."));
+        product.setReservedStock(product.getReservedStock().subtract(quantityDelivery));
+        product.setStock(product.getStock().subtract(quantityDelivery));
+        productRepository.save(product);
+    }
+}
 

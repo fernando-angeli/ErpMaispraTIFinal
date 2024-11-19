@@ -1,46 +1,100 @@
-
-
 .account {
-    display: flex;
-    align-items: center;
-    gap: 9px ;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  cursor: pointer;
+  padding: 0 8px;
 }
 
 .account label {
-    color: var(--text-20);
-    text-align: left;
+  color: var(--text-20);
+  text-align: left;
+  cursor: pointer;
 }
 
 .exitIcon {
-    cursor: pointer;
+  cursor: pointer;
 }
 
-p{
-    color: var(--text-20); 
+p {
+  color: var(--text-20);
 }
 
 @media (max-width: 768px) {
-    .account {
-        display: flex;
-        align-items: center;
-        gap: 0.5em ;
-        padding-right: 1rem;
-    }
+  .account {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    padding-right: 1rem;
+  }
 
-    .account img{
-        width: 4em;
-    }
-    
-    .account label {
-        color: var(--text-20);
-        font-size:1em;
-        width: 3em;
-        
-    }
-    
-    .exitIcon {
-        cursor: pointer;
-    }
+  .account img {
+    width: 4em;
+  }
 
-   
+  .account label {
+    color: var(--text-20);
+    font-size: 1em;
+    width: 3em;
+  }
+
+  .exitIcon {
+    cursor: pointer;
+  }
+}
+
+.account-container {
+  position: relative;
+}
+
+.account-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 32px;
+  background-color: white;
+  border: 1px solid #0e1d25;
+  width: 100%;
+  border-radius: 16px;
+}
+
+.account-menu .menu-item {
+  font-size: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  color: #0e1d25;
+  gap: 8px;
+  padding: 12px 8px;
+  cursor: pointer;
+  position: relative;
+}
+
+.menu-item:first-child {
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+}
+
+.menu-item:last-child {
+  border-bottom-left-radius: 16px;
+  border-bottom-right-radius: 16px;
+}
+
+.menu-item:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 10%;
+  width: 80%;
+  border-bottom: 2px solid #0e1d25;
+}
+
+.account-menu .menu-item:hover {
+  background-color: #f0f0f0;
+}
+
+.account-menu .menu-icon {
+  width: 32px;
+  height: 32px;
+  color: #0e1d25;
 }

@@ -59,7 +59,7 @@ public class SupplierService {
     }
 
     @Transactional
-    public SupplierDto update(Long id, SupplierUpdateDto supplierUpdateDto){
+    public SupplierDto update(Long id, SupplierUpdateDto supplierUpdateDto) {
         verifyExistsId(id);
         try {
             Supplier supplier = supplierRepository.getReferenceById(id);
@@ -70,7 +70,7 @@ public class SupplierService {
             supplier.setUpdatedAt(LocalDateTime.now());
             supplier = supplierRepository.save(supplier);
             return convertToDto(supplier, SupplierDto.class);
-        } catch (DataIntegrityViolationException e){
+        } catch (DataIntegrityViolationException e) {
             throw new DatabaseException("Não foi possível fazer a alteração neste fornecedor.");
         }
     }
@@ -87,20 +87,20 @@ public class SupplierService {
         }
     }
 
-    private void verifyExistsId(Long id){
+    public void verifyExistsId(Long id){
         if(!supplierRepository.existsById(id)){
             throw new ResourceNotFoundException("Id não localizado: " + id);
         }
     }
 
-    private void verifyExistsDocuments(String cpfCnpj, String stateRegistration, TypePfOrPj typePfOrPj) {
+    public void verifyExistsDocuments(String cpfCnpj, String stateRegistration, TypePfOrPj typePfOrPj) {
         if(supplierRepository.existsByCpfCnpj(cpfCnpj))
             throw new DatabaseException(typePfOrPj.equals(TypePfOrPj.PJ) ? "CNPJ já cadastrado no sistema." : "CPF já cadastrado no sistema.");
         if(typePfOrPj.equals(TypePfOrPj.PJ) && supplierRepository.existsByStateRegistration(stateRegistration) && !stateRegistration.equalsIgnoreCase("isento"))
             throw new DatabaseException("Inscrição estadual já cadastrada no sistema.");
     }
 
-    private String stateRegistrationNormalize(String stateRegistration){
+    String stateRegistrationNormalize(String stateRegistration){
         return stateRegistration != null ? stateRegistration.toLowerCase() : null;
     }
 

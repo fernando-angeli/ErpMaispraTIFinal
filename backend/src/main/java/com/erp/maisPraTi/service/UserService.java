@@ -1,9 +1,6 @@
 package com.erp.maisPraTi.service;
 
-import com.erp.maisPraTi.dto.users.RoleDto;
-import com.erp.maisPraTi.dto.users.UserDto;
-import com.erp.maisPraTi.dto.users.UserInsertDto;
-import com.erp.maisPraTi.dto.users.UserUpdateDto;
+import com.erp.maisPraTi.dto.users.*;
 import com.erp.maisPraTi.model.Role;
 import com.erp.maisPraTi.model.User;
 import com.erp.maisPraTi.repository.UserRepository;
@@ -38,7 +35,7 @@ public class UserService {
 
     @Transactional
     public UserDto insert(UserInsertDto userInsertDto) {
-        if(userRepository.findByEmail(userInsertDto.getEmail()) != null)
+        if(userRepository.findByEmail(userInsertDto.getEmail()).isPresent())
             throw new DatabaseException("E-mail já utilizado.");
         User newUser = convertToEntity(userInsertDto, User.class);
         newUser.setCreatedAt(LocalDateTime.now());
@@ -66,12 +63,14 @@ public class UserService {
     public UserDto update(Long id, UserUpdateDto userUpdateDto){
         verifyExistsId(id);
         try{
+            
             User user = userRepository.getReferenceById(id);
             user.getRoles().clear();
             convertToEntity(userUpdateDto, user);
             user.setUpdatedAt(LocalDateTime.now());
             updateRoles(userUpdateDto.getRoles(), user);
             user.setPassword(passwordEncoder.encode(userUpdateDto.getPassword()));
+            user.setId(id);
             user = userRepository.save(user);
             return convertToDto(user, UserDto.class);
         } catch (DataIntegrityViolationException e){
@@ -105,6 +104,17 @@ public class UserService {
         if(!userRepository.existsById(id)){
             throw new ResourceNotFoundException("Id não localizado: " + id);
         }
+    }
+
+    @Transactional
+    public void insertCard(Long id, CardDto cardDto) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Usuário não localizado."));
+        user.getCards().clear();
+        user.addCards("slot1", cardDto.getSlot1());
+        user.addCards("slot2", cardDto.getSlot2());
+        user.addCards("slot3", cardDto.getSlot3());
+        userRepository.save(user);
     }
 
 }

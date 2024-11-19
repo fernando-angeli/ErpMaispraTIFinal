@@ -8,7 +8,9 @@ import InputField from "../../InputField/InputField";
 import SelectField from "../../SelectField/SelectField";
 import RadioGroup from "../../RadioGroup/RadioGroup";
 import LoadingSpin from "../../LoadingSpin/LoadingSpin";
-function FormNewEmployee(dataEmployee) {
+function FormNewEmployee({ dataEmployee, onSubmitSuccess }) {
+  const apiUrl = import.meta.env.VITE_API_URL;
+
   const [ResponsiveEmployee, setResponsiveEmployee] = useState(true);
   const [PostToUpdate, SetPostToUpdade] = useState(true);
 
@@ -24,17 +26,19 @@ function FormNewEmployee(dataEmployee) {
   const [newEmployeeRole, setNewEmployeeRole] = useState("");
   const [newEmployeeState, setNewEmployeeState] = useState("");
   const [newEmployeeBirthDate, setNewEmployeeBirthDate] = useState("");
-  const [newEmployeeStatus, setNewEmployeeStatus] = useState("active");
-  const [isLoading, setIsLoading] =  useState(false);
-  const [newEmployeeIE, setNewEmployeeIE] = useState("134");
-  const [UpdateEmployeeId, setUpdateEmployeeId] = useState();
+  const [newEmployeeStatus, setNewEmployeeStatus] = useState("ativo");
+  const [isLoading, setIsLoading] = useState(false);
+  const [updateEmployeeId, setUpdateEmployeeId] = useState();
 
   const [Error, setError] = useState();
   const [Success, setSuccess] = useState();
 
   const { JwtToken } = useAuth();
 
-  const roleList = [{ id: 1, label: "ROLE_ADMIN" }, { id: 2, label: "ROLE_MANAGER" }];
+  const roleList = [
+    { id: 1, label: "ROLE_ADMIN" },
+    { id: 2, label: "ROLE_MANAGER" },
+  ];
 
   const statusOptions = [
     { value: "ativo", label: "Ativo" },
@@ -92,6 +96,17 @@ function FormNewEmployee(dataEmployee) {
     }
   };
 
+const CheckCpf = (cpf) => {
+    const cpfRegex =
+      /^(?!.*(\d)(?:-?\1){10})\d{3}\.\d{3}\.\d{3}-\d{2}$|^(\d{11})$/;
+    if (cpfRegex.test(cpf)) {
+      setError(null);
+    } else {
+      setError("Formato de Cpf Inválido!");
+      return;
+    }
+  };
+
   const handleReset = () => {
     let form = document.getElementById("formNewEmployee");
     let elements = form.getElementsByClassName("isInvalid");
@@ -112,47 +127,34 @@ function FormNewEmployee(dataEmployee) {
     setNewEmployeeState("");
     setNewEmployeeBirthDate("");
     setNewEmployeeRole("");
-    setNewEmployeeIE("");
     SetPostToUpdade(true);
     setError(null);
   };
 
-  const CheckCpf = (cpf)=> {
-    const cpfRegex = /^(?!.*(\d)(?:-?\1){10})\d{3}\.\d{3}\.\d{3}-\d{2}$|^(\d{11})$/;
-    if (cpfRegex.test(cpf)) {
-      setError(null);
-    } else {
-      setError('Formato de Telefone Inválido!');
-      return
-    }
-    }
 
   const handleSubmit = async (event) => {
     setIsLoading(true);
     event.preventDefault();
     const newEmployeeData = {
       fullName: newEmployeeName,
-      gender: "NAO INFORMADO",
-      cpf: newEmployeeCPF,
-      rgIe: newEmployeeIE,
-      phoneNumber: newEmployeePhone,
       email: newEmployeeEmail,
+      birthDate: newEmployeeBirthDate,
+      phoneNumber: newEmployeePhone,
+      cpf: newEmployeeCPF,
       address: newEmployeeAddress,
       number: newEmployeeAddressNumber,
       district: newEmployeeDistrict,
       zipCode: newEmployeeCEP,
       city: newEmployeeCity,
-      role: newEmployeeRole,
       state: newEmployeeState,
       country: "Brasil",
-      birthDate: newEmployeeBirthDate,
-      creditLimit: 100.0,
-      status: "ativo",
+      roles: newEmployeeRole,
+      status: newEmployeeStatus,
+      password: "12345",
     };
-
     try {
       const response = await axios.post(
-        `http://localhost:8080/api/usuarios`,
+        `${apiUrl}/api/usuarios`,
         newEmployeeData,
         {
           headers: {
@@ -161,10 +163,12 @@ function FormNewEmployee(dataEmployee) {
           },
         }
       );
-      handleReset();
       setSuccess("Usuário adicionado com sucesso!");
-      setIsLoading(false);
-      setError(null);
+      setIsLoading(false);  
+      handleReset();
+      if (onSubmitSuccess) {
+        onSubmitSuccess();
+      }
     } catch (err) {
       setIsLoading(false);
       console.error(err);
@@ -185,16 +189,17 @@ function FormNewEmployee(dataEmployee) {
     setUpdateEmployeeId(values.id);
     setNewEmployeeName(values.fullName);
     setNewEmployeeEmail(values.email);
-    setNewEmployeeIE(values.rgIe);
     setNewEmployeeAddress(values.address);
     setNewEmployeeDistrict(values.district);
     setNewEmployeePhone(values.phoneNumber);
-    setNewEmployeeCPF(values.cpfCnpj);
+    setNewEmployeeCPF(values.cpf);
     setNewEmployeeAddressNumber(values.number);
     setNewEmployeeCEP(values.zipCode.replace(/\D/g, ""));
     setNewEmployeeCity(values.city);
     setNewEmployeeBirthDate(values.birthDate);
     setNewEmployeeState(values.state);
+
+    setNewEmployeeRole(values.roles);
 
     setNewEmployeeStatus(values.status);
     document.getElementById(values.status).checked = true;
@@ -203,13 +208,13 @@ function FormNewEmployee(dataEmployee) {
   const handleUpdate = async (event) => {
     setIsLoading(true);
     event.preventDefault();
+    
     const newEmployeeData = {
       fullName: newEmployeeName,
-      gender: "NAO INFORMADO",
-      cpf: newEmployeeCPF,
-      stateRegistration: newEmployeeIE,
-      phoneNumber: newEmployeePhone,
       email: newEmployeeEmail,
+      birthDate: newEmployeeBirthDate,
+      phoneNumber: newEmployeePhone,
+      cpf: newEmployeeCPF,
       address: newEmployeeAddress,
       number: newEmployeeAddressNumber,
       district: newEmployeeDistrict,
@@ -217,9 +222,9 @@ function FormNewEmployee(dataEmployee) {
       city: newEmployeeCity,
       state: newEmployeeState,
       country: "Brasil",
-      birthDate: newEmployeeBirthDate,
-      creditLimit: 100.0,
+      roles: newEmployeeRole,
       status: newEmployeeStatus,
+      password: "12345",
     };
     const TelephoneRegex =
       /^\(?\+?(\d{1,3})?\)?[-.\s]?(\d{2})[-.\s]?(\d{4,5})[-.\s]?(\d{4})$/;
@@ -231,8 +236,9 @@ function FormNewEmployee(dataEmployee) {
     }
 
     try {
+      console.log(JwtToken);
       const response = await axios.put(
-        `http://localhost:8080/api/usuarios/${UpdateEmployeeId}`,
+        `${apiUrl}/api/usuarios/${updateEmployeeId}`,
         newEmployeeData,
         {
           headers: {
@@ -241,12 +247,14 @@ function FormNewEmployee(dataEmployee) {
           },
         }
       );
-      handleReset();
       setSuccess("Usuario Atualizado com sucesso!");
       setIsLoading(false);
-      window.location.reload();
+      if (onSubmitSuccess) {
+        onSubmitSuccess();
+      }
       setError(null);
-      SetPostToUpdade(true);
+      SetPostToUpdade(true); 
+      handleReset();
     } catch (err) {
       setIsLoading(false);
       console.error(err);
@@ -260,15 +268,15 @@ function FormNewEmployee(dataEmployee) {
   };
 
   useEffect(() => {
-    if (dataEmployee.dataEmployee) {
-      SetValuestoUpdate(dataEmployee.dataEmployee);
+    if (dataEmployee) {
+      SetValuestoUpdate(dataEmployee);
       SetPostToUpdade(false);
     }
   }, [dataEmployee]);
 
   return (
-    
-    <div className="containerForm">{isLoading && <LoadingSpin/>}
+    <div className="containerForm">
+      {isLoading && <LoadingSpin />}
       <h2 className="tabTitle">
         Adicionar Usuario
         <a className="hide-desktop" onClick={resposiveEmployeeShow}>
@@ -283,7 +291,7 @@ function FormNewEmployee(dataEmployee) {
             : "hiddenformNewEmployee"
         }
         id="formNewEmployee"
-        onSubmit={PostToUpdate ? handleSubmit :  handleUpdate}
+        onSubmit={PostToUpdate ? handleSubmit : handleUpdate}
         onReset={handleReset}
       >
         <div className="line1 line">
@@ -311,7 +319,7 @@ function FormNewEmployee(dataEmployee) {
             onChange={(e) => {
               setNewEmployeeEmail(e.target.value);
               isValid(e);
-              CheckEmail(newClientEmail);
+              CheckEmail(newEmployeeEmail);
             }}
             onInvalid={(e) => isInvalid(e)}
           />
@@ -356,6 +364,7 @@ function FormNewEmployee(dataEmployee) {
             value={newEmployeeCPF}
             onChange={(e) => {
               setNewEmployeeCPF(e.target.value);
+              console.log(e.target.value)
               isValid(e);
               CheckCpf(e.target.value);
             }}
@@ -364,8 +373,7 @@ function FormNewEmployee(dataEmployee) {
         </div>
 
         <div className="line3 line">
-
-        <InputField
+          <InputField
             label={"CEP:"}
             name={"CEP"}
             placeholder={"00000-000"}
@@ -436,25 +444,28 @@ function FormNewEmployee(dataEmployee) {
             onInvalid={(e) => isInvalid(e)}
             onChange={(e) => {
               setNewEmployeeCity(e.target.value);
-              selectIsValid(e);
+              isValid(e);
             }}
           />
-<div className="roleAndStatus">
-            <SelectField
-              label={"Cargo:"}
-              name={"cargo"}
-              id={"newEmployeeRole"}
-              classnameDiv={"divSelectRole"}
-              classNameSelect={"selectRole"}
-              value={newEmployeeRole}
-              onInvalid={(e) => selectIsInvalid(e)}
-              onChange={(e) => {
-                setNewEmployeeRole(e.target.value);
-                selectIsValid(e);
-              }}
-              arrayOptions={roleList}
-            />
+          <SelectField
+            label={"Cargo:"}
+            name={"cargo"}
+            id={"newEmployeeRole"}
+            classnameDiv={"divSelectRole"}
+            classNameSelect={"selectRole"}
+            value={newEmployeeRole ? JSON.stringify(newEmployeeRole[0]) : ""}
+            onInvalid={(e) => selectIsInvalid(e)}
+            onChange={(e) => {
+              const selectedRole = JSON.parse(e.target.value);
+              setNewEmployeeRole([selectedRole]);
+              isValid(e);
+            }}
+            arrayOptions={roleList}
+          />
+        </div>
 
+        <div className="line5 line">
+          <div className="divStatusAndButtons">
             <div className="divStatus">
               <label
                 htmlFor="newEmployeeStatus"
@@ -466,7 +477,7 @@ function FormNewEmployee(dataEmployee) {
                   <RadioGroup
                     name={"ativoInativo"}
                     options={statusOptions}
-                    defaultValue={"ativo"}
+                    defaultValue={newEmployeeStatus}
                     onChange={(selectedValue) =>
                       setNewEmployeeStatus(selectedValue)
                     }
@@ -474,30 +485,26 @@ function FormNewEmployee(dataEmployee) {
                 </div>
               </label>
             </div>
-          </div>
-        </div>
-
-        <div className="line5 line">
-          
-          <div className="errorsOrSuccess">
-            <p style={{ color: "red" }}>{Error && Error}</p>
-            <p style={{ color: "green" }}>{Success && Success}</p>
-          </div>
-          <div className="divButtons">
-            <button
-              type="submit"
-              className="primaryNormal"
-              onClick={PostToUpdate ? handleSubmit :  handleUpdate}
-            >
-              Salvar
-            </button>
-            <button
-              type="reset"
-              className="primaryLight"
-              onClick={() => handleReset()}
-            >
-              Cancelar
-            </button>
+            <div className="errorsOrSuccess">
+              <p style={{ color: "red" }}>{Error && Error}</p>
+              <p style={{ color: "green" }}>{Success && Success}</p>
+            </div>
+            <div className="divButtons">
+              <button
+                type="submit"
+                className="primaryNormal"
+                onClick={PostToUpdate ? handleSubmit : handleUpdate}
+              >
+                {PostToUpdate ? "Salvar" : "Atualizar"}
+              </button>
+              <button
+                type="reset"
+                className="primaryLight"
+                onClick={() => handleReset()}
+              >
+                Cancelar
+              </button>
+            </div>
           </div>
         </div>
       </form>

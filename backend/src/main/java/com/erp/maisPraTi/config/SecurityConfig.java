@@ -63,7 +63,8 @@ public class SecurityConfig{
             "/auth/validate-user/**",
             "/api/clientes/**",
             "/api/fornecedores/**",
-            "/api/produtos/**"
+            "/api/produtos/**",
+            "/api/vendas/**"
     };
     private static final String[] ADMIN = {
             "/api/usuarios/**"

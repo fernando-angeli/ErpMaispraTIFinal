@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 @Data
 @AllArgsConstructor
@@ -59,5 +60,7 @@ public class UserDto {
 
     @Enumerated(EnumType.STRING)
     private PartyStatus status;
+
+    private Map<String, String> cards;
 
 }

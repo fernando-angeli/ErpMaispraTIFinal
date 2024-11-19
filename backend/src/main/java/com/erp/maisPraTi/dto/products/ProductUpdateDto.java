@@ -33,7 +33,7 @@ public class ProductUpdateDto {
     private UnitOfMeasure unitOfMeasure;
 
     @NotNull(message = "Informe o valor do produto.")
-    private BigDecimal price;
+    private BigDecimal productPrice;
 
     private BigDecimal stock = BigDecimal.ZERO;
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)

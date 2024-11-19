@@ -4,6 +4,7 @@ import com.erp.maisPraTi.dto.auth.LoginRequest;
 import com.erp.maisPraTi.dto.auth.LoginResponse;
 import com.erp.maisPraTi.dto.auth.ResetPasswordRequest;
 import com.erp.maisPraTi.dto.auth.ValidationUserRequest;
+import com.erp.maisPraTi.enums.PartyStatus;
 import com.erp.maisPraTi.model.User;
 import com.erp.maisPraTi.repository.UserRepository;
 import com.erp.maisPraTi.security.JwtTokenProvider;
@@ -36,6 +37,7 @@ public class AuthService {
     private PasswordEncoder passwordEncoder;
 
     public LoginResponse login(LoginRequest request){
+        verifyUserActive(request.getEmail());
         try {
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
@@ -50,17 +52,9 @@ public class AuthService {
     }
 
     public void requestPasswordReset(String email){
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado."));
-        String token = jwtTokenProvider.generateTokenWithUserEmail(user.getEmail());
-        emailService.sendPasswordResetEmail(user.getEmail(), token);
-    }
-
-    public boolean validateUser(String token, ValidationUserRequest request) {
-        Optional<User> user = userRepository.findByEmail(jwtTokenProvider.getUserEmailFromToken(token));
-        if(user.isPresent() && user.get().getCpf().equals(request.getCpf()))
-            return true;
-        throw new ResourceNotFoundException("Usuário não encontrado ou CPF inválido.");
+        verifyUserActive(email);
+        String token = jwtTokenProvider.generateTokenWithUserEmail(email);
+        emailService.sendPasswordResetEmail(email, token);
     }
 
     public void resetPassword(String token, ResetPasswordRequest request){
@@ -69,8 +63,26 @@ public class AuthService {
             user.get().setPassword(passwordEncoder.encode(request.getNewPassword()));
             userRepository.save(user.get());
         } else{
-            throw new ResourceNotFoundException("Usuário não encontrado ou Senha inválida");
+            throw new ResourceNotFoundException("Usuário não encontrado.");
         }
+    }
+
+    public boolean validateUser(String token, ValidationUserRequest request) {
+        Optional<User> user = userRepository.findByEmail(jwtTokenProvider.getUserEmailFromToken(token));
+        if(user.isPresent() && user.get().getCpf().equals(request.getCpf()))
+            return true;
+        else if(user.isEmpty())
+            throw new ResourceNotFoundException("Usuário não encontrado.");
+        else
+            throw new ResourceNotFoundException("CPF inválido.");
+    }
+
+    public void verifyUserActive(String email) {
+        Optional<User> user = userRepository.findByEmail(email);
+        if(user.isPresent() && user.get().getStatus() != PartyStatus.ACTIVE)
+            throw new AuthenticationUserException("Usuário inativo ou suspenso, entre em contato com o administrador do sistema.");
+        if(user.isEmpty())
+            throw new ResourceNotFoundException("Usuário não encontrado.");
     }
 
 }

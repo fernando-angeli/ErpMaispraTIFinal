@@ -31,7 +31,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"fernando3@gmail.com\",\r\n    \"password\": \"senha123\"\r\n}",
+							"raw": "{\r\n    \"email\": \"fernando_angeli@hotmail.com\",\r\n    \"password\": \"12345\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -39,9 +39,9 @@
 							}
 						},
 						"url": {
-							"raw": "{{host}}/login",
+							"raw": "{{host-auth}}/login",
 							"host": [
-								"{{host}}"
+								"{{host-auth}}"
 							],
 							"path": [
 								"login"
@@ -61,6 +61,193 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Forgot password",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"fernando_angeli@hotmail.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host-auth}}/forgot-password",
+							"host": [
+								"{{host-auth}}"
+							],
+							"path": [
+								"forgot-password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Validation",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Captura o valor do token a partir da URL\r",
+									"let token = pm.request.url.query.get(\"token\");\r",
+									"\r",
+									"// Verifica se o token está presente na URL e o configura como variável de ambiente\r",
+									"if (token) {\r",
+									"    pm.environment.set(\"token\", token);\r",
+									"} else {\r",
+									"    console.log(\"Token não encontrado na URL\");\r",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJmZXJuYW5kb19hbmdlbGlAaG90bWFpbC5jb20iLCJpYXQiOjE3MzA0ODIyMjUsImV4cCI6MTczMDQ4MzEyNX0.5uYcOtpDtdq8_5vAzXrmDng097VV3ZyYs8l39ZV_LA4",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"cpf\": \"314.559.980-15\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/auth/validation-user?token=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJmZXJuYW5kb19hbmdlbGlAaG90bWFpbC5jb20iLCJpYXQiOjE3MzA0ODIyMjUsImV4cCI6MTczMDQ4MzEyNX0.5uYcOtpDtdq8_5vAzXrmDng097VV3ZyYs8l39ZV_LA4",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"auth",
+								"validation-user"
+							],
+							"query": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJmZXJuYW5kb19hbmdlbGlAaG90bWFpbC5jb20iLCJpYXQiOjE3MzA0ODIyMjUsImV4cCI6MTczMDQ4MzEyNX0.5uYcOtpDtdq8_5vAzXrmDng097VV3ZyYs8l39ZV_LA4"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update password",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"packages": {},
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"newPassword\": \"fernandoupdate\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host-auth}}/reset-password?token={{token}}",
+							"host": [
+								"{{host-auth}}"
+							],
+							"path": [
+								"reset-password"
+							],
+							"query": [
+								{
+									"key": "token",
+									"value": "{{token}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer"
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
 				}
 			]
 		},
@@ -84,7 +271,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"fullName\": \"Marcelo D2\",\r\n    \"typePfOrPj\": \"PF\",\r\n    \"gender\": \"MASCULINO\",\r\n    \"cpfCnpj\": \"373.858.040-98\",\r\n    \"phoneNumber\": \"513543-4811\",\r\n    \"email\": \"marcelo_mnicolai@gmail.com\", \r\n    \"address\": \"Rua Casemiro Alves\", \r\n    \"number\": \"S/N\", \r\n    \"district\": \"Centro\",\r\n    \"zipCode\": \"95.650-000\",\r\n    \"city\": \"Cachoeirinha\", \r\n    \"state\": \"RS\",\r\n    \"country\": \"Brasil\", \r\n    \"birthDate\": \"1982-03-29\",\r\n    \"creditLimit\": 50000.00, \r\n    \"notes\" : \"Gremistão e bom pagador.\", \r\n    \"status\" : \"ativo\"\r\n}",
+							"raw": "{\r\n    \"fullName\": \"Marcelo D2\",\r\n    \"typePfOrPj\": \"PF\",\r\n    \"gender\": \"MASCULINO\",\r\n    \"cpfCnpj\": \"016.664.960-06\",\r\n    \"phoneNumber\": \"513543-4811\",\r\n    \"email\": \"marcelo_mnicolai@gmail.com\", \r\n    \"address\": \"Rua Casemiro Alves\", \r\n    \"number\": \"S/N\", \r\n    \"district\": \"Centro\",\r\n    \"zipCode\": \"95.650-000\",\r\n    \"city\": \"Cachoeirinha\", \r\n    \"state\": \"RS\",\r\n    \"country\": \"Brasil\", \r\n    \"birthDate\": \"1982-03-29\",\r\n    \"creditLimit\": 50000.00, \r\n    \"notes\" : \"Gremistão e bom pagador.\", \r\n    \"status\" : \"ativo\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -167,13 +354,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{host}}/clientes/4",
+							"raw": "{{host}}/clientes/1",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
 								"clientes",
-								"4"
+								"1"
 							]
 						}
 					},
@@ -284,7 +471,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"fullName\": \"Marcelo Update\",\r\n    \"typePfOrPj\": \"PF\",\r\n    \"gender\": \"MASCULINO\",\r\n    \"cpfCnpj\": \"373.858.040-98\",\r\n    \"rgIe\": \"125-55SDS4as\",\r\n    \"phoneNumber\": \"513543-4811\",\r\n    \"email\": \"marcelo_mnicolai@gmail.com\", \r\n    \"address\": \"Rua Casemiro Alves\", \r\n    \"number\": \"S/N\", \r\n    \"district\": \"Centro\",\r\n    \"zipCode\": \"95.650-000\",\r\n    \"city\": \"Cachoeirinha\", \r\n    \"state\": \"RS\",\r\n    \"country\": \"Brasil\", \r\n    \"birthDate\": \"1982-03-29\",\r\n    \"creditLimit\": 50000.00, \r\n    \"notes\" : \"Gremistão e bom pagador.\", \r\n    \"status\" : \"ativo\"\r\n}\r\n",
+							"raw": "{\r\n    \"fullName\": \"Marcelo Update\",\r\n    \"typePfOrPj\": \"PF\",\r\n    \"gender\": \"MASCULINO\",\r\n    \"cpfCnpj\": \"373.858.040-98\",\r\n    \"stateRegistration\": \"125-55SDS4as\",\r\n    \"phoneNumber\": \"513543-4811\",\r\n    \"email\": \"marcelo_mnicolai@gmail.com\", \r\n    \"address\": \"Rua Casemiro Alves\", \r\n    \"number\": \"S/N\", \r\n    \"district\": \"Centro\",\r\n    \"zipCode\": \"95.650-000\",\r\n    \"city\": \"Cachoeirinha\", \r\n    \"state\": \"RS\",\r\n    \"country\": \"Brasil\", \r\n    \"birthDate\": \"1982-03-29\",\r\n    \"creditLimit\": 50000.00, \r\n    \"notes\" : \"Gremistão e bom pagador.\", \r\n    \"status\" : \"ativo\"\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -399,7 +586,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"fullName\": \"Oraganizações Tabajara\",\r\n    \"typePfOrPj\": \"PJ\",\r\n    \"cpfCnpj\": \"16.310.788/0001-72\",\r\n    \"phoneNumber\": \"513543-4811\",\r\n    \"email\": \"marcelo_mnicolai@gmail.com\", \r\n    \"address\": \"Rua Casemiro Alves\", \r\n    \"number\": \"S/N\", \r\n    \"district\": \"Centro\",\r\n    \"zipCode\": \"95.650-000\",\r\n    \"city\": \"Cachoeirinha\", \r\n    \"state\": \"RS\",\r\n    \"country\": \"Brasil\", \r\n    \"birthDate\": \"1982-03-29\",\r\n    \"creditLimit\": 50000.00, \r\n    \"notes\" : \"Gremistão e bom pagador.\", \r\n    \"status\" : \"ativo\"\r\n}",
+							"raw": "{\r\n    \"fullName\": \"Oraganizações Tabajara\",\r\n    \"typePfOrPj\": \"PJ\",\r\n    \"cpfCnpj\": \"64.879.174/0001-59\",\r\n    \"stateRegistration\": \"ISENTO\",\r\n    \"phoneNumber\": \"513543-4811\",\r\n    \"email\": \"marcelo_mnicolai@gmail.com\", \r\n    \"address\": \"Rua Casemiro Alves\", \r\n    \"number\": \"S/N\", \r\n    \"district\": \"Centro\",\r\n    \"zipCode\": \"95.650-000\",\r\n    \"city\": \"Cachoeirinha\", \r\n    \"state\": \"RS\",\r\n    \"country\": \"Brasil\", \r\n    \"birthDate\": \"1982-03-29\",\r\n    \"creditLimit\": 50000.00, \r\n    \"notes\" : \"Gremistão e bom pagador.\", \r\n    \"status\" : \"ativo\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -593,7 +780,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"supplierCode\": \"C600-HK\",  \r\n  \"name\": \"Cerveja garrafa 600ml\",\r\n  \"description\": \"Heineken - retornável\",\r\n  \"unitOfMeasure\": \"Unidade\",\r\n  \"price\": 1.00,\r\n  \"stock\": 5,\r\n    \"suppliers\": [\r\n        {\r\n            \"id\": 1\r\n        },\r\n        {\r\n            \"id\":2\r\n        }\r\n]\r\n}",
+							"raw": "{\r\n  \"supplierCode\": \"C600-HK\",  \r\n  \"name\": \"Cerveja garrafa 600ml\",\r\n  \"description\": \"Heineken - retornável\",\r\n  \"unitOfMeasure\": \"Unidade\",\r\n  \"price\": 1.00,\r\n  \"stock\": 5,\r\n    \"suppliers\": [\r\n        {\r\n            \"id\": 8\r\n        },\r\n        {\r\n            \"id\":2\r\n        }\r\n]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -787,7 +974,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"firstName\": \"Luiz Fernando\",\r\n    \"lastName\": \"Angeli\",\r\n    \"email\": \"fernando3@gmail.com\",\r\n    \"password\" : \"senha123\",\r\n    \"roles\": [\r\n                {\r\n                    \"id\": 1\r\n                }\r\n    ]\r\n}",
+							"raw": "{\r\n  \"fullName\": \"Luiz Fernando\",\r\n  \"email\": \"fernando_angeli22@hotmail.com\",\r\n  \"birthDate\": \"2024-11-07\",\r\n  \"phoneNumber\": \"string\",\r\n  \"cpf\": \"string\",\r\n  \"address\": \"string\",\r\n  \"number\": \"string\",\r\n  \"district\": \"string\",\r\n  \"zipCode\": \"string\",\r\n  \"city\": \"string\",\r\n  \"state\": \"string\",\r\n  \"country\": \"string\",\r\n  \"roles\": [\r\n    {\r\n      \"id\": 1\r\n   }\r\n  ],\r\n  \"status\": \"ativo\",\r\n  \"password\" : \"senha13\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -823,7 +1010,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"firstName\": \"Luiz Fernando\",\r\n    \"lastName\": \"Angeli\",\r\n    \"email\": \"fernando@gmail.com\",\r\n    \"password\" : \"senha13\",\r\n    \"roles\": [\r\n                {\r\n                    \"id\": 1\r\n                }\r\n\r\n    ]\r\n}",
+							"raw": "{\r\n  \"fullName\": \"Luiz Fernando Update\",\r\n  \"email\": \"fernando_angeliUpdate@hotmail.com\",\r\n  \"birthDate\": \"2024-11-07\",\r\n  \"phoneNumber\": \"string\",\r\n  \"address\": \"string\",\r\n  \"number\": \"string\",\r\n  \"district\": \"string\",\r\n  \"zipCode\": \"string\",\r\n  \"city\": \"string\",\r\n  \"state\": \"string\",\r\n  \"country\": \"string\",\r\n  \"roles\": [\r\n    {\r\n      \"id\": 1\r\n   },\r\n   {\r\n      \"id\": 2\r\n   }\r\n  ],\r\n  \"status\": \"ativo\",\r\n  \"password\" : \"senha13\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"

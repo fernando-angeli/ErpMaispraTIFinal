@@ -1,11 +1,30 @@
 .contentListClients{
-    width: 70%;
+    width: 80%;
     height: auto;
     margin: 0 auto; 
     border-radius: 1em;
     border: 2px solid var(--text-100, #2A153B);
+    
 }
 
+.None{
+    display:none;
+}
+
+.hide-desktop {
+    display: none;
+    text-decoration: none;
+    color: black;
+  }
+
+  section.visibleClient {
+    display: block;
+
+  }
+  
+  section.hiddenClient {
+  display: none;
+  }
 
 .headerListClients{
     display: flex;
@@ -119,21 +138,6 @@ thead th {
     font-weight: bold;
 }
 
-.col1 {
-    width: 25%;
-}
-.col2 {
-    width: 35%;
-}
-.col3 {
-    width: 15%;
-}
-.col4 {
-    width: 20;
-}
-.col5 {
-    width: 5%;
-}
 
 
 thead th:first-child{
@@ -141,7 +145,7 @@ thead th:first-child{
 }
 
 
-tbody td{
+tbody > td{
     text-wrap: nowrap;
     
 
@@ -159,6 +163,7 @@ tbody td{
     font-style: normal;
     font-weight: 400;
     line-height: 150%; /* 24px */
+    margin-inline: -1px;
 }
 table {
     border-spacing: 0 0.6rem;
@@ -183,7 +188,7 @@ tbody td svg.editLine:hover{
     fill: var(--system-info);
 }
 tbody td svg.deleteLine:hover{
-    fill: var(--system-danger);
+    fill: var(--system-danger) !important;
 }
 
 
@@ -220,4 +225,176 @@ tbody td svg.deleteLine:hover{
 
 .pagination a:hover {
     background-color: #ddd;
+}
+
+@media (max-width: 768px) {
+    .contentListClients {
+        width: 100%;
+        border: none;
+    }
+    .headerListClients .userIcon {
+        width: 2.875rem;
+    }
+    .headerListClients h3 {
+        font-size: 2rem;
+    }
+    .ListClientsTable {
+        padding-top: 0;
+    }
+    .headerListClients, .headerListClients section {
+        flex-direction: column;
+    }
+    .headerListClients, .headerListClients section {
+        flex-direction: column;
+    }
+    .headerListClients section {
+        width: 100%;
+    }
+    .headerListClients section .searchClient {
+        flex-basis: 0;
+        width: 100%;
+    }
+    .headerListClients .divCheckboxes, .headerListClients.divRadios {
+        flex-basis: 0 !important;
+        width: 100%;
+        justify-content: end !important;
+        margin-top: 0.7rem;
+        
+    }
+
+    .headerListClients .divCheckboxes .labelRadio::before{
+        transform: scale(0.5);
+        border-radius: 50%;
+        
+    }
+    .headerListClients .inputRadio:checked + label:before {
+        content: "\00A0";
+    }
+
+    .ListClients hr {
+        display: none;
+    }
+
+    
+    
+    
+    
+    .ListClientsTable thead {
+        display: none;
+    }
+
+    .ListClientsTable tbody tr {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+
+        width: calc(100dvw - 89px) !important;
+        overflow: hidden;
+        margin-block: 9px;
+    }
+
+    .ListClientsTable tbody tr td {
+        display: flex;
+        
+        align-items: center;
+        padding: 0.3rem;
+        
+        
+        
+        
+    }
+
+   
+
+    .td-icon {
+        margin: 2px 0.3rem 0 0;
+        min-width: 16px;
+    }
+    .td-icon-2 {
+        margin: 0 0.3rem 0 0;
+        min-width: 16px;
+    }
+    .td-icon-3 {
+        margin: 0 0.3rem 3px 0;
+        min-width: 16px;
+    }
+
+
+    td.td-fullName {
+        border-radius: 0.9375rem 0.9375rem 0 0 !important;
+        padding-left: 0.7rem !important;
+        
+        flex-wrap: nowrap;
+    }
+    td.td-email {
+        padding-left: 0.7rem !important;
+    }
+    td.td-phoneNumber {
+        border-radius: 0 0 0.9375rem 0.9375rem !important;
+        padding-left: 0.7rem !important;
+        
+    }
+    td.td-cpfCnpj {
+        display: flex;
+        position: absolute;
+        width: 50%;
+        right: 0;
+        bottom: 0;
+        border-radius: 0 0 0.9375rem 0 !important;
+
+        justify-content: end;
+        
+        padding-left: 3px !important;
+        padding-right: 0.7rem !important;
+    }
+    td.td-editLine {
+        position: absolute;
+        top: 0;
+        right: 0;
+        border-radius: 0 0.9375rem 0 0 !important;
+        padding: 0.5rem !important;
+    }
+
+
+    
+
+
+
+}
+
+@media (max-width: 400px) {
+    .headerListClients .userIcon {
+        min-width: 2.5rem;
+    }
+    
+    td.td-editLine {
+        
+        flex-direction: column-reverse;
+        height: 100%;
+        border-bottom-right-radius: 0.9375rem !important;
+        justify-content: space-evenly;
+        padding-left: 0.3rem !important;
+    }
+    td.td-phoneNumber {
+        border-radius: 0 !important;
+        padding-left: 0.7rem !important;
+        
+    }
+    td.td-cpfCnpj {
+        display: flex;
+        position: static;
+        width: 100%;
+        border-radius: 0 0 0.9375rem 0.9375rem !important;
+
+        justify-content: start;
+        
+        padding-left: 0.7rem !important;
+        padding-right: 0 !important;
+    }
+    .ListClientsTable tbody tr {
+        
+
+        width: calc(100dvw - 72px) !important;
+        
+    }
 }

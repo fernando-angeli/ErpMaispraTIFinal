@@ -15,8 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.Optional;
-import static com.erp.maisPraTi.util.EntityMapper.convertToDto;
-import static com.erp.maisPraTi.util.EntityMapper.convertToEntity;
+import static com.erp.maisPraTi.util.EntityMapper.*;
 
 @Service
 public class ClientService {
@@ -29,7 +28,7 @@ public class ClientService {
         verifyExistsDocuments(dto.getCpfCnpj(), dto.getStateRegistration(), dto.getTypePfOrPj());
         dto.setStateRegistration(stateRegistrationNormalize(dto.getStateRegistration()));
         Client client = new Client();
-        client = convertToDto(dto, Client.class);
+        client = convertToEntity(dto, Client.class);
         client.setCreatedAt(LocalDateTime.now());
         client.setUpdatedAt(LocalDateTime.now());
         client = clientRepository.save(client);
@@ -77,20 +76,20 @@ public class ClientService {
         }
     }
 
-    private void verifyExistsId(Long id) {
+    void verifyExistsId(Long id) {
         if (!clientRepository.existsById(id)) {
             throw new ResourceNotFoundException("Id não localizado: " + id);
         }
     }
 
-    private void verifyExistsDocuments(String cpfCnpj, String stateRegistration, TypePfOrPj typePfOrPj) {
+    public void verifyExistsDocuments(String cpfCnpj, String stateRegistration, TypePfOrPj typePfOrPj) {
         if(clientRepository.existsByCpfCnpj(cpfCnpj))
             throw new DatabaseException(typePfOrPj.equals(TypePfOrPj.PJ) ? "CNPJ já cadastrado no sistema." : "CPF já cadastrado no sistema.");
         if(typePfOrPj.equals(TypePfOrPj.PJ) && clientRepository.existsByStateRegistration(stateRegistration) && !stateRegistration.equalsIgnoreCase("isento"))
             throw new DatabaseException("Inscrição estadual já cadastrada no sistema.");
     }
 
-    private String stateRegistrationNormalize(String stateRegistration){
+    String stateRegistrationNormalize(String stateRegistration){
         return stateRegistration != null ? stateRegistration.toLowerCase() : null;
     }
 

@@ -11,11 +11,19 @@ function InputField({
   onInvalid,
   idInput,
   classNameDiv = "",
+  disabled = false,
+  readOnly = false,
 }) {
   return (
     <div className={classNameDiv}>
       <label htmlFor={idInput} className="inputLabel">
-        <span className={`inputDescription ${classNameDiv=="inputFieldNoLabel"?"inputFieldNoLabel":""}`}>{label}</span>
+        <span
+          className={`inputDescription ${
+            classNameDiv == "inputFieldNoLabel" ? "inputFieldNoLabel" : ""
+          }`}
+        >
+          {label}
+        </span>
         <input
           type={type}
           placeholder={placeholder}
@@ -26,6 +34,7 @@ function InputField({
           required={required}
           onInvalid={onInvalid}
           onChange={onChange}
+          disabled={disabled}
         />
       </label>
     </div>
