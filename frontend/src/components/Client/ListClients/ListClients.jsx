@@ -15,6 +15,7 @@ const ListClients = ({ onlyView }) => {
   ListClients.defaultProps = {
     onlyView: false,
   };
+
   const apiUrl = import.meta.env.VITE_API_URL;
   const { JwtToken } = useAuth();
   const [clients, setClients] = useState();
@@ -35,25 +36,25 @@ const ListClients = ({ onlyView }) => {
           Authorization: `Bearer ${JwtToken}`,
         },
       });
-
       setClients(response.data.content);
-      setIsLoading(!true);
+      setIsLoading(false);
     } catch (err) {
       console.log(err);
       alert("Erro ao buscar clientes!");
     }
   };
+
   useEffect(() => {
     handleShowClients();
   }, []);
 
   const deleteClient = async (client) => {
-    setClienteNameShow(client.fullName);
+    setClienteNameShow(client.fullName); // Define o nome do cliente
     const confirmDelete = await new Promise((resolve) => {
-      setShowModal(true);
+      setShowModal(true); // Exibe o modal
       const handleConfirm = (choice) => {
-        setShowModal(false);
-        resolve(choice);
+        setShowModal(false); // Fecha o modal
+        resolve(choice); // Retorna a escolha do usuário
       };
       window.handleModalConfirm = handleConfirm;
     });
@@ -89,17 +90,16 @@ const ListClients = ({ onlyView }) => {
     clients?.filter((client) => {
       const matchesStatus =
         (showAtivos && client.status === "ativo") ||
-        (showInativos && client.status === "inativo"); // se ambos forem true e ativo ou inativo, ele filtra de acorco com o check
+        (showInativos && client.status === "inativo");
       const matchesSearch = client.fullName
         .toLowerCase()
-        .includes(searchClients.toLowerCase()); // Filtro por nome, ele busca por nome e acresenta o filtro
+        .includes(searchClients.toLowerCase());
       return matchesStatus && matchesSearch;
     }) || [];
 
   const maxClientsPerList = 6;
   let contClientPages = Math.ceil(filteredClients.length / maxClientsPerList);
 
-  // estou chamando form cliente dentro de list pra poder jogar os dados nele pra update!!!!
   return (
     <>
       {isLoading && <LoadingSpin />}
@@ -187,19 +187,17 @@ const ListClients = ({ onlyView }) => {
               <tbody>
                 <ModalYesOrNot
                   show={showModal}
-                  onClose={() => setShowModal(false)}
                   title="Deletar Cliente?"
-                >
-                  <h6>
-                    Confirma Exclusão de {ClienteNameShow && ClienteNameShow}?
-                  </h6>
-                  <button onClick={() => window.handleModalConfirm(true)}>
-                    Sim
-                  </button>
-                  <button onClick={() => window.handleModalConfirm(false)}>
-                    Não
-                  </button>
-                </ModalYesOrNot>
+                  deleteItem={ClienteNameShow}
+                  onConfirm={() => {
+                    window.handleModalConfirm(true);
+                    setShowModal(false);
+                  }}
+                  onClose={() => {
+                    window.handleModalConfirm(false);
+                    setShowModal(false);
+                  }}
+                />
 
                 <PageOfListClients
                   clients={filteredClients}

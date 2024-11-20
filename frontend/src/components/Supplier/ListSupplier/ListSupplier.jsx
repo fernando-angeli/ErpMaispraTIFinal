@@ -177,19 +177,17 @@ const ListSupplier = ({ onlyView }) => {
               <tbody>
                 <ModalYesOrNot
                   show={showModal}
-                  onClose={() => setShowModal(false)}
                   title="Deletar Fornecedor?"
-                >
-                  <h6>
-                    Confirma Exclusão de {supplierNameShow && supplierNameShow}?
-                  </h6>
-                  <button onClick={() => window.handleModalConfirm(true)}>
-                    Sim
-                  </button>
-                  <button onClick={() => window.handleModalConfirm(false)}>
-                    Não
-                  </button>
-                </ModalYesOrNot>
+                  deleteItem={supplierNameShow}
+                  onConfirm={() => {
+                    window.handleModalConfirm(true);
+                    setShowModal(false);
+                  }}
+                  onClose={() => {
+                    window.handleModalConfirm(false);
+                    setShowModal(false);
+                  }}
+                />
 
                 <PageOfListSupplier
                   suppliers={filteredSuppliers}
