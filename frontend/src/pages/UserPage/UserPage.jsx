@@ -1,25 +1,34 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import "./UserPage.css"; 
+import "./UserPage.css";
 import { useAuth } from "../../components/AuthContext";
 import userIcon from "../../assets/icons/userIcon.svg";
+import { jwtDecode } from "jwt-decode";
 
 const UserPage = () => {
-  const [userData, setUserData] = useState(null);
+  const [userData, setUserData] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   const apiUrl = import.meta.env.VITE_API_URL;
   const { JwtToken } = useAuth();
+  const decoded = jwtDecode(JwtToken);
+  let formatedRoles = "N/A";
 
   const handleShowEmployees = async () => {
     try {
-      const response = await axios.get(`${apiUrl}/api/usuarios/1`, {
+      const response = await axios.get(`${apiUrl}/api/usuarios`, {
         headers: {
           Authorization: `Bearer ${JwtToken}`,
         },
       });
-      setUserData(response.data);
+
+      const loggedUser = response.data.content.find(
+        (user) => user.email === decoded.sub
+      );
+
+      setUserData(loggedUser);
+
       setLoading(false);
     } catch (err) {
       console.error(err);
@@ -46,6 +55,13 @@ const UserPage = () => {
         <p className="user-page-error-text">{error}</p>
       </div>
     );
+  }
+
+  if (userData.roles) {
+    formatedRoles = userData.roles
+      .map((role) => role.authority.replace("ROLE_", ""))
+      .map((role) => role.charAt(0).toUpperCase() + role.slice(1).toLowerCase())
+      .join(", ");
   }
 
   return (
@@ -96,21 +112,8 @@ const UserPage = () => {
             </span>
           </p>
           <p>
-            <strong>Cargo:</strong>{" "}
-            {userData.roles.length > 0 ? userData.roles[0].authority : "N/A"}
+            <strong>Cargo:</strong> {formatedRoles}
           </p>
-        </div>
-      </div>
-
-      <div className="user-page-cards">
-        <div className="user-page-card">
-          <p>{userData.cards.additionalProp1}</p>
-        </div>
-        <div className="user-page-card">
-          <p>{userData.cards.additionalProp2}</p>
-        </div>
-        <div className="user-page-card">
-          <p>{userData.cards.additionalProp3}</p>
         </div>
       </div>
     </div>

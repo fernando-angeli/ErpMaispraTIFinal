@@ -4,18 +4,18 @@ import "./assets/css/buttons.css";
 
 import { Route, Routes, useLocation } from "react-router-dom";
 
-import Header from "./components/header/header";
+import Header from "./components/Header/Header";
 import ProtectedRoute from "./components/ProtectedRoute";
-import NavigationMenu from "./components/navigationMenu/NavigationMenu";
-import AddClientPage from "./pages/addClientPage/AddClientPage";
+import NavigationMenu from "./components/NavigationMenu/NavigationMenu";
+import AddClientPage from "./pages/AddClientPage/AddClientPage";
 import HomePage from "./pages/HomePage";
 import Login from "./pages/LoginPage/Login";
 import { useAuth } from "./components/AuthContext";
 import AddEmployeePage from "./pages/addEmployeePage/AddEmployeePage";
-import AddProductPage from "./pages/addProductPage/addProductPage";
+import AddProductPage from "./pages/AddProductPage/AddProductPage";
 import ResetPassword from "./pages/ResetPassword/ResetPassword";
-import AddSupplierpage from "./pages/addSupplierpage/AddSupplierpage";
-import AddSaleRegister from "./pages/addSaleRegister/AddSaleRegister";
+import AddSupplierpage from "./pages/AddSupplierpage/AddSupplierpage";
+import AddSaleRegister from "./pages/AddSaleRegister/AddSaleRegister";
 import SupplyPurchasingPage from "./pages/SupplyPurchasingPage/SupplyPurchasingPage";
 import NotificationPage from "./pages/NotificationPage/NotificationPage";
 import UserPage from "./pages/UserPage/UserPage";
@@ -23,7 +23,7 @@ function App() {
   const { isAuthenticated } = useAuth();
   const location = useLocation();
 
-  const isNotificationPage = location.pathname === "/notifications";
+  const isNotificationPage = location.pathname === "/notificacao";
 
   return (
     <>
@@ -86,7 +86,7 @@ function App() {
           }
         />
         <Route
-          path="/notifications"
+          path="/notificacao"
           element={
             <ProtectedRoute isLoggedIn={isAuthenticated}>
               <NotificationPage />
@@ -94,7 +94,7 @@ function App() {
           }
         />
         <Route
-          path="/profile"
+          path="/perfil"
           element={
             <ProtectedRoute isLoggedIn={isAuthenticated}>
               <UserPage/>

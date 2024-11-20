@@ -1,5 +1,5 @@
 import userIcon from "../../assets/icons/userIcon.svg";
-import "./accountContainer.css";
+import "./AccountContainer.css";
 import { jwtDecode } from "jwt-decode";
 import { useAuth } from "../AuthContext";
 import { useState, useEffect, useRef } from "react";
@@ -55,13 +55,13 @@ function AccountContainer({ isLoggedIn }) {
           </div>
           {isMenuOpen && (
             <div className="account-menu" ref={menuRef}>
-              <div className="menu-item" onClick={() => navigate("/profile")}>
+              <div className="menu-item" onClick={() => navigate("/perfil")}>
                 <RxAvatar className="menu-icon" />
                 Perfil
               </div>
               <div
                 className="menu-item"
-                onClick={() => navigate("/notifications")}
+                onClick={() => navigate("/notificacao")}
               >
                 <AiOutlineMail className="menu-icon" />
                 Notificações
