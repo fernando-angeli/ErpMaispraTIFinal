@@ -1,0 +1,116 @@
+.BoxChartValue {
+    display: flex;
+    border: 0.20em solid #0E1D25;
+    border-radius: 1em;
+    padding: 1em;
+    height: 100%;
+    width: 100%;
+}
+.chartValue-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+.valuebox {
+    padding: 0 3.5em 0 3em;
+    align-items: center;
+    border-radius: 1em;
+    color: white;
+}
+
+.valuebox span {
+    font-size: 3em;
+}
+
+.valuebox p:first-child {
+    position: relative;
+    top: 1.8em;
+    left: 1.5em;
+    color: white;
+    font-size: 1.4em;
+    text-align: end;
+}
+
+.valuebox p {
+    position: relative;
+    top: -1.7em;
+    left: -1.2em;
+    color: white;
+    font-size: 1.4em;
+    text-align: start;
+}
+
+/* big slot responsive */
+@container (min-height: 500px) and (min-width: 900px) {
+    .chartValue-container {
+        flex-direction: column;
+        justify-content: center;
+        gap: 50px;
+    }
+    .valuebox {
+        padding: 0 4em 0 3.5em;
+    }
+    .valuebox span {
+        font-size: 3.8em;
+    }
+    .valuebox p:first-child {
+        font-size: 1.7em;
+    }
+    .valuebox p {
+        font-size: 1.7em;
+    }
+}
+
+/* medium slot responsive */
+@container (min-height: 300px) and (max-width: 750px) {
+    .chartValue-container {
+        flex-direction: column;
+        justify-content: space-evenly;
+    }
+    
+}
+
+ @media (max-width: 768px) {
+    .chartValue-container {
+        flex-wrap: wrap;
+    }
+
+    .BoxChartValue {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: space-around;
+        align-items: center;
+        border: 0.20em solid #0E1D25;
+        border-radius: 1em;
+        padding: 1.5em;
+        height: 100%;
+
+    }
+
+    .BoxChartValue h2 {
+        padding-bottom: 0.25em;
+    }
+
+    .valuebox p:first-child {
+        position: relative;
+        top: 1.8em;
+        left: 1.5em;
+        color: white;
+        font-size: 1.9em;
+        text-align: end;
+    }
+
+    .valuebox p {
+        position: relative;
+        top: -1.7em;
+        left: -1.3em;
+        color: white;
+        font-size: 1.9em;
+        text-align: start;
+    }
+
+} 

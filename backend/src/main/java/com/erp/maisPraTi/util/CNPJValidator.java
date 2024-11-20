@@ -2,7 +2,12 @@ package com.erp.maisPraTi.util;
 
 public class CNPJValidator {
 
-    public static boolean validarCNPJ(String cnpj) {
+    public static boolean validateCnpj(String cnpj) {
+
+        // Teste caracteres especiais (diferentes de numericos)
+        if(cnpj.matches(".*[^0-9./-].*"))
+            return false;
+
         // Remove caracteres não numéricos
         cnpj = cnpj.replaceAll("[^0-9]", "");
 

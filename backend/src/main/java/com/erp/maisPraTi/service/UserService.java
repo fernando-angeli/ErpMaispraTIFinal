@@ -1,8 +1,6 @@
 package com.erp.maisPraTi.service;
 
-import com.erp.maisPraTi.dto.RoleDto;
-import com.erp.maisPraTi.dto.UserDto;
-import com.erp.maisPraTi.dto.UserUpdateDto;
+import com.erp.maisPraTi.dto.users.*;
 import com.erp.maisPraTi.model.Role;
 import com.erp.maisPraTi.model.User;
 import com.erp.maisPraTi.repository.UserRepository;
@@ -10,23 +8,24 @@ import com.erp.maisPraTi.service.exceptions.DatabaseException;
 import com.erp.maisPraTi.service.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import static com.erp.maisPraTi.util.EntityMapper.convertToDto;
 import static com.erp.maisPraTi.util.EntityMapper.convertToEntity;
 
 @Service
-public class UserService implements UserDetailsService {
+public class UserService {
+
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
     private UserRepository userRepository;
@@ -35,11 +34,14 @@ public class UserService implements UserDetailsService {
     private RoleService roleService;
 
     @Transactional
-    public UserDto insert(UserDto userDto) {
-        User newUser = convertToEntity(userDto, User.class);
+    public UserDto insert(UserInsertDto userInsertDto) {
+        if(userRepository.findByEmail(userInsertDto.getEmail()).isPresent())
+            throw new DatabaseException("E-mail já utilizado.");
+        User newUser = convertToEntity(userInsertDto, User.class);
         newUser.setCreatedAt(LocalDateTime.now());
         newUser.setUpdatedAt(LocalDateTime.now());
-        insertOrUpdateRoles(userDto.getRoles(), newUser);
+        updateRoles(userInsertDto.getRoles(), newUser);
+        newUser.setPassword(passwordEncoder.encode(userInsertDto.getPassword()));
         newUser = userRepository.save(newUser);
         return convertToDto(newUser, UserDto.class);
     }
@@ -61,11 +63,14 @@ public class UserService implements UserDetailsService {
     public UserDto update(Long id, UserUpdateDto userUpdateDto){
         verifyExistsId(id);
         try{
+            
             User user = userRepository.getReferenceById(id);
             user.getRoles().clear();
             convertToEntity(userUpdateDto, user);
             user.setUpdatedAt(LocalDateTime.now());
-            insertOrUpdateRoles(userUpdateDto.getRoles(), user);
+            updateRoles(userUpdateDto.getRoles(), user);
+            user.setPassword(passwordEncoder.encode(userUpdateDto.getPassword()));
+            user.setId(id);
             user = userRepository.save(user);
             return convertToDto(user, UserDto.class);
         } catch (DataIntegrityViolationException e){
@@ -87,7 +92,7 @@ public class UserService implements UserDetailsService {
         }
     }
 
-    private void insertOrUpdateRoles(Set<RoleDto> roleDtos, User user) {
+    private void updateRoles(List<RoleDto> roleDtos, User user) {
         user.getRoles().clear();
         roleDtos.forEach(roleDto -> {
             Role role = convertToEntity(roleService.findById(roleDto.getId()), Role.class);
@@ -101,13 +106,15 @@ public class UserService implements UserDetailsService {
         }
     }
 
-    @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        User user = userRepository.findByEmail(email);
-        if(user == null) {
-            throw new UsernameNotFoundException("Usuário não encontrado: " + email);
-        }
-        return user;
+    @Transactional
+    public void insertCard(Long id, CardDto cardDto) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Usuário não localizado."));
+        user.getCards().clear();
+        user.addCards("slot1", cardDto.getSlot1());
+        user.addCards("slot2", cardDto.getSlot2());
+        user.addCards("slot3", cardDto.getSlot3());
+        userRepository.save(user);
     }
 
 }

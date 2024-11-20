@@ -1,0 +1,44 @@
+.notification-page {
+  width: 80%;
+  margin: 0 auto;
+}
+
+.notification-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 20px;
+  margin: 3em 0;
+  padding: 0.5em 0;
+  border-bottom: 2px solid black;
+  flex-wrap: wrap;
+  gap: 1em;
+}
+
+.notification-header .left h1 {
+  font-size: 3em;
+}
+
+.notification-header .right {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.notification-header .right span {
+  margin-left: 5px;
+}
+
+.notification-page .notification-list {
+  margin-top: 20px;
+}
+.icon-back {
+  font-size: 3em;
+}
+
+@media (max-width: 768px) {
+  .notification-header {
+    display: flex;
+    justify-content: center;
+  }
+}

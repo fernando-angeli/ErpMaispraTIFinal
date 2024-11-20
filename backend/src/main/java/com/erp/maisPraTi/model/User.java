@@ -1,38 +1,59 @@
 package com.erp.maisPraTi.model;
 
+import com.erp.maisPraTi.enums.PartyStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Data
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "users")
-public class User implements UserDetails {
+@Table(name = "tb_users")
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String firstName;
-    private String lastName;
+    private String fullName;
+
+    private LocalDate birthDate;
+
+    private String phoneNumber;
+
+    @Column(unique = true)
+    private String cpf;
 
     @Column(unique = true)
     private String email;
 
+    private String address;
+
+    private String number;
+
+    private String district;
+
+    private String zipCode;
+
+    private String city;
+
+    private String state;
+
+    private String country;
+
     private String password;
+
     private LocalDateTime createdAt;
+
     private LocalDateTime updatedAt;
 
     @ManyToMany(fetch = FetchType.EAGER)
@@ -41,39 +62,22 @@ public class User implements UserDetails {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
-    private Set<Role> roles = new HashSet<>();
+    private List<Role> roles = new ArrayList<>();
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return roles
-                .stream()
-                .map(role -> new SimpleGrantedAuthority(role.getAuthority()))
-                .collect(Collectors.toList());
+    @Enumerated(EnumType.STRING)
+    private PartyStatus status;
+
+    private String resetPasswordToken;
+
+    private LocalDateTime tokenExpiration;
+
+    @ElementCollection
+    @CollectionTable(name = "tb_user_cards", joinColumns = @JoinColumn(name = "user_id"))
+    @MapKeyColumn(name = "card_name")
+    @Column(name = "card_description")
+    private Map<String, String> cards = new HashMap<>();
+
+    public void addCards(String slot, String cardName){
+        this.cards.put(slot, cardName);
     }
-
-    @Override
-    public String getUsername() {
-        return this.email;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
-
 }

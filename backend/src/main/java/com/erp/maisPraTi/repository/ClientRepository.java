@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ClientRepository extends JpaRepository<Client, Long> {
 
-    Client findByCpfCnpj(String cpfCnpj);
-
+    boolean existsByCpfCnpj(String cpfCnpj);
+    boolean existsByStateRegistration(String rgIe);
 }

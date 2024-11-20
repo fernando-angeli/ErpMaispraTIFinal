@@ -1,0 +1,185 @@
+.hide-desktop {
+  display: none;
+  text-decoration: none;
+  color: black;
+}
+
+.salesuccess {
+  color: green;
+}
+
+div.containerForm {
+  width: 80%;
+  margin: 0 auto;
+  margin-bottom: 2em;
+}
+
+h2.tabTitle {
+  text-align: left;
+  margin-left: 15px;
+  margin-block: 40px;
+}
+
+form.visibleformNewSaleRegister {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 60px;
+  row-gap: 15px;
+}
+
+form.hiddenformSaleRegister {
+  display: none;
+}
+
+.line {
+  grid-column: 1/3;
+  display: flex;
+  gap: inherit;
+}
+
+.line4 {
+  
+}
+.successOrErrosAndButton {
+  
+}
+.errorsOrSuccess {
+  grid-column: 1/3;
+}
+.divRegisterButton {
+  display: flex;
+  align-items: end;
+  justify-content: center;
+  
+  
+}
+
+.registerButton {
+  height: 60px;
+}
+
+
+
+
+
+.fieldName {
+  flex-grow: 2;
+  flex-basis: 10rem;
+  flex-shrink: 0;
+  height: auto;
+  max-height: 104px;
+}
+
+
+.fieldDate {
+  flex-grow: 1;
+  flex-basis: 5rem;
+  flex-shrink: 2;
+
+  min-width: 100px;
+  
+}
+
+.fieldProduct {
+  flex-grow: 2;
+  flex-basis: 10rem;
+  flex-shrink: 0;
+  max-height: 104px;
+}
+
+.fieldQuantity {
+  flex-grow: 2;
+  flex-basis: 10rem;
+  flex-shrink: 0;
+}
+
+
+
+
+
+/* line 5 */
+
+
+
+
+.isInvalid {
+  border-color: var(--system-danger);
+  background-color: #fff2f2;
+}
+
+/* ------------- PLACEHODER COLOR ------------- */
+
+::-webkit-input-placeholder {
+  color: var(--text-40);
+}
+
+:-moz-placeholder {
+  /* Firefox 18- */
+  color: var(--text-40);
+}
+
+::-moz-placeholder {
+  /* Firefox 19+ */
+  color: var(--text-40);
+}
+
+:-ms-input-placeholder {
+  color: var(--text-40);
+}
+
+@media (max-width: 768px) {
+  .hide-desktop {
+    display: block;
+    margin-left: 0.05em;
+  }
+
+  div.containerForm {
+    width: 98%;
+    margin: 0 auto;
+  }
+
+  h2.tabTitle {
+    text-align: center;
+    margin-left: none;
+    margin-block: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+  }
+
+  form.visibleSaleRegister {
+    display: flex;
+    flex-direction: column;
+  }
+
+  form.hiddenSaleRegister {
+    display: none;
+    flex-direction: column;
+  }
+
+  .fieldAddress {
+    grid-column: 1/3;
+  }
+
+  .divButtons {
+    grid-column: 2/3;
+    display: flex;
+    justify-content: center;
+    gap: 1em;
+    margin: none;
+  }
+
+  .isInvalid {
+    border-color: var(--system-danger);
+    background-color: #fff2f2;
+  }
+
+  .line {
+    grid-column: 1/3;
+    display: flex;
+    gap: inherit;
+    flex-direction: column;
+    /* COLOCAR O FLEX-DIRECTION: COLUMN; PARA FORMATAR O MOBILE */
+  }
+}

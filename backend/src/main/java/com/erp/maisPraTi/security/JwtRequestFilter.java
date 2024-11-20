@@ -1,16 +1,18 @@
 package com.erp.maisPraTi.security;
 
-import com.erp.maisPraTi.service.UserService;
-import com.erp.maisPraTi.service.exceptions.JwtTokenException;
+import com.erp.maisPraTi.security.model.CustomUserDetails;
+import com.erp.maisPraTi.security.exceptions.StandardErrorAuth;
+import com.erp.maisPraTi.security.service.UserDetailsServiceImpl;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -24,7 +26,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     private JwtTokenProvider jwtTokenProvider;
 
     @Autowired
-    private UserService userService;
+    private UserDetailsServiceImpl userService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -42,18 +44,16 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             try {
                 email = jwtTokenProvider.extractUsername(jwtToken);
             } catch (ExpiredJwtException e) {
-                throw new JwtTokenException("O token expirou");
+                handleException(response, "Expired token", "Token expirado", HttpServletResponse.SC_UNAUTHORIZED);
             }
             catch (IllegalArgumentException e) {
-                throw new JwtTokenException("Não foi possível obter o JWT Token");
+                handleException(response, "Token error", "Token inválido ou ausente", HttpServletResponse.SC_UNAUTHORIZED);
             }
-        } else {
-            logger.warn("JWT Token não encontrado no header ou com prefixo incorreto.");
         }
 
         // Valida o token e carrega o usuário
         if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = userService.loadUserByUsername(email);
+            CustomUserDetails userDetails = (CustomUserDetails) userService.loadUserByUsername(email);
             if (jwtTokenProvider.validateToken(jwtToken, userDetails.getUsername())) {
                 UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                         userDetails, null, userDetails.getAuthorities());
@@ -62,5 +62,18 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             }
         }
         chain.doFilter(request, response);
+    }
+
+    private void handleException(HttpServletResponse response, String errorDescription, String message, Integer status) throws IOException {
+        StandardErrorAuth error = new StandardErrorAuth();
+        error.setStatus(status);
+        error.setError(HttpStatus.valueOf(status).getReasonPhrase());
+        error.setMessage(message);
+
+        response.setStatus(status);
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+
+        new ObjectMapper().writeValue(response.getWriter(), error);
     }
 }

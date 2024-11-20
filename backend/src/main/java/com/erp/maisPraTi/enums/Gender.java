@@ -1,5 +1,6 @@
 package com.erp.maisPraTi.enums;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum Gender {
@@ -18,4 +19,5 @@ public enum Gender {
     public String getGender(){
         return this.gender;
     }
+
 }

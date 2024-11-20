@@ -1,17 +1,10 @@
 package com.erp.maisPraTi.config;
 
 import com.erp.maisPraTi.security.JwtRequestFilter;
-import com.erp.maisPraTi.service.UserService;
-import com.erp.maisPraTi.service.exceptions.AccessDeniedException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.convert.converter.Converter;
 import org.springframework.core.env.Environment;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -19,20 +12,13 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.security.oauth2.jwt.JwtDecoder;
-import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
-import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
-import javax.crypto.spec.SecretKeySpec;
 import java.util.Arrays;
 
 import static org.springframework.security.config.Customizer.withDefaults;
@@ -41,26 +27,14 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @EnableWebSecurity
 public class SecurityConfig{
 
-    @Value("${jwt.issuerUri}")
-    private String jwtIssuerUri;
-    @Value("${jwt.secret}")
-    private String jwtSecret;
-
     @Autowired
     private Environment environment;
-
-    @Autowired
-    private UserService userService;
 
     @Autowired
     private JwtRequestFilter jwtRequestFilter;
 
     @Autowired
     private CustomAccessDeniedHandler customAccessDeniedHandler;
-
-    private static final String[] PUBLIC = {"/auth/**", "/h2-console/**"};
-    private static final String[] OPERATOR_OR_ADMIN = {"/clientes/**"};
-    private static final String[] ADMIN = {"/usuarios/**", "/roles/**"};
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -71,6 +45,30 @@ public class SecurityConfig{
     public AuthenticationManager authManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
+
+    private static final String[] PUBLIC = {
+            "/auth/login/**",
+            "/auth/forgot-password/**",
+            "/api/h2-console/**",
+            "/api/v3/docs/**",
+            "/api/docs/**",
+            "/api/swagger-ui/**",
+            "/api/swagger-resources/**",
+            "/api/documentation.html",
+            "/api/forgot-password/**",
+            "/api/reset-password/**"
+    };
+    private static final String[] OPERATOR_OR_ADMIN = {
+            "/auth/reset-password/**",
+            "/auth/validate-user/**",
+            "/api/clientes/**",
+            "/api/fornecedores/**",
+            "/api/produtos/**",
+            "/api/vendas/**"
+    };
+    private static final String[] ADMIN = {
+            "/api/usuarios/**"
+    };
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -83,33 +81,15 @@ public class SecurityConfig{
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(PUBLIC).permitAll()
-                        .requestMatchers(HttpMethod.GET, OPERATOR_OR_ADMIN).permitAll()
                         .requestMatchers(OPERATOR_OR_ADMIN).hasAnyRole("OPERATOR", "ADMIN")
                         .requestMatchers(ADMIN).hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(exceptionHandling ->
                         exceptionHandling.accessDeniedHandler(customAccessDeniedHandler))
-                .oauth2ResourceServer((oauth2) -> oauth2
-                        .jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())));
-        http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+
         return http.build();
-    }
-
-    @Bean
-    public Converter<Jwt, AbstractAuthenticationToken> jwtAuthenticationConverter() {
-        JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
-        grantedAuthoritiesConverter.setAuthorityPrefix("");
-        grantedAuthoritiesConverter.setAuthoritiesClaimName("roles");
-
-        JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
-        jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(grantedAuthoritiesConverter);
-        return jwtAuthenticationConverter;
-    }
-
-    @Bean
-    public JwtDecoder jwtDecoder() {
-        return NimbusJwtDecoder.withSecretKey(new SecretKeySpec(jwtSecret.getBytes(), "HMACSHA256")).build();
     }
 
     @Bean

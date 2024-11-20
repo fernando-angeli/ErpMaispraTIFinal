@@ -1,0 +1,191 @@
+.contentCircle {
+     display: flex;
+     flex-direction: column;
+     align-items: center;
+     justify-content: space-between;
+     border: 0.20em solid #0E1D25;
+     border-radius: 1em;
+     padding: 1.5em;
+     width: 100%;
+     height: 100%;
+     container-type: size;
+}
+
+.circleChart {
+     width: auto;
+     height: 15em;
+     width: 15em;
+     display: flex;
+     flex-direction: column;
+     align-items: center;
+     position: relative;
+     justify-content: center;
+     max-height: 100%;
+}
+
+.contentCircle h4 {
+     margin-top: 0.4rem;
+     margin-inline: 1rem;
+
+
+}
+
+.circleChart h2 {
+     position: absolute;
+}
+
+.circleChartData {
+     width: 100%;
+
+     text-align: center;
+
+}
+
+.circleChartData span {
+     font-size: 1.25em;
+     padding: 0.25em;
+     text-wrap: nowrap;
+}
+
+.graphs {
+     container-type: size;
+}
+
+.contentGraph {
+     display: flex;
+     justify-content: space-around;
+     width: 100%;
+     height: 100%;
+
+
+}
+
+.divGraph {
+     display: flex;
+     flex-direction: column;
+     align-items: center;
+     position: relative;
+     justify-content: space-around;
+     height: 100%;
+
+
+}
+
+.list {
+     display: none;
+     height: 100%;
+     justify-content: space-around;
+     align-items: center;
+     
+
+}
+
+.list > div {
+     margin: 0;
+     width: 100%;
+     height: max-content;
+}
+.list > div tbody tr td:last-child {
+     border-radius: 0rem 1rem 1rem 0rem; 
+     text-align: start;   
+}
+
+/* small slot */
+@container (max-height: 250px) {
+     .contentCircle {
+          flex-direction: row;
+     }
+
+     .circleChart h2 {
+          margin-top: 0;
+     }
+}
+
+/* small slot */
+@container (max-height: 250px) {
+     .circleChart {
+          height: 10em;
+          max-width: 10em;
+          margin-inline: 5%;
+     }
+
+
+     .contentCircle {
+          /* gap: 10px; */
+     }
+
+     .contentCircle h4 {
+          flex-grow: 0.5;
+          font-size: 1.75em;
+          margin: 0;
+          justify-content: end;
+     }
+
+     .contentCircle > * {
+          display: flex;
+          flex-grow: 1;
+          /* background-color: antiquewhite; */
+          width: auto;
+
+
+     }
+
+     .circleChart h2 {
+
+          font-size: 1.7em;
+          margin-top: 6px;
+     }
+
+     .circleChartData {
+          display: flex;
+          flex-direction: column;
+     }
+
+     .circleChartData span {
+          text-align: left;
+     }
+     .divGraph {
+          flex-direction: row;
+          width: 100%;
+     }
+     
+}
+/* small slot responsive */
+@container (max-height: 250px) and (max-width: 490px) {
+     .circleChartData {
+          display: none;
+     }
+}
+/* big slot responsive */
+@container (min-height: 500px) and (min-width: 900px) {
+     .circleChart {
+          height: 18em;
+          width: 18em;
+     }
+
+     .contentCircle h4 {
+          flex-grow: 1;
+          font-size: 2.2em;
+          margin: 0;
+          margin-block: 0.8rem 1rem;
+
+     }
+
+     .contentGraph {
+          flex-direction: row;
+          height: 100%;
+     }
+
+     .divGraph {
+          width: 30%;
+          margin-right: 24px;
+          justify-content: center;
+          gap: 30px;
+     }
+
+     .list {
+          display: flex;
+          width: calc(70% - 24px);
+
+     }
+}

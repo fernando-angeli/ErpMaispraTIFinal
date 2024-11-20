@@ -1,11 +1,14 @@
-import FormNewClient from "../../components/formNewClient/FormNewClient";
+
+import ButtonBackPage from "../../components/ButtonBackPage/ButtonBackPage";
+import ListClients from "../../components/Client/ListClients/ListClients";
 
 function AddClientPage() {
-    return (
-        <>
-            <FormNewClient/>
-        </>
-    )
+  return (
+    <>
+    <ButtonBackPage/>
+      <ListClients></ListClients>
+    </>
+  );
 }
 
-export default AddClientPage
+export default AddClientPage;

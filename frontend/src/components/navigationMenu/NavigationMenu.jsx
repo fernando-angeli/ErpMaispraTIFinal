@@ -1,41 +1,37 @@
-import './navigationMenu.css'
-import OptionsNavigationMenu from './optionNavigationMenu/OptionsNavigationMenu'
-
-import newClientIcon from '../../assets/icons/newClientIcon.png'
-import newSupplierIcon from '../../assets/icons/newSupplierIcon.png'
-import newProductIcon from '../../assets/icons/newProductIcon.png'
-import newBuyIcon from '../../assets/icons/newBuyIcon.png'
-import newSaleIcon from '../../assets/icons/newSaleIcon.png'
+import { useNavigate, useLocation } from "react-router-dom";
+import "./NavigationMenu.css";
+import arrayOptions from "./OptionNavigationMenu/OptionsNavigationMenu";
 
 function NavigationMenu() {
-    let options = [
-        {
-            icon: newClientIcon,
-            description: "Novo Cliente",
-            url:"/cliente"
-        },
-        {
-            icon: newSupplierIcon,
-            description: "Novo Fornecedor"
-        },
-        {
-            icon: newProductIcon,
-            description: "Novo Produto"
-        },
-        {
-            icon: newBuyIcon,
-            description: "Compra de Insumos"
-        },
-        {
-            icon: newSaleIcon,
-            description: "Venda de Produtos"
-        }
-    ]
-    return (
-        
-        <OptionsNavigationMenu arrayOptions={options} className='resposive'/>
-        
-    )
+  const navigate = useNavigate();
+  const location = useLocation(); 
+
+  return (
+    <div
+      className={`navigationMenu ${
+        arrayOptions().length === 6 ? "navigationMenuAdmin" : ""
+      }`}
+    >
+      {arrayOptions().map((option, index) => (
+        <div
+          key={index}
+          className={`option option${index} ${
+            location.pathname === option.url ? "selected" : ""
+          }`}
+          onClick={() => navigate(option.url)}
+        >
+          <div className="optionResposive">
+            <img
+              src={option.icon}
+              alt={option.description}
+              className="optionIcon"
+            />
+            <label className="optionDescription">{option.description}</label>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
 }
 
-export default NavigationMenu
+export default NavigationMenu;

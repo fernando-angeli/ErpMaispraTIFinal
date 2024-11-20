@@ -1,0 +1,8 @@
+.right{
+    padding: 1em;
+    display: flex;
+align-self: center;
+justify-content: center;
+color:  #1B3B4B;
+cursor: pointer;
+}
