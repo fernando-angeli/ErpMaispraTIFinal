@@ -62,7 +62,7 @@ function App() {
           }
         />
         <Route
-          path="/supplypurchasing"
+          path="/compraInsumos"
           element={
             <ProtectedRoute isLoggedIn={isAuthenticated}>
               <SupplyPurchasingPage />
@@ -70,7 +70,7 @@ function App() {
           }
         />
         <Route
-          path="/supplier"
+          path="/fornecedor"
           element={
             <ProtectedRoute isLoggedIn={isAuthenticated}>
               <AddSupplierpage />
@@ -78,7 +78,7 @@ function App() {
           }
         />
         <Route
-          path="/saleregister"
+          path="/registroDeVendas"
           element={
             <ProtectedRoute isLoggedIn={isAuthenticated}>
               <AddSaleRegister />
@@ -97,7 +97,7 @@ function App() {
           path="/perfil"
           element={
             <ProtectedRoute isLoggedIn={isAuthenticated}>
-              <UserPage/>
+              <UserPage />
             </ProtectedRoute>
           }
         />
