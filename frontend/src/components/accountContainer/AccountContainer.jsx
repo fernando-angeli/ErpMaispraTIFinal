@@ -9,7 +9,6 @@ import { AiOutlineMail } from "react-icons/ai";
 import { IoIosHelpCircleOutline } from "react-icons/io";
 import { RxExit } from "react-icons/rx";
 
-
 function AccountContainer({ isLoggedIn }) {
   const { JwtToken } = useAuth();
   const { logout } = useAuth();
@@ -56,7 +55,7 @@ function AccountContainer({ isLoggedIn }) {
           </div>
           {isMenuOpen && (
             <div className="account-menu" ref={menuRef}>
-              <div className="menu-item">
+              <div className="menu-item" onClick={() => navigate("/profile")}>
                 <RxAvatar className="menu-icon" />
                 Perfil
               </div>

@@ -18,7 +18,7 @@ import AddSupplierpage from "./pages/addSupplierpage/AddSupplierpage";
 import AddSaleRegister from "./pages/addSaleRegister/AddSaleRegister";
 import SupplyPurchasingPage from "./pages/SupplyPurchasingPage/SupplyPurchasingPage";
 import NotificationPage from "./pages/NotificationPage/NotificationPage";
-
+import UserPage from "./pages/UserPage/UserPage";
 function App() {
   const { isAuthenticated } = useAuth();
   const location = useLocation();
@@ -90,6 +90,14 @@ function App() {
           element={
             <ProtectedRoute isLoggedIn={isAuthenticated}>
               <NotificationPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute isLoggedIn={isAuthenticated}>
+              <UserPage/>
             </ProtectedRoute>
           }
         />
