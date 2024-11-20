@@ -1,7 +1,91 @@
-.CardSale{
+.cardSale {
     width: 80%;
     height: auto;
     margin: 0 auto;
     border-radius: 1em;
     border: 2px solid var(--text-100, #2A153B);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.cardSale>h2 {
+    margin: 1rem;
+}
+
+.cardSale hr {
+    height: 2px;
+    width: 95%;
+    background: var(--text-100, #2A153B);
+    margin: 0 auto;
+    opacity: 100%;
+}
+
+.emptyCard {
+    color: var(--text-100, #2A153B);
+    margin: 1.5rem;
+    font-size: 1.1rem;
+
+}
+
+.cardSale table {
+    width: 95%;
+}
+
+.cardSale table thead th {
+    padding-bottom: 1rem;
+}
+
+
+.div-totals {
+    display: flex;
+    flex-direction: row; /* colocar column para o mobile */
+    gap: 2.2rem;
+    justify-content: right;
+    align-items: center;
+    padding-block: 1rem;
+    width: 95%;
+
+
+}
+
+p.totals {
+    color: var(--text-100);
+    line-height: 200%;
+
+
+
+}
+
+p.totals span {
+    border: 1px solid var(--primary-dark, #0E1D25);
+    border-radius: 0.9375rem;
+    padding: 0.6rem 1rem;
+    text-wrap: nowrap;
+}
+
+button {}
+
+.buttonSubmitSale {
+    all: unset;
+
+    width: 137px;
+    height: 38px;
+    border-radius: 7px;
+    background: var(--primary-normal);
+    border: none;
+
+    /* TEXT */
+
+    color: #FFF;
+    text-align: center;
+    font-family: Lato;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 150%;
+    /* 24px */
+    cursor: pointer;
+
+    padding: 0.5rem;
 }

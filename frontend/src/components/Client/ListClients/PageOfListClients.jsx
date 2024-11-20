@@ -11,6 +11,7 @@ function PageOfListClients({
   onDelete,
   maxClientsPerList,
   listClientsPageSelected,
+  onlyView
 }) {
   const [showModalDetails, setshowModalDetails] = useState(false);
   const [selectedClient, setSelectedClient] = useState("");
@@ -33,8 +34,7 @@ function PageOfListClients({
         show={showModalDetails}
         onClose={() => setshowModalDetails(false)}
         content={selectedClient}
-        title="Detalhes Cliente"
-      ></ModalDetails>
+        title="Detalhes Cliente"> </ModalDetails>
 
       {clientsToList.map((client) => (
         <tr key={client.id}>
@@ -51,22 +51,27 @@ function PageOfListClients({
             <BiFileBlank className="td-icon-2" size={16} />
             {client.cpfCnpj}
           </td>
-          <td className="td-editLine">
-            <Link
-              onClick={() => {
-                setSelectedClient(client);
-                setshowModalDetails(true);
-              }}
-            >
-              <BiDetail className="editLine" size={30} />
-            </Link>
-            <a href="#" onClick={() => onEdit(client)}>
-              <BiEdit className="editLine" size={30} />
-            </a>
-            <Link onClick={() => onDelete(client)}>
-              <MdDeleteOutline className="deleteLine" size={30} />
-            </Link>
-          </td>
+
+            {onlyView ? "" : (
+              
+              <td className="td-editLine">
+                <Link
+                  onClick={() => {
+                    setSelectedClient(client);
+                    setshowModalDetails(true);
+                  }}
+                >
+                  <BiDetail className="editLine" size={30} />
+                </Link>
+                <a href="#" onClick={() => onEdit(client)}>
+                  <BiEdit className="editLine" size={30} />
+                </a>
+                <Link onClick={() => onDelete(client)}>
+                  <MdDeleteOutline className="deleteLine" size={30} />
+                </Link>
+              </td> 
+              
+            )}
         </tr>
       ))}
     </>

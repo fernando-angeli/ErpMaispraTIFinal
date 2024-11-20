@@ -45,24 +45,24 @@ function PageOfListEmployees({
           </td>
           <td className="td-phoneNumber">
             <BiPhone className="td-icon" size={16} />
-            {employee.phoneNumber}
+            {employee.phoneNumber.replace(/\D/g, "").replace(/(\d{2})(\d{5})(\d{4})/, "($1) $2-$3")}
           </td>
           <td className="td-cpf">
             <BiFileBlank className="td-icon-2" size={16} />
             {employee.cpf}
           </td>
           <td className="td-editLine">
-            <Link
-              onClick={() => {
-                setSelectedEmployee(employee);
-                setshowModalDetails(true);
-              }}
-            >
-              <BiDetail className="editLine" size={30} />
-            </Link>
 
             {onlyView ? "" : (
               <>
+                <Link
+                  onClick={() => {
+                    setSelectedEmployee(employee);
+                    setshowModalDetails(true);
+                  }}
+                >
+                  <BiDetail className="editLine" size={30} />
+                </Link>
                 <a href="#" onClick={() => onEdit(employee)}>
                   <BiEdit className="editLine" size={30} />
                 </a>

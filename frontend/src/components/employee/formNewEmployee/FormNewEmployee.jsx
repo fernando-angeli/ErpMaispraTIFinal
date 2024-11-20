@@ -8,7 +8,7 @@ import InputField from "../../InputField/InputField";
 import SelectField from "../../SelectField/SelectField";
 import RadioGroup from "../../RadioGroup/RadioGroup";
 import LoadingSpin from "../../LoadingSpin/LoadingSpin";
-function FormNewEmployee(dataEmployee) {
+function FormNewEmployee({ dataEmployee, onSubmitSuccess }) {
   const apiUrl = import.meta.env.VITE_API_URL;
 
   const [ResponsiveEmployee, setResponsiveEmployee] = useState(true);
@@ -26,7 +26,7 @@ function FormNewEmployee(dataEmployee) {
   const [newEmployeeRole, setNewEmployeeRole] = useState("");
   const [newEmployeeState, setNewEmployeeState] = useState("");
   const [newEmployeeBirthDate, setNewEmployeeBirthDate] = useState("");
-  const [newEmployeeStatus, setNewEmployeeStatus] = useState("active");
+  const [newEmployeeStatus, setNewEmployeeStatus] = useState("ativo");
   const [isLoading, setIsLoading] = useState(false);
   const [updateEmployeeId, setUpdateEmployeeId] = useState();
 
@@ -96,6 +96,17 @@ function FormNewEmployee(dataEmployee) {
     }
   };
 
+const CheckCpf = (cpf) => {
+    const cpfRegex =
+      /^(?!.*(\d)(?:-?\1){10})\d{3}\.\d{3}\.\d{3}-\d{2}$|^(\d{11})$/;
+    if (cpfRegex.test(cpf)) {
+      setError(null);
+    } else {
+      setError("Formato de Cpf Inválido!");
+      return;
+    }
+  };
+
   const handleReset = () => {
     let form = document.getElementById("formNewEmployee");
     let elements = form.getElementsByClassName("isInvalid");
@@ -120,16 +131,6 @@ function FormNewEmployee(dataEmployee) {
     setError(null);
   };
 
-  const CheckCpf = (cpf) => {
-    const cpfRegex =
-      /^(?!.*(\d)(?:-?\1){10})\d{3}\.\d{3}\.\d{3}-\d{2}$|^(\d{11})$/;
-    if (cpfRegex.test(cpf)) {
-      setError(null);
-    } else {
-      setError("Formato de Telefone Inválido!");
-      return;
-    }
-  };
 
   const handleSubmit = async (event) => {
     setIsLoading(true);
@@ -148,7 +149,7 @@ function FormNewEmployee(dataEmployee) {
       state: newEmployeeState,
       country: "Brasil",
       roles: newEmployeeRole,
-      status: "ativo",
+      status: newEmployeeStatus,
       password: "12345",
     };
     try {
@@ -162,11 +163,12 @@ function FormNewEmployee(dataEmployee) {
           },
         }
       );
-      console.log(response);
-      handleReset();
       setSuccess("Usuário adicionado com sucesso!");
-      setIsLoading(false);
-      window.location.reload;
+      setIsLoading(false);  
+      handleReset();
+      if (onSubmitSuccess) {
+        onSubmitSuccess();
+      }
     } catch (err) {
       setIsLoading(false);
       console.error(err);
@@ -221,11 +223,9 @@ function FormNewEmployee(dataEmployee) {
       state: newEmployeeState,
       country: "Brasil",
       roles: newEmployeeRole,
-      status: "ativo",
+      status: newEmployeeStatus,
       password: "12345",
     };
-    console.log(newEmployeeData);
-    console.log(updateEmployeeId);
     const TelephoneRegex =
       /^\(?\+?(\d{1,3})?\)?[-.\s]?(\d{2})[-.\s]?(\d{4,5})[-.\s]?(\d{4})$/;
     if (TelephoneRegex.test(newEmployeeData.phoneNumber)) {
@@ -247,12 +247,14 @@ function FormNewEmployee(dataEmployee) {
           },
         }
       );
-      handleReset();
       setSuccess("Usuario Atualizado com sucesso!");
       setIsLoading(false);
-      window.location.reload();
+      if (onSubmitSuccess) {
+        onSubmitSuccess();
+      }
       setError(null);
-      SetPostToUpdade(true);
+      SetPostToUpdade(true); 
+      handleReset();
     } catch (err) {
       setIsLoading(false);
       console.error(err);
@@ -266,8 +268,8 @@ function FormNewEmployee(dataEmployee) {
   };
 
   useEffect(() => {
-    if (dataEmployee.dataEmployee) {
-      SetValuestoUpdate(dataEmployee.dataEmployee);
+    if (dataEmployee) {
+      SetValuestoUpdate(dataEmployee);
       SetPostToUpdade(false);
     }
   }, [dataEmployee]);
@@ -362,6 +364,7 @@ function FormNewEmployee(dataEmployee) {
             value={newEmployeeCPF}
             onChange={(e) => {
               setNewEmployeeCPF(e.target.value);
+              console.log(e.target.value)
               isValid(e);
               CheckCpf(e.target.value);
             }}
@@ -474,7 +477,7 @@ function FormNewEmployee(dataEmployee) {
                   <RadioGroup
                     name={"ativoInativo"}
                     options={statusOptions}
-                    defaultValue={"ativo"}
+                    defaultValue={newEmployeeStatus}
                     onChange={(selectedValue) =>
                       setNewEmployeeStatus(selectedValue)
                     }

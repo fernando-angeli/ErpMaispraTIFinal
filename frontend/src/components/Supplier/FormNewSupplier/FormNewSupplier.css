@@ -25,6 +25,12 @@ form.visibleformNewSupplier {
 form.hiddenformNewSupplier {
   display: none;
 }
+.show{
+  display: block; 
+}
+.hidden {
+  display: none;
+}
 
 .line {
   grid-column: 1/3;

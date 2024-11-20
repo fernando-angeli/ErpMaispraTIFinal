@@ -12,7 +12,11 @@ import PageOfListClients from "./PageOfListClients.jsx";
 import LoadingSpin from "../../LoadingSpin/LoadingSpin.jsx";
 
 
-const ListClients = () => {
+const ListClients = ({ onlyView }) => {
+
+  ListClients.defaultProps = {
+    onlyView: false,
+  };
   const apiUrl = import.meta.env.VITE_API_URL;
   const { JwtToken } = useAuth();
   const [clients, setClients] = useState();
@@ -23,33 +27,30 @@ const ListClients = () => {
   const [showModal, setShowModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [ClienteNameShow, setClienteNameShow] = useState();
-  const [ResponsiveCliente, setResponsiveCliente] = useState(true);
   const [listClientsPageSelected, setListClientsPage] = useState(1)
-  const resposiveClienteShow = () => {
-    setResponsiveCliente(!ResponsiveCliente);
-  };
 
   const handleShowClients = async () => {
+    setIsLoading(true)
     try {
       const response = await axios.get(`${apiUrl}/api/clientes`, {
         headers: {
           Authorization: `Bearer ${JwtToken}`,
         },
       });
-      
+
       setClients(response.data.content);
+      setIsLoading(!true)
     } catch (err) {
       console.log(err);
       alert("Erro ao puxar clientes!");
     }
   };
-  
   useEffect(() => {
     handleShowClients();
   }, []);
-  
+
   const deleteClient = async (client) => {
-    
+
     setClienteNameShow(client.fullName);
     const confirmDelete = await new Promise((resolve) => {
       setShowModal(true);
@@ -76,39 +77,49 @@ const ListClients = () => {
       alert("Erro ao deletar");
     }
   };
-  
-  
+
+
   const ToFormUpdateClient = (data) => {
     setClientsUpdate(data)
   };
-  
+
+  const [ResponsiveCliente, setResponsiveCliente] = useState(true);
+
+  const resposiveClienteShow = () => {
+    setResponsiveCliente(!ResponsiveCliente);
+  };
+
   const filteredClients = clients?.filter((client) => {
     const matchesStatus = (showAtivos && client.status === "ativo")
-    || (showInativos && client.status === "inativo"); // se ambos forem true e ativo ou inativo, ele filtra de acorco com o check
+      || (showInativos && client.status === "inativo"); // se ambos forem true e ativo ou inativo, ele filtra de acorco com o check
     const matchesSearch = client.fullName.toLowerCase().includes(searchClients.toLowerCase()); // Filtro por nome, ele busca por nome e acresenta o filtro
     return matchesStatus && matchesSearch;
   }) || [];
-  
+
   const maxClientsPerList = 6
   let contClientPages = Math.ceil(filteredClients.length / maxClientsPerList)
-  
-  
-  
-  
+
   // estou chamando form cliente dentro de list pra poder jogar os dados nele pra update!!!!
   return (
-    
+
     <>
       {isLoading && <LoadingSpin />}
-      <FormNewClient dataClient={clientUpdate} />
+      {onlyView ? "" : <FormNewClient dataClient={clientUpdate} onSubmitSuccess={handleShowClients} />}
       <div className="contentListClients">
+
         <div className="ListClients">
+
           <div className="headerListClients">
             <div className="title">
               <BiSolidUser className="userIcon" size={75} />
-              <h3>Lista de Clientes  </h3>
+              <h3>Lista de Clientes </h3>
+              <a className="hide-desktop" onClick={resposiveClienteShow}>
+                {!ResponsiveCliente ? <CgAdd size={40} /> : <CgRemove size={40} />}
+              </a>
             </div >
-            <section >
+            <section className={
+              ResponsiveCliente ? "" : "None"
+            }>
               <label className="searchClient">
                 <input type="text" placeholder="Buscar cliente..." required onChange={(e) => setsearchClients(e.target.value)} />
                 <a>
@@ -125,7 +136,7 @@ const ListClients = () => {
                     className="inputRadio inputCheckbox"
                     onClick={() => setShowAtivos(!showAtivos)}
                     defaultChecked
-                    />
+                  />
                   <label className="text labelRadio" htmlFor="ativos">
                     Ativos
                   </label>
@@ -140,7 +151,7 @@ const ListClients = () => {
                     className="inputRadio inputCheckbox"
                     onClick={() => setShowInativos(!showInativos)}
                     defaultChecked
-                    />
+                  />
                   <label className="text labelRadio" htmlFor="inativos">
                     Inativos
                   </label>
@@ -150,7 +161,7 @@ const ListClients = () => {
           </div>
           <hr />
 
-          <div className="ListClientsTable">
+          <div className={ResponsiveCliente ? "ListClientsTable" : "None"}>
             <table>
               <thead>
                 <tr>
@@ -173,18 +184,19 @@ const ListClients = () => {
                   <button onClick={() => window.handleModalConfirm(false)}>Não</button>
                 </ModalYesOrNot>
 
-                <PageOfListClients 
-                clients={filteredClients} 
-                onEdit={ToFormUpdateClient} 
-                onDelete={deleteClient} 
-                maxClientsPerList={maxClientsPerList} 
-                listClientsPageSelected={listClientsPageSelected}/>
+                <PageOfListClients
+                  clients={filteredClients}
+                  onEdit={ToFormUpdateClient}
+                  onDelete={deleteClient}
+                  maxClientsPerList={maxClientsPerList}
+                  listClientsPageSelected={listClientsPageSelected}
+                  onlyView={onlyView} />
 
               </tbody>
 
             </table>
           </div>
-          <div className="pagination">
+          <div className={ResponsiveCliente ? "pagination" : "None"}>
             <NavigationListClients contClientPages={contClientPages} setListClientsPage={setListClientsPage} />
           </div>
         </div>
