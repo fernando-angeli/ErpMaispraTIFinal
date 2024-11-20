@@ -10,7 +10,7 @@ import TextareaField from "../../TextareaField/TextareaField";
 import LoadingSpin from '../../LoadingSpin/LoadingSpin'
 
 function FormNewSupplier({ dataSupplier, onSubmitSuccess }) {
-  
+
 
   const [ResponsiveSupplier, setResponsiveSupplier] = useState(true);
   const [PostToUpdate, SetPostToUpdade] = useState(true)
@@ -31,11 +31,11 @@ function FormNewSupplier({ dataSupplier, onSubmitSuccess }) {
   const [newSupplierStatus, setNewSupplierStatus] = useState("ativo");
 
   const [newSupplierIE, setNewSupplierIE] = useState("");
-  
+
   const [UpdateSupplierId, setUpdateSupplierId] = useState();
   const [Error, setError] = useState();
   const [Success, setSuccess] = useState();
-  const [isLoading, setIsLoading] =  useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const { JwtToken } = useAuth();
 
@@ -81,7 +81,7 @@ function FormNewSupplier({ dataSupplier, onSubmitSuccess }) {
     }
   };
 
-  const CheckEmail = (email)=> {
+  const CheckEmail = (email) => {
     const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
     if (emailRegex.test(email)) {
       setError(null);
@@ -91,7 +91,7 @@ function FormNewSupplier({ dataSupplier, onSubmitSuccess }) {
     }
   }
 
-  const CheckTelephone = (phone)=> {
+  const CheckTelephone = (phone) => {
     const phoneRegex = /^(\(?\d{2}\)?[\s-]?(\d{4,5})[\s-]?(\d{4})|\d{4,5}-\d{4})$/;
     if (phoneRegex.test(phone)) {
       setError(null);
@@ -100,25 +100,25 @@ function FormNewSupplier({ dataSupplier, onSubmitSuccess }) {
     }
   }
 
-  const CheckCpf = (cpf)=> {
-  const cpfRegex = /^(?!.*(\d)(?:-?\1){10})\d{3}\.\d{3}\.\d{3}-\d{2}$|^(\d{11})$/;
-  const cnpjRegex = /^(\d{2}\.\d{3}\.\d{3}\/\d{4}-\d{2}|\d{14})$/;
-  if (CPForCNPJ === "cpf") {
-  if (cpfRegex.test(cpf)) {
-    setError(null);
-  } else {
-    setError('Formato de CPF Inválido!');
-    return
-  }
-  }else{
-    if (cnpjRegex.test(cpf)) {
-      setError(null);
+  const CheckCpf = (cpf) => {
+    const cpfRegex = /^(?!.*(\d)(?:-?\1){10})\d{3}\.\d{3}\.\d{3}-\d{2}$|^(\d{11})$/;
+    const cnpjRegex = /^(\d{2}\.\d{3}\.\d{3}\/\d{4}-\d{2}|\d{14})$/;
+    if (CPForCNPJ === "cpf") {
+      if (cpfRegex.test(cpf)) {
+        setError(null);
+      } else {
+        setError('Formato de CPF Inválido!');
+        return
+      }
     } else {
-      setError('Formato de CNPJ Inválido!');
-      return
+      if (cnpjRegex.test(cpf)) {
+        setError(null);
+      } else {
+        setError('Formato de CNPJ Inválido!');
+        return
+      }
     }
   }
-}
   const handleReset = () => {
     let form = document.getElementById("formNewSupplier");
     let elements = form.getElementsByClassName("isInvalid");
@@ -142,16 +142,16 @@ function FormNewSupplier({ dataSupplier, onSubmitSuccess }) {
     setNewSupplierCountry('')
     SetPostToUpdade(true)
     setError(null)
-    };
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     const newSupplierData = {
       fullName: newSupplierName,
       typePfOrPj: CPForCNPJ === "cpf" ? "PF" : "PJ",
-      cpfCnpj: CPForCNPJ === "cpf" 
-      ? newSupplierCPForCNPJ.replace(/\D/g, "").replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4")
-      : newSupplierCPForCNPJ.replace(/\D/g, "").replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, "$1.$2.$3/$4-$5"),  
+      cpfCnpj: CPForCNPJ === "cpf"
+        ? newSupplierCPForCNPJ.replace(/\D/g, "").replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4")
+        : newSupplierCPForCNPJ.replace(/\D/g, "").replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, "$1.$2.$3/$4-$5"),
       stateRegistration: newSupplierIE,
       phoneNumber: newSupplierPhone.replace(/\D/g, "").replace(/(\d{2})(\d{5})(\d{4})/, "($1) $2-$3"),
       email: newSupplierEmail,
@@ -174,9 +174,9 @@ function FormNewSupplier({ dataSupplier, onSubmitSuccess }) {
         setError("Preencha todos os campos!");
         return;
       }
-      
+
       setIsLoading(true);
-      
+
       if (cpfRegex.test(newSupplierData.cpfCnpj)) {
         setError(null);
       } else {
@@ -184,15 +184,15 @@ function FormNewSupplier({ dataSupplier, onSubmitSuccess }) {
         setError('Formato de CPF Inválido');
         return;
       }
-      
+
     } else {
       if (!document.getElementById("formNewSupplier").reportValidity()) {
         setError("Preencha todos os campos!");
         return;
       }
-      
+
       setIsLoading(true);
-      
+
       if (cnpjRegex.test(newSupplierData.cpfCnpj)) {
         setError(null);
       } else {
@@ -201,8 +201,8 @@ function FormNewSupplier({ dataSupplier, onSubmitSuccess }) {
         return;
       }
     }
-    
-  
+
+
     try {
       const response = await axios.post(
         `http://localhost:8080/api/fornecedores`,
@@ -227,12 +227,12 @@ function FormNewSupplier({ dataSupplier, onSubmitSuccess }) {
         setIsLoading(false);
         setError(`${err.response.data.message}`);
       } else {
-        setError(err,'Erro desconhecido');
-        setIsLoading(false) 
+        setError(err, 'Erro desconhecido');
+        setIsLoading(false)
         return
       }
     }
-      
+
   }
   const handleUpdate = async (event) => {
     setIsLoading(true)
@@ -241,9 +241,9 @@ function FormNewSupplier({ dataSupplier, onSubmitSuccess }) {
     const newSupplierData = {
       fullName: newSupplierName,
       typePfOrPj: CPForCNPJ === "cpf" ? "PF" : "PJ",
-      cpfCnpj: CPForCNPJ === "cpf" 
-      ? newSupplierCPForCNPJ.replace(/\D/g, "").replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4")
-      : newSupplierCPForCNPJ.replace(/\D/g, "").replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, "$1.$2.$3/$4-$5"),
+      cpfCnpj: CPForCNPJ === "cpf"
+        ? newSupplierCPForCNPJ.replace(/\D/g, "").replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4")
+        : newSupplierCPForCNPJ.replace(/\D/g, "").replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, "$1.$2.$3/$4-$5"),
       stateRegistration: newSupplierIE,
       phoneNumber: newSupplierPhone.replace(/\D/g, "").replace(/(\d{2})(\d{5})(\d{4})/, "($1) $2-$3"),
       email: newSupplierEmail,
@@ -267,9 +267,9 @@ function FormNewSupplier({ dataSupplier, onSubmitSuccess }) {
         setError("Preencha todos os campos!");
         return;
       }
-      
+
       setIsLoading(true);
-      
+
       if (cpfRegex.test(newSupplierData.cpfCnpj)) {
         setError(null);
       } else {
@@ -277,15 +277,15 @@ function FormNewSupplier({ dataSupplier, onSubmitSuccess }) {
         setError('Formato de CPF Inválido');
         return;
       }
-      
+
     } else {
       if (!document.getElementById("formNewSupplier").reportValidity()) {
         setError("Preencha todos os campos!");
         return;
       }
-      
+
       setIsLoading(true);
-      
+
       if (cnpjRegex.test(newSupplierData.cpfCnpj)) {
         setError(null);
       } else {
@@ -321,7 +321,7 @@ function FormNewSupplier({ dataSupplier, onSubmitSuccess }) {
         setError("Erro ao atualizar fornecedor! Tente novamente.");
         setSuccess(null);
       }
-    }finally {
+    } finally {
       setIsLoading(false);
     }
   };
@@ -329,35 +329,35 @@ function FormNewSupplier({ dataSupplier, onSubmitSuccess }) {
   const resposiveSuppliereShow = () => {
     setResponsiveSupplier(!ResponsiveSupplier);
   };
- const SetValuestoUpdate = (values) => {
-   setUpdateSupplierId(values.id)
-   setNewSupplierName(values.fullName);
-   setNewSupplierEmail(values.email);
-   setNewSupplierIE(values.stateRegistration)
-   setNewSupplierAddress(values.address);
-   setNewSupplierDistrict(values.district)
-   setNewSupplierPhone(values.phoneNumber);
-   setNewSupplierCPForCNPJ(values.cpfCnpj);
-   setNewSupplierAddressNumber(values.number);
-   setNewSupplierCEP(values.zipCode.replace(/\D/g, ''))
-   setNewSupplierCity(values.city)
-   setNewSupplierCountry(values.country)
-   setOption(values.typePfOrPj.toLowerCase());
-   setNewSupplierState(values.state);
-   setNewSupplierNotes(values.notes)
-   setOption(values.typePfOrPj == "PF" ? "cpf" : "cnpj")
-   setNewSupplierStatus(values.status)
-   document.getElementById(values.typePfOrPj == "PF" ? "cpf" : "cnpj").checked = true;
-   document.getElementById(values.status).checked = true;
-   
+  const SetValuestoUpdate = (values) => {
+    setUpdateSupplierId(values.id)
+    setNewSupplierName(values.fullName);
+    setNewSupplierEmail(values.email);
+    setNewSupplierIE(values.stateRegistration)
+    setNewSupplierAddress(values.address);
+    setNewSupplierDistrict(values.district)
+    setNewSupplierPhone(values.phoneNumber);
+    setNewSupplierCPForCNPJ(values.cpfCnpj);
+    setNewSupplierAddressNumber(values.number);
+    setNewSupplierCEP(values.zipCode.replace(/\D/g, ''))
+    setNewSupplierCity(values.city)
+    setNewSupplierCountry(values.country)
+    setOption(values.typePfOrPj.toLowerCase());
+    setNewSupplierState(values.state);
+    setNewSupplierNotes(values.notes)
+    setOption(values.typePfOrPj == "PF" ? "cpf" : "cnpj")
+    setNewSupplierStatus(values.status)
+    document.getElementById(values.typePfOrPj == "PF" ? "cpf" : "cnpj").checked = true;
+    document.getElementById(values.status).checked = true;
+
   };
 
   useEffect(() => {
-  if(dataSupplier){
-    SetValuestoUpdate(dataSupplier);
-    SetPostToUpdade(false)
-  }
-}, [dataSupplier]);
+    if (dataSupplier) {
+      SetValuestoUpdate(dataSupplier);
+      SetPostToUpdade(false)
+    }
+  }, [dataSupplier]);
 
 
   return (
@@ -375,7 +375,7 @@ function FormNewSupplier({ dataSupplier, onSubmitSuccess }) {
         }
         id="formNewSupplier"
         onReset={handleReset}
-        onSubmit={PostToUpdate ? handleSubmit :  handleUpdate}
+        onSubmit={PostToUpdate ? handleSubmit : handleUpdate}
       >
         <div className="line1 line">
           <InputField
@@ -432,7 +432,7 @@ function FormNewSupplier({ dataSupplier, onSubmitSuccess }) {
               onChange={(selectedValue) => setOption(selectedValue)}
               clasnameDiv={"aaa"}
             />
-      
+
             <InputField
               type={"text"}
               placeholder={"Digite o CPF/CNPJ do Fornecedor"}
@@ -452,22 +452,22 @@ function FormNewSupplier({ dataSupplier, onSubmitSuccess }) {
         </div>
 
         <div className="line3 line">
-        <div className="divIE">
-          <InputField
-              type={"text"}
-              placeholder={"Digite a Inscrição Estadual"}
-              name={"Inscrição Estadual"}
+          
+            <InputField
               label={"Inscrição Estadual:"}
+              name={"Inscrição Estadual"}
+              placeholder={"Digite a Inscrição Estadual"}
               idInput={"newSupplierIE"}
+              classNameDiv={"fieldIE"}
+              type={"text"}
               value={newSupplierIE}
-              onInvalid={(e) => isInvalid(e)}
               onChange={(e) => {
                 setNewSupplierIE(e.target.value);
                 isValid(e);
               }}
-              classNameDiv="inputFieldNoLabel"
-            /></div>
-        <InputField
+              onInvalid={(e) => isInvalid(e)}
+            />
+          <InputField
             label={"CEP:"}
             name={"CEP"}
             placeholder={"00000-000"}
@@ -481,33 +481,12 @@ function FormNewSupplier({ dataSupplier, onSubmitSuccess }) {
             }}
             onInvalid={(e) => isInvalid(e)}
           />
-          <div className="divStatusAndButtons">
-            <div className="divStatus">
-              <label
-                htmlFor="newSupplierStatus"
-                className="inputLabel"
-                id="labelNewSupplierStatus"
-              >
-                <span className="inputDescription">Status:</span>
-                <div className="divRadios">
-                  <RadioGroup
-                    name={"ativoInativo"}
-                    options={statusOptions}
-                    defaultValue={"ativo"}
-                    onChange={(selectedValue) =>
-                      setNewSupplierStatus(selectedValue)
-                    }
-                  />
-                </div>
-              </label>
-            </div>
 
-          </div>
-          
+
         </div>
 
         <div className="line4 line">
-        <InputField
+          <InputField
             label={"Logradouro:"}
             name={"logradouro"}
             placeholder={"Digite o endereço do Fornecedor"}
@@ -522,7 +501,7 @@ function FormNewSupplier({ dataSupplier, onSubmitSuccess }) {
             onInvalid={(e) => isInvalid(e)}
           />
 
-        <InputField
+          <InputField
             label={"Número:"}
             name={"numero"}
             placeholder={"0000"}
@@ -567,7 +546,7 @@ function FormNewSupplier({ dataSupplier, onSubmitSuccess }) {
             arrayOptions={cityList}
           />
 
-<InputField
+          <InputField
             label={"Pais:"}
             name={"pais"}
             id={"newSupplierCountry"}
@@ -584,49 +563,80 @@ function FormNewSupplier({ dataSupplier, onSubmitSuccess }) {
           />
         </div>
 
-        <div className="line5 line">
-          <TextareaField
-            label={"Notas:"}
-            name={"notas"}
-            placeholder={"Digite notas sobre o Fornecedor"}
-            idInput={"newSupplierNotes"}
-            classNameDiv={"fieldNotes"}
-            value={newSupplierNotes}
-            onChange={(e) => {
-              setNewSupplierNotes(e.target.value);
-              isValid(e);
-            }}
-            onInvalid={(e) => isInvalid(e)}
-          />
+        <div className="line line5">
           
+            <TextareaField
+              label={"Notas:"}
+              name={"notas"}
+              placeholder={"Digite notas sobre o Fornecedor"}
+              idInput={"newSupplierNotes"}
+              classNameDiv={"fieldNotes"}
+              value={newSupplierNotes}
+              onChange={(e) => {
+                setNewSupplierNotes(e.target.value);
+                isValid(e);
+              }}
+              onInvalid={(e) => isInvalid(e)}
+            />
+
+          
+
+          <div className="divStatusAndButtons">
+            <div className="divStatus">
+              <label
+                htmlFor="newSupplierStatus"
+                className="inputLabel"
+                id="labelNewSupplierStatus"
+              >
+                <span className="inputDescription">Status:</span>
+                <div className="divRadios">
+                  <RadioGroup
+                    name={"ativoInativo"}
+                    options={statusOptions}
+                    defaultValue={"ativo"}
+                    onChange={(selectedValue) =>
+                      setNewSupplierStatus(selectedValue)
+                    }
+                  />
+                </div>
+              </label>
+            </div>
+
+
+            <div className={
+              ResponsiveSupplier ? "show" : "hidden"
+            }>
+              <div className="errorsOrSuccess" style={{ paddingTop: '1em' }}>
+                <p style={{ color: "red" }}>{Error && Error}</p>
+                <p style={{ color: "green" }}>{Success && Success}</p>
+              </div>
+              <div className="divButtons">
+                <button
+                  type="submit"
+                  className="primaryNormal"
+                  onClick={PostToUpdate ? handleSubmit : handleUpdate}
+                >
+                  {PostToUpdate ? "Salvar" : "Atualizar"}
+                </button>
+                <button
+                  type="reset"
+                  className="primaryLight"
+                  onClick={() => handleReset()}
+                >
+                  Cancelar
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
+
       </form>
-      <div className={
-          ResponsiveSupplier ? "show" : "hidden"
-        }>
-      <div className="errorsOrSuccess" style={{paddingTop:'1em'}}>
-              <p style={{ color: "red" }}>{Error && Error}</p>
-              <p style={{ color: "green" }}>{Success && Success}</p>
-            </div>
-            <div className="divButtons">
-              <button
-                type="submit"
-                className="primaryNormal"
-                onClick={PostToUpdate ? handleSubmit :  handleUpdate}
-              >
-                {PostToUpdate ? "Salvar" : "Atualizar"}
-              </button>
-              <button
-                type="reset"
-                className="primaryLight"
-                onClick={() => handleReset()}
-              >
-                Cancelar
-              </button>
-            </div>
-      </div>
-            
-      {isLoading && <LoadingSpin/>}
+
+
+
+
+
+      {isLoading && <LoadingSpin />}
     </div>
   );
 }

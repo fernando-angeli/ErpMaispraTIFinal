@@ -70,6 +70,10 @@ form.hiddenformNewEmployee {
   flex-basis: 25%;
 }
 
+#formNewEmployee .line4 {
+  justify-content: end !important;
+}
+
 .selectCity,
 .selectRole {
   padding-inline: 15px;
@@ -99,7 +103,7 @@ form.hiddenformNewEmployee {
 } */
 
 .selectCity,
-selectRole {
+.selectRole {
   -webkit-appearance: none; /* Remove a aparência padrão no Chrome/Safari */
   -moz-appearance: none; /* Remove a aparência padrão no Firefox */
   appearance: none; /* Remove a aparência padrão */

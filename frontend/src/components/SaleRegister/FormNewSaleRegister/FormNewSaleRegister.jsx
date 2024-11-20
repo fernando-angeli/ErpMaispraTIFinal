@@ -160,7 +160,7 @@ function FormNewSaleRegister({ dataSaleRegister }) {
           if (prod.id === itemToDelete.productId) {
             return {
               ...prod,
-              availableForSale: Number(prod.availableForSale) + Number(itemToDelete.quant), 
+              availableForSale: Number(prod.availableForSale) + Number(itemToDelete.quant),
             };
           }
           return prod;
@@ -170,7 +170,7 @@ function FormNewSaleRegister({ dataSaleRegister }) {
     });
     setCardId((prevId) => prevId - 1);
   };
-  
+
 
   const handleAddtoCard = (e) => {
     e.preventDefault();
@@ -182,7 +182,7 @@ function FormNewSaleRegister({ dataSaleRegister }) {
       price: NewSaleRegisterProduct[0].productPrice,
       subtotal: NewSaleRegisterProduct[0].productPrice * NewSaleRegisterQuant,
     };
-  
+
     if (NewSaleRegisterQuant > NewSaleRegisterProduct[0].availableForSale) {
       setError(
         NewSaleRegisterProduct[0].availableForSale === 0
@@ -191,12 +191,12 @@ function FormNewSaleRegister({ dataSaleRegister }) {
       );
       return;
     }
-  
+
     if (!NewItemtoCard.quant || isNaN(NewItemtoCard.quant) || NewItemtoCard.quant <= 0) {
       setError("A quantidade deve ser preenchida e ser um número positivo.");
       return;
     }
-  
+
     if (!NewItemtoCard.price || isNaN(NewItemtoCard.price) || NewItemtoCard.price <= 0) {
       setError("O preço deve ser preenchido e ser um número positivo.");
       return;
@@ -217,7 +217,7 @@ function FormNewSaleRegister({ dataSaleRegister }) {
     setNewSaleRegisterQuant("");
     setError("");
   };
-  
+
 
   const handleGetClients = async () => {
     try {
@@ -308,6 +308,9 @@ function FormNewSaleRegister({ dataSaleRegister }) {
             onChange={(e) => setNewSaleRegisterData(e.target.value)}
           />
 
+        </div>
+
+        <div className="line">
           <InputField
             classNameDiv="fieldDate"
             label="Data Prevista:"
@@ -316,9 +319,6 @@ function FormNewSaleRegister({ dataSaleRegister }) {
             value={NewSaleRegisterDataPrev}
             onChange={(e) => setNewSaleRegisterDataPrev(e.target.value)}
           />
-        </div>
-
-        <div className="line">
 
           <SelectFieldProduct
             classNameDiv="fieldProduct"
@@ -338,19 +338,19 @@ function FormNewSaleRegister({ dataSaleRegister }) {
             value={NewSaleRegisterQuant}
             onChange={(e) => setNewSaleRegisterQuant(e.target.value)}
           />
-          
 
-            <div className="divRegisterButton">
-              {isLoading ? <LoadingSpin /> : <button type="submit" className="registerButton" onClick={(e) => handleAddtoCard(e)}>Registrar</button>}
-            </div>
-          
+
+          <div className="divRegisterButton">
+            {isLoading ? <LoadingSpin /> : <button type="submit" className="registerButton" onClick={(e) => handleAddtoCard(e)}>Registrar</button>}
+          </div>
+
 
 
         </div>
-            <div className="errorsOrSuccess">
-              {Error && <p className="error">{Error}</p>}
-              {Success && <p className="salesuccess">{Success}</p>}
-            </div>
+        <div className="errorsOrSuccess">
+          {Error && <p className="error">{Error}</p>}
+          {Success && <p className="salesuccess">{Success}</p>}
+        </div>
       </form>
       <CardSaleRegister
         saleRegisters={CardItems}
@@ -359,7 +359,7 @@ function FormNewSaleRegister({ dataSaleRegister }) {
         handleSubmit={handleSubmit}
         handleUpdate={handleUpdate}
       />
-      
+
     </div>
   );
 }

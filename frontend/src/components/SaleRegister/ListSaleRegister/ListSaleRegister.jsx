@@ -1,4 +1,4 @@
-import { BiSolidUser } from "react-icons/bi";
+import { BiSolidCart } from "react-icons/bi";
 import { BiSearch } from "react-icons/bi";
 import { CgAdd, CgRemove } from "react-icons/cg";
 import ModalYesOrNot from "../../ModalYesOrNot/ModalYesOrNot.jsx";
@@ -21,7 +21,7 @@ const ListSaleRegisters = () => {
   const [showModal, setShowModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [saleRegisterNameShow, setSaleRegisterNameShow] = useState("");
-  
+
   const [listSaleRegistersPageSelected, setListSaleRegistersPage] = useState(1);
 
   const handleShowSaleRegisters = async () => {
@@ -38,10 +38,10 @@ const ListSaleRegisters = () => {
   };
 
   useEffect(() => {
-   handleShowSaleRegisters();
-   console.log(filteredSaleRegisters)
-   }, []);
-   
+    handleShowSaleRegisters();
+    console.log(filteredSaleRegisters)
+  }, []);
+
   const deleteSaleRegister = async (saleRegister) => {
     setSaleRegisterNameShow(saleRegister.client.fullName);
     const confirmDelete = await new Promise((resolve) => {
@@ -79,57 +79,59 @@ const ListSaleRegisters = () => {
   });
 
   const maxSaleRegistersPerList = 6;
-  const totalPages = Math.ceil(filteredSaleRegisters.length / maxSaleRegistersPerList);
+  let contSaleRegisterPages = Math.ceil(filteredSaleRegisters.length / maxSaleRegistersPerList);
 
   return (
     <>
-    
+
       {isLoading && <LoadingSpin />}
-      <FormNewSaleRegister dataSaleRegister={saleRegisterUpdate} /> 
-    
+      <FormNewSaleRegister dataSaleRegister={saleRegisterUpdate} />
+
       <div className="contentListSaleRegisters">
         <div className="ListSaleRegisters">
           <div className="headerListSaleRegisters">
             <div className="title">
-              <BiSolidUser className="userIcon" size={75} />
+              <BiSolidCart className="userIcon" size={65} />
               <h3>Lista de Registros de Venda</h3>
             </div>
             <section>
               <label className="searchSaleRegister">
-                <input 
-                  type="text" 
-                  placeholder="Buscar registro de venda..." 
-                  required 
-                  onChange={(e) => setSearchSaleRegister(e.target.value)} 
+                <input
+                  type="text"
+                  placeholder="Buscar registro de venda..."
+                  required
+                  onChange={(e) => setSearchSaleRegister(e.target.value)}
                 />
                 <a>
                   <BiSearch size={35} />
                 </a>
               </label>
-              <div className="divCheckboxes">
-                <label htmlFor="active" className="labelCheckbox">
+              <div className="divRadios divCheckboxes">
+                <label htmlFor="ativos" className="labelCheckbox">
                   <input
                     type="checkbox"
-                    name="active/inactive"
-                    id="active"
-                    className="inputCheckbox"
+                    value={0}
+                    name="ativos/inativos"
+                    id="ativos"
+                    className="inputRadio inputCheckbox"
                     onClick={() => setShowActive(!showActive)}
                     defaultChecked
                   />
-                  <label className="text" htmlFor="active">
+                  <label className="text labelRadio" htmlFor="ativos">
                     Ativos
                   </label>
                 </label>
-                <label htmlFor="inactive" className="labelCheckbox">
+                <label htmlFor="inativos" className="labelCheckbox">
                   <input
                     type="checkbox"
-                    name="active/inactive"
-                    id="inactive"
-                    className="inputCheckbox"
+                    value={0}
+                    name="ativos/inativos"
+                    id="inativos"
+                    className="inputRadio inputCheckbox"
                     onClick={() => setShowInactive(!showInactive)}
                     defaultChecked
                   />
-                  <label className="text" htmlFor="inactive">
+                  <label className="text labelRadio" htmlFor="inativos">
                     Inativos
                   </label>
                 </label>
@@ -159,20 +161,20 @@ const ListSaleRegisters = () => {
                   <button onClick={() => window.handleModalConfirm(true)}>Sim</button>
                   <button onClick={() => window.handleModalConfirm(false)}>Não</button>
                 </ModalYesOrNot>
-                <PageOfListSaleRegister 
-                  SaleRegisters={filteredSaleRegisters} 
-                  onEdit={ToFormUpdateSaleRegister} 
-                  onDelete={deleteSaleRegister} 
-                  maxSaleRegistersPerList={maxSaleRegistersPerList} 
+                <PageOfListSaleRegister
+                  SaleRegisters={filteredSaleRegisters}
+                  onEdit={ToFormUpdateSaleRegister}
+                  onDelete={deleteSaleRegister}
+                  maxSaleRegistersPerList={maxSaleRegistersPerList}
                   listSaleRegistersPageSelected={listSaleRegistersPageSelected}
                 />
               </tbody>
             </table>
           </div>
           <div className="pagination">
-            <NavigationListSaleRegister 
-              totalPages={totalPages} 
-              setListSaleRegistersPage={setListSaleRegistersPage} 
+            <NavigationListSaleRegister
+              contSaleRegisterPages={contSaleRegisterPages}
+              setListSaleRegistersPage={setListSaleRegistersPage}
             />
           </div>
         </div>

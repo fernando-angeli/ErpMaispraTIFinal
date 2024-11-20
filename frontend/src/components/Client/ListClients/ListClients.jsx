@@ -111,7 +111,7 @@ const ListClients = ({ onlyView }) => {
 
           <div className="headerListClients">
             <div className="title">
-              <BiSolidUser className="userIcon" size={75} />
+              <BiSolidUser className="userIcon" size={65} />
               <h3>Lista de Clientes </h3>
               <a className="hide-desktop" onClick={resposiveClienteShow}>
                 {!ResponsiveCliente ? <CgAdd size={40} /> : <CgRemove size={40} />}

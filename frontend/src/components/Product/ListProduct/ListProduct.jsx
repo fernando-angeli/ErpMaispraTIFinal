@@ -1,5 +1,6 @@
 import { BiSolidUser } from "react-icons/bi";
 import { BiSearch } from "react-icons/bi";
+import { FaBoxes } from "react-icons/fa";
 import ModalYesOrNot from "../../ModalYesOrNot/ModalYesOrNot.jsx";
 import axios from "axios";
 import { useEffect, useState } from "react";
@@ -89,7 +90,7 @@ const ListProduct = () => {
         <div className="ListProducts">
           <div className="headerListProducts">
             <div className="title">
-              <BiSolidUser className="userIcon" size={75} />
+              <FaBoxes className="userIcon" size={65} />
               <h3>Lista de Produtos  </h3>
             </div >
 
@@ -108,6 +109,7 @@ const ListProduct = () => {
               </label>
             </section>
           </div>
+          <hr />
 
           <div className="ListProductsTable">
             <table>
