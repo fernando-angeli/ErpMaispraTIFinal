@@ -115,7 +115,7 @@ const ListClients = ({ onlyView }) => {
         <div className="ListClients">
           <div className="headerListClients">
             <div className="title">
-              <BiSolidUser className="userIcon" size={75} />
+              <BiSolidUser className="userIcon" size={65} />
               <h3>Lista de Clientes </h3>
               <a className="hide-desktop" onClick={resposiveClienteShow}>
                 {!ResponsiveCliente ? (

@@ -10,6 +10,7 @@ import TextareaField from "../../TextareaField/TextareaField";
 import LoadingSpin from "../../LoadingSpin/LoadingSpin";
 
 function FormNewSupplier({ dataSupplier, onSubmitSuccess }) {
+
   const apiUrl = import.meta.env.VITE_API_URL;
 
   const [ResponsiveSupplier, setResponsiveSupplier] = useState(true);
@@ -92,6 +93,7 @@ function FormNewSupplier({ dataSupplier, onSubmitSuccess }) {
   };
 
   const CheckTelephone = (phone) => {
+
     const phoneRegex =
       /^(\(?\d{2}\)?[\s-]?(\d{4,5})[\s-]?(\d{4})|\d{4,5}-\d{4})$/;
     if (phoneRegex.test(phone)) {
@@ -102,8 +104,8 @@ function FormNewSupplier({ dataSupplier, onSubmitSuccess }) {
   };
 
   const CheckCpf = (cpf) => {
-    const cpfRegex =
-      /^(?!.*(\d)(?:-?\1){10})\d{3}\.\d{3}\.\d{3}-\d{2}$|^(\d{11})$/;
+
+    const cpfRegex = /^(?!.*(\d)(?:-?\1){10})\d{3}\.\d{3}\.\d{3}-\d{2}$|^(\d{11})$/;
     const cnpjRegex = /^(\d{2}\.\d{3}\.\d{3}\/\d{4}-\d{2}|\d{14})$/;
     if (CPForCNPJ === "cpf") {
       if (cpfRegex.test(cpf)) {
@@ -139,11 +141,12 @@ function FormNewSupplier({ dataSupplier, onSubmitSuccess }) {
     setNewSupplierCity("");
     setNewSupplierCEP("");
     setNewSupplierState("");
-    setNewSupplierNotes("");
-    setNewSupplierIE("");
-    setNewSupplierCountry("");
-    SetPostToUpdade(true);
-    setError(null);
+
+    setNewSupplierNotes("")
+    setNewSupplierIE("")
+    setNewSupplierCountry('')
+    SetPostToUpdade(true)
+    setError(null)
   };
 
   const handleSubmit = async (event) => {
@@ -151,6 +154,9 @@ function FormNewSupplier({ dataSupplier, onSubmitSuccess }) {
     const newSupplierData = {
       fullName: newSupplierName,
       typePfOrPj: CPForCNPJ === "cpf" ? "PF" : "PJ",
+      cpfCnpj: CPForCNPJ === "cpf"
+        ? newSupplierCPForCNPJ.replace(/\D/g, "").replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4")
+        : newSupplierCPForCNPJ.replace(/\D/g, "").replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, "$1.$2.$3/$4-$5"),
       cpfCnpj:
         CPForCNPJ === "cpf"
           ? newSupplierCPForCNPJ
@@ -194,6 +200,7 @@ function FormNewSupplier({ dataSupplier, onSubmitSuccess }) {
         setError("Formato de CPF Inválido");
         return;
       }
+
     } else {
       if (!document.getElementById("formNewSupplier").reportValidity()) {
         setError("Preencha todos os campos!");
@@ -210,6 +217,7 @@ function FormNewSupplier({ dataSupplier, onSubmitSuccess }) {
         return;
       }
     }
+
 
     try {
       const response = await axios.post(
@@ -256,6 +264,7 @@ function FormNewSupplier({ dataSupplier, onSubmitSuccess }) {
           : newSupplierCPForCNPJ
               .replace(/\D/g, "")
               .replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, "$1.$2.$3/$4-$5"),
+      
       stateRegistration: newSupplierIE,
       phoneNumber: newSupplierPhone
         .replace(/\D/g, "")
@@ -291,6 +300,7 @@ function FormNewSupplier({ dataSupplier, onSubmitSuccess }) {
         setError("Formato de CPF Inválido");
         return;
       }
+      
     } else {
       if (!document.getElementById("formNewSupplier").reportValidity()) {
         setError("Preencha todos os campos!");
@@ -467,19 +477,26 @@ function FormNewSupplier({ dataSupplier, onSubmitSuccess }) {
         </div>
 
         <div className="line3 line">
+          
+            <InputField
           <div className="divIE">
             <InputField
               type={"text"}
               placeholder={"Digite a Inscrição Estadual"}
               name={"Inscrição Estadual"}
               label={"Inscrição Estadual:"}
+              name={"Inscrição Estadual"}
+              placeholder={"Digite a Inscrição Estadual"}
               idInput={"newSupplierIE"}
+              classNameDiv={"fieldIE"}
+              type={"text"}
               value={newSupplierIE}
-              onInvalid={(e) => isInvalid(e)}
               onChange={(e) => {
                 setNewSupplierIE(e.target.value);
                 isValid(e);
               }}
+              onInvalid={(e) => isInvalid(e)}
+            />
               classNameDiv="inputFieldNoLabel"
             />
           </div>
@@ -497,6 +514,7 @@ function FormNewSupplier({ dataSupplier, onSubmitSuccess }) {
             }}
             onInvalid={(e) => isInvalid(e)}
           />
+
           <div className="divStatusAndButtons">
             <div className="divStatus">
               <label
@@ -518,6 +536,7 @@ function FormNewSupplier({ dataSupplier, onSubmitSuccess }) {
               </label>
             </div>
           </div>
+
         </div>
 
         <div className="line4 line">

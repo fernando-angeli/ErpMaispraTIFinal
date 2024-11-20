@@ -1,4 +1,4 @@
-import { BiSolidUser } from "react-icons/bi";
+import { BiSolidTruck } from "react-icons/bi";
 import { BiSearch } from "react-icons/bi";
 import ModalYesOrNot from "../../ModalYesOrNot/ModalYesOrNot.jsx";
 import axios from "axios";
@@ -112,7 +112,7 @@ const ListSupplier = ({ onlyView }) => {
         <div className="ListSuppliers">
           <div className="headerListSuppliers">
             <div className="title">
-              <BiSolidUser className="userIcon" size={75} />
+              <BiSolidTruck className="userIcon" size={65} />
               <h3>Lista de Fornecedores</h3>
             </div>
             <section>

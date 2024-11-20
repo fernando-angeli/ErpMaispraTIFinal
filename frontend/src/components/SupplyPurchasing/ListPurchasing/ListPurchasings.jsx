@@ -106,7 +106,7 @@ const ListPurchasings = () => {
         <div className="ListPurchasings">
           <div className="headerListPurchasings">
             <div className="title">
-              <FaCoins size={75} />
+              <FaCoins size={65} className="userIcon"/>
               <h3>Lista de Pedidos de Compras</h3>
             </div>
             <section>

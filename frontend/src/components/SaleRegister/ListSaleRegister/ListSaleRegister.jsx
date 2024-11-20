@@ -1,4 +1,4 @@
-import { BiSolidUser } from "react-icons/bi";
+import { BiSolidCart } from "react-icons/bi";
 import { BiSearch } from "react-icons/bi";
 import { CgAdd, CgRemove } from "react-icons/cg";
 import ModalYesOrNot from "../../ModalYesOrNot/ModalYesOrNot.jsx";
@@ -39,7 +39,8 @@ const ListSaleRegisters = () => {
 
   useEffect(() => {
     handleShowSaleRegisters();
-    console.log(filteredSaleRegisters);
+
+    console.log(filteredSaleRegisters)
   }, []);
 
   const deleteSaleRegister = async (saleRegister) => {
@@ -94,7 +95,7 @@ const ListSaleRegisters = () => {
         <div className="ListSaleRegisters">
           <div className="headerListSaleRegisters">
             <div className="title">
-              <BiSolidUser className="userIcon" size={75} />
+              <BiSolidCart className="userIcon" size={65} />
               <h3>Lista de Registros de Venda</h3>
             </div>
             <section>
@@ -109,30 +110,32 @@ const ListSaleRegisters = () => {
                   <BiSearch size={35} />
                 </a>
               </label>
-              <div className="divCheckboxes">
-                <label htmlFor="active" className="labelCheckbox">
+              <div className="divRadios divCheckboxes">
+                <label htmlFor="ativos" className="labelCheckbox">
                   <input
                     type="checkbox"
-                    name="active/inactive"
-                    id="active"
-                    className="inputCheckbox"
+                    value={0}
+                    name="ativos/inativos"
+                    id="ativos"
+                    className="inputRadio inputCheckbox"
                     onClick={() => setShowActive(!showActive)}
                     defaultChecked
                   />
-                  <label className="text" htmlFor="active">
+                  <label className="text labelRadio" htmlFor="ativos">
                     Ativos
                   </label>
                 </label>
-                <label htmlFor="inactive" className="labelCheckbox">
+                <label htmlFor="inativos" className="labelCheckbox">
                   <input
                     type="checkbox"
-                    name="active/inactive"
-                    id="inactive"
-                    className="inputCheckbox"
+                    value={0}
+                    name="ativos/inativos"
+                    id="inativos"
+                    className="inputRadio inputCheckbox"
                     onClick={() => setShowInactive(!showInactive)}
                     defaultChecked
                   />
-                  <label className="text" htmlFor="inactive">
+                  <label className="text labelRadio" htmlFor="inativos">
                     Inativos
                   </label>
                 </label>
@@ -156,6 +159,11 @@ const ListSaleRegisters = () => {
                 <ModalYesOrNot
                   show={showModal}
                   title="Deletar Registro de Venda?"
+                >
+                  <h6>Confirma Exclusão de {saleRegisterNameShow}?</h6>
+                  <button onClick={() => window.handleModalConfirm(true)}>Sim</button>
+                  <button onClick={() => window.handleModalConfirm(false)}>Não</button>
+                </ModalYesOrNot>
                   deleteItem={saleRegisterNameShow}
                   onConfirm={() => {
                     window.handleModalConfirm(true);
@@ -178,6 +186,7 @@ const ListSaleRegisters = () => {
           </div>
           <div className="pagination">
             <NavigationListSaleRegister
+              contSaleRegisterPages={contSaleRegisterPages}
               totalPages={totalPages}
               setListSaleRegistersPage={setListSaleRegistersPage}
             />
