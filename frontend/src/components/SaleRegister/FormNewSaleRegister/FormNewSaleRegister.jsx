@@ -23,7 +23,7 @@ function FormNewSaleRegister({ dataSaleRegister }) {
   const [ListClients, setListClients] = useState([]);
   const [ListProducts, setListProducts] = useState([]);
 
-  const [NewSaleRegisterClientId, setNewSaleRegisterClientId] = useState(''); 
+  const [NewSaleRegisterClientId, setNewSaleRegisterClientId] = useState('');
   const [NewSaleRegisterClient, setNewSaleRegisterClient] = useState('');
   const [NewSaleRegisterSaller, setNewSaleRegisterSaller] = useState(decoded.fullName);
   const [NewSaleRegisterData, setNewSaleRegisterData] = useState('');
@@ -43,7 +43,7 @@ function FormNewSaleRegister({ dataSaleRegister }) {
     setNewSaleRegisterProduct('');
     setNewSaleRegisterQuant('');
     setCardId(1);
-    
+
     values.saleItems.forEach((value, index) => {
       const NewItemtoCard = {
         id: index + 1,
@@ -60,7 +60,7 @@ function FormNewSaleRegister({ dataSaleRegister }) {
   const handleSubmit = async (event) => {
     event.preventDefault();
     setIsLoading(true);
-  
+
     try {
       const response = await axios.post(
         `${apiUrl}/api/vendas`,
@@ -77,27 +77,28 @@ function FormNewSaleRegister({ dataSaleRegister }) {
       );
 
       const clientData = response.data;
-  
-      const saleRequests = CardItems.map((card) =>
-        axios.post(
-          `${apiUrl}/api/vendas/${clientData.id}/itens`, 
-          {
-            productId: card.productId,
-            quantitySold: card.quant,
-            salePrice: card.price,
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${JwtToken}`,
-              "Content-Type": "application/json",
+              
+        const saleRequests = CardItems.map((card) =>
+          axios.post(
+            `${apiUrl}/api/vendas/${clientData.id}/itens`,
+            {
+              productId: +card.productId,     
+              quantitySold: +card.quant,       
+              salePrice: +card.price,         
             },
-          }
-        )
-      );
+            {
+              headers: {
+                Authorization: `Bearer ${JwtToken}`,
+                "Content-Type": "application/json",
+              },
+            }
+          )
+        );
       await Promise.all(saleRequests);
       setSuccess("Venda registrada com sucesso!");
       handleReset();
     } catch (err) {
+      console.log(err)
       setError("Erro ao registrar itens de venda");
       if (err.response && err.response.data) {
         setError(`${err.response.data.message}`);
@@ -119,13 +120,13 @@ function FormNewSaleRegister({ dataSaleRegister }) {
       //   quantitySold: card.quant,
       //   salePrice: card.price,
       // })),
-      saleItems:[],
+      saleItems: [],
       saleStatus: "pendente",
     };
     console.log("Payload:", salePayload);
 
     try {
-     const response = await axios.put( `${apiUrl}/api/vendas/${NewSaleRegisterClientId}`,
+      const response = await axios.put(`${apiUrl}/api/vendas/${NewSaleRegisterClientId}`,
         salePayload,
         {
           headers: {
@@ -133,7 +134,7 @@ function FormNewSaleRegister({ dataSaleRegister }) {
             "Content-Type": "application/json",
           },
         }
-      );  
+      );
       console.log(response)
       setSuccess("Venda Atualizada com sucesso!");
       handleReset();
@@ -147,36 +148,101 @@ function FormNewSaleRegister({ dataSaleRegister }) {
       setIsLoading(false);
     }
   };
-  
-  
-  const deleteCardItem = (idToDelete) => {
-    setCardItems((prevItems) => prevItems.filter(item => item.id !== idToDelete)); 
-    setCardId(cardId - 1);
-  };
 
   const handleAddtoCard = (e) => {
     e.preventDefault();
+    if (!NewSaleRegisterProduct || NewSaleRegisterProduct.length === 0) {
+      setError("Nenhum produto foi selecionado.");
+      return;
+    }
+    const selectedProduct = NewSaleRegisterProduct[0];
     const NewItemtoCard = {
       id: cardId,
-      productId: NewSaleRegisterProduct[0].id,
-      productName: NewSaleRegisterProduct[0].name,
+      productId: selectedProduct.id,
+      productName: selectedProduct.name,
       quant: NewSaleRegisterQuant,
-      price: NewSaleRegisterProduct[0].productPrice,
-      subtotal: NewSaleRegisterProduct[0].productPrice * NewSaleRegisterQuant,
+      price: selectedProduct.productPrice,
+      subtotal: +selectedProduct.productPrice * +NewSaleRegisterQuant,
     };
-
+  
+    if (+NewSaleRegisterQuant > +selectedProduct.availableForSale) {
+      setError(
+        +selectedProduct.availableForSale === 0
+          ? "Produto sem estoque disponível!"
+          : "Quantidade maior que o estoque disponível!"
+      );
+      return;
+    }
+  
     if (!NewItemtoCard.quant || isNaN(NewItemtoCard.quant) || NewItemtoCard.quant <= 0) {
       setError("A quantidade deve ser preenchida e ser um número positivo.");
       return;
-    } else if (!NewItemtoCard.price || isNaN(NewItemtoCard.price) || NewItemtoCard.price <= 0) {
+    }
+  
+    if (!NewItemtoCard.price || isNaN(NewItemtoCard.price) || NewItemtoCard.price <= 0) {
       setError("O preço deve ser preenchido e ser um número positivo.");
       return;
     }
-    
-    setCardItems((prevItems) => [...prevItems, NewItemtoCard]);
-    setCardId(cardId + 1);
-    setNewSaleRegisterQuant('');
+  
+    const updatedProducts = ListProducts.map((prod) => {
+      if (prod.id === selectedProduct.id) {
+        if (+prod.availableForSale < +NewItemtoCard.quant) {
+          setError("Estoque insuficiente para adicionar essa quantidade.");
+          throw new Error("Estoque insuficiente");
+        }
+        return {
+          ...prod,
+          availableForSale: +prod.availableForSale - +NewItemtoCard.quant,
+        };
+      }
+      return prod;
+    });
+    console.log("Estoque após atualização:", updatedProducts);
+    setListProducts(updatedProducts);
+  
+    setCardItems((prevItems) => {
+      const existingItemIndex = prevItems.findIndex(
+        (item) => item.productId === NewItemtoCard.productId
+      );
+  
+      if (existingItemIndex >= 0) {
+        const updatedItems = [...prevItems];
+        const existingItem = updatedItems[existingItemIndex];
+        updatedItems[existingItemIndex] = {
+          ...existingItem,
+          quant: +existingItem.quant + +NewSaleRegisterQuant,
+          subtotal: (+existingItem.quant + +NewSaleRegisterQuant) * existingItem.price,
+        };
+        return updatedItems;
+      }
+      setCardId(cardId + 1);
+      return [...prevItems, NewItemtoCard];
+    });
+  
+    setNewSaleRegisterQuant("");
+    setError("");
   };
+  
+   const deleteCardItem = (idToDelete) => {
+    setCardItems((prevItems) => {
+      const itemToDelete = prevItems.find(item => item.id === idToDelete);
+      if (!itemToDelete) return prevItems;
+      setListProducts((prevProducts) =>
+        prevProducts.map((prod) => {
+          if (prod.id === itemToDelete.productId) {
+            return {
+              ...prod,
+              availableForSale: +prod.availableForSale + +itemToDelete.quant,
+            };
+          }
+          return prod;
+        })
+      );
+      return prevItems.filter(item => item.id !== idToDelete);
+    });
+    setCardId((prevId) => prevId - 1);
+  };
+  
 
   const handleGetClients = async () => {
     try {
@@ -222,7 +288,7 @@ function FormNewSaleRegister({ dataSaleRegister }) {
   useEffect(() => {
     if (dataSaleRegister) {
       ValuestoUpdate(dataSaleRegister);
-      setPostToUpdate(false); 
+      setPostToUpdate(false);
       console.log(dataSaleRegister)
     }
   }, [dataSaleRegister]);
@@ -231,7 +297,7 @@ function FormNewSaleRegister({ dataSaleRegister }) {
   return (
     <div className="containerForm">
       <h2 className="tabTitle">
-        Registro de Vendas
+        Vendas de Produtos
         <a className="hide-desktop" onClick={() => setResponsiveSaleRegister(!ResponsiveSaleRegister)}>
           {!ResponsiveSaleRegister ? <CgAdd size={45} /> : <CgRemove size={45} />}
         </a>
@@ -242,14 +308,14 @@ function FormNewSaleRegister({ dataSaleRegister }) {
       >
         <div className="line1 line">
           <SelectFieldClient
-          classNameDiv="fieldName"
-          label={"Clientes"}
-          placeholder="Clientes"
-          arrayOptions={ListClients}
-          value={!PostToUpdate && NewSaleRegisterClient.fullName}
-          onChangeValue={setNewSaleRegisterClient}
+            classNameDiv="fieldName"
+            label={"Clientes"}
+            placeholder="Clientes"
+            arrayOptions={ListClients}
+            value={!PostToUpdate && NewSaleRegisterClient.fullName}
+            onChangeValue={setNewSaleRegisterClient}
           />
-          
+
           <InputField
             classNameDiv="fieldName"
             label="Vendedor Responsavel:"
@@ -259,58 +325,63 @@ function FormNewSaleRegister({ dataSaleRegister }) {
             disabled={true}
           />
           <InputField
-          classNameDiv="fieldDate"
+            classNameDiv="fieldDate"
             label="Data de Entrega:"
             name="deliveryDate"
             type="date"
             value={NewSaleRegisterData}
-            onChange={(e)=>setNewSaleRegisterData(e.target.value)}
+            onChange={(e) => setNewSaleRegisterData(e.target.value)}
           />
 
           <InputField
-              classNameDiv="fieldDate"
+            classNameDiv="fieldDate"
             label="Data Prevista:"
             name="deliveryDate"
             type="date"
             value={NewSaleRegisterDataPrev}
-            onChange={(e)=>setNewSaleRegisterDataPrev(e.target.value)}
+            onChange={(e) => setNewSaleRegisterDataPrev(e.target.value)}
           />
         </div>
 
-        <div className="line4 line">
+        <div className="line">
 
-        <SelectFieldProduct
-          label={"Produtos"}
-          placeholder="Produtos"
-          arrayOptions={ListProducts}
-          value={NewSaleRegisterProduct}
-          onChangeValue={setNewSaleRegisterProduct}
-        />
+          <SelectFieldProduct
+            classNameDiv="fieldProduct"
+            label={"Produtos"}
+            placeholder="Produtos"
+            arrayOptions={ListProducts}
+            value={NewSaleRegisterProduct}
+            onChangeValue={setNewSaleRegisterProduct}
+          />
 
 
-        <InputField
+          <InputField
+            classNameDiv="fieldQuantity"
             label="Quantidade:"
             name="quantity"
             placeholder="0"
             value={NewSaleRegisterQuant}
-            onChange={(e)=>setNewSaleRegisterQuant(e.target.value)}
+            onChange={(e) => setNewSaleRegisterQuant(e.target.value)}
           />
           
-          <div className="errorsOrSuccess">
-          {Error && <p className="error">{Error}</p>}
-          {Success && <p className="salesuccess">{Success}</p>}
-        </div>
 
-        {isLoading ? <LoadingSpin /> : <button type="submit" onClick={(e)=>handleAddtoCard(e)}>Registrar</button>}
+            <div className="divRegisterButton">
+              {isLoading ? <LoadingSpin /> : <button type="submit" className="registerButton" onClick={(e) => handleAddtoCard(e)}>Registrar</button>}
+            </div>
         </div>
+            <div className="errorsOrSuccess">
+              {Error && <p className="error">{Error}</p>}
+              {Success && <p className="salesuccess">{Success}</p>}
+            </div>
       </form>
       <CardSaleRegister
-      saleRegisters={CardItems}
+        saleRegisters={CardItems}
         onDelete={deleteCardItem}
+        PostToUpdate={PostToUpdate}
+        handleSubmit={handleSubmit}
+        handleUpdate={handleUpdate}
       />
-    <button type="submit" onClick={PostToUpdate ? handleSubmit : handleUpdate}>
-      {PostToUpdate ? "Finalizar Pedido" : "Atualizar Pedido"}
-    </button>
+      
     </div>
   );
 }
