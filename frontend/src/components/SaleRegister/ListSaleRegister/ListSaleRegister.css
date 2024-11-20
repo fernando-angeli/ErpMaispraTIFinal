@@ -1,4 +1,6 @@
-.contentListSaleRegisters {
+
+ .contentListSaleRegisters{
+
     width: 80%;
     height: auto;
     margin: 0 auto;
@@ -201,7 +203,9 @@ tbody td svg.deleteLine:hover {
     fill: var(--system-danger) !important;
 }
 
-
+.DeliveryLine{
+    text-decoration: none;
+}
 
 /* tbody tr:hover {
     background-color: #e6e6e6;

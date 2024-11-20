@@ -66,14 +66,11 @@ function FormNewPurchasing(dataPurchasing) {
   useEffect(() => {
     const handleShowSuppliers = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:8080/api/fornecedores",
-          {
-            headers: {
-              Authorization: `Bearer ${JwtToken}`,
-            },
-          }
-        );
+        const response = await axios.get(`${apiUrl}/api/fornecedores`, {
+          headers: {
+            Authorization: `Bearer ${JwtToken}`,
+          },
+        });
 
         const listSupplier = response.data.content.map((supplier) => ({
           value: supplier.id,

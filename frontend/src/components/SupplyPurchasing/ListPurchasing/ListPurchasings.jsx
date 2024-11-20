@@ -141,20 +141,17 @@ const ListPurchasings = () => {
               <tbody>
                 <ModalYesOrNot
                   show={showModal}
-                  onClose={() => setShowModal(false)}
-                  title="Deletar Purchasinge?"
-                >
-                  <h6>
-                    Confirma Exclusão de{" "}
-                    {PurchasingeNameShow && PurchasingeNameShow}?
-                  </h6>
-                  <button onClick={() => window.handleModalConfirm(true)}>
-                    Sim
-                  </button>
-                  <button onClick={() => window.handleModalConfirm(false)}>
-                    Não
-                  </button>
-                </ModalYesOrNot>
+                  title="Deletar Compra do insulmo?"
+                  deleteItem={PurchasingeNameShow}
+                  onConfirm={() => {
+                    window.handleModalConfirm(true);
+                    setShowModal(false);
+                  }}
+                  onClose={() => {
+                    window.handleModalConfirm(false);
+                    setShowModal(false);
+                  }}
+                />
 
                 <PageOfListPurchasings
                   Purchasings={filteredPurchasings}

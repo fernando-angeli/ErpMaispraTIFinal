@@ -39,6 +39,7 @@ const ListSaleRegisters = () => {
 
   useEffect(() => {
     handleShowSaleRegisters();
+
     console.log(filteredSaleRegisters)
   }, []);
 
@@ -74,16 +75,19 @@ const ListSaleRegisters = () => {
   };
 
   const filteredSaleRegisters = saleRegisters.filter((saleRegister) => {
-    const matchesSearch = saleRegister.client.fullName.toLowerCase().includes(searchSaleRegister.toLowerCase());
+    const matchesSearch = saleRegister.client.fullName
+      .toLowerCase()
+      .includes(searchSaleRegister.toLowerCase());
     return matchesSearch;
   });
 
   const maxSaleRegistersPerList = 6;
-  let contSaleRegisterPages = Math.ceil(filteredSaleRegisters.length / maxSaleRegistersPerList);
+  const totalPages = Math.ceil(
+    filteredSaleRegisters.length / maxSaleRegistersPerList
+  );
 
   return (
     <>
-
       {isLoading && <LoadingSpin />}
       <FormNewSaleRegister dataSaleRegister={saleRegisterUpdate} />
 
@@ -154,13 +158,22 @@ const ListSaleRegisters = () => {
               <tbody>
                 <ModalYesOrNot
                   show={showModal}
-                  onClose={() => setShowModal(false)}
                   title="Deletar Registro de Venda?"
                 >
                   <h6>Confirma Exclusão de {saleRegisterNameShow}?</h6>
                   <button onClick={() => window.handleModalConfirm(true)}>Sim</button>
                   <button onClick={() => window.handleModalConfirm(false)}>Não</button>
                 </ModalYesOrNot>
+                  deleteItem={saleRegisterNameShow}
+                  onConfirm={() => {
+                    window.handleModalConfirm(true);
+                    setShowModal(false);
+                  }}
+                  onClose={() => {
+                    window.handleModalConfirm(false);
+                    setShowModal(false);
+                  }}
+                />
                 <PageOfListSaleRegister
                   SaleRegisters={filteredSaleRegisters}
                   onEdit={ToFormUpdateSaleRegister}
@@ -174,6 +187,7 @@ const ListSaleRegisters = () => {
           <div className="pagination">
             <NavigationListSaleRegister
               contSaleRegisterPages={contSaleRegisterPages}
+              totalPages={totalPages}
               setListSaleRegistersPage={setListSaleRegistersPage}
             />
           </div>
