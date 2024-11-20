@@ -52,7 +52,7 @@ public class SaleItemService {
         // Faz a verificação se já existe um item com o mesmo id e valor nessa venda
         Optional<SaleItem> existingSaleItem = saleItemRepository.findByProductIdAndSaleIdAndSalePrice(saleInsertItemDto.getProductId(), saleId, saleInsertItemDto.getSalePrice());
 
-        // Se o item existir atualizad o mesmo
+        // Se o item existir atualiza com o mesmo valor vai atualizar o mesmo
         if(existingSaleItem.isPresent()){
             SaleItem saleItem = existingSaleItem.get();
             getProductAndUpdateStock(saleInsertItemDto.getProductId(), saleInsertItemDto.getQuantitySold());
@@ -85,6 +85,12 @@ public class SaleItemService {
         SaleItem saleItem = saleItemRepository.findByIdAndSaleId(itemId, saleId)
                 .orElseThrow(() -> new ResourceNotFoundException("Item não localizado"));
         return Optional.of(convertToDto(saleItem, SaleItemResponseDto.class));
+    }
+
+    @Transactional(readOnly = true)
+    public SaleItemResponseDto findById(Long saleId) {
+        Optional<SaleItem> saleItem = saleItemRepository.findById(saleId);
+        return convertToDto(saleItem, SaleItemResponseDto.class);
     }
 
     @Transactional(readOnly = true)
@@ -123,42 +129,44 @@ public class SaleItemService {
 
     @Transactional
     public void delete(Long id) {
-        SaleItem saleItem = saleItemRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Venda de item não localizada."));
-
-        // Verifica se a quantidade entregue é maior que zero
-        if (saleItem.getQuantityDelivered().compareTo(BigDecimal.ZERO) > 0) {
-            throw new DatabaseException("Não é possível deletar um item que já unidades entregues.");
-        }
-
         try {
-            // Caso a quantidade entregue seja zero ou menor, prossegue com a exclusão
+            SaleItem saleItem = saleItemRepository.findById(id)
+                    .orElseThrow(() -> new ResourceNotFoundException("Venda de item não localizada."));
+            if(saleItem.getQuantityDelivered().compareTo(BigDecimal.ZERO) > 0)
+                throw new DatabaseException("Não é possível deletar um item que já unidades entregues.");
             productService.updateDeletedItemToSaleItems(saleItem.getProduct().getId(), saleItem.getQuantitySold());
             saleItemRepository.deleteById(id);
         } catch (DataIntegrityViolationException e) {
-            throw new DatabaseException("Não foi possível excluir este item. Ele pode estar vinculado a outros registros.");
+            throw new DatabaseException("Não foi possível excluir esta item. Ele pode estar vinculado a outros registros.");
+        } catch (Exception e) {
+            throw new DatabaseException("Erro inesperado ao tentar excluir este item.");
         }
     }
 
-
     @Transactional
-    void getProductAndUpdateStock(Long productId, BigDecimal quantitySale){
+    private void getProductAndUpdateStock(Long productId, BigDecimal quantitySale){
         ProductDto productDto = productService.findById(productId)
                 .orElseThrow(() -> new ResourceNotFoundException("Produto não encontrado com ID: " + productId));
         verifyProductStock(productDto, quantitySale);
         productService.updateStockBySale(productId, quantitySale);
     }
 
-    private void verifyProductStock(ProductDto productDto, BigDecimal quantitySold) {
+    public void verifyProductStock(ProductDto productDto, BigDecimal quantitySold) {
         if(productDto.getAvailableForSale().compareTo(quantitySold) < 0)
             throw new ProductException("Estoque insuficiente, falta(m): "
                     + (new BigDecimal(String.valueOf(quantitySold.subtract(productDto.getAvailableForSale()))))
                     + " " + productDto.getUnitOfMeasure().getDescription() + "(s)");
     }
 
-    void verifyQuantitySold(BigDecimal quantitySold){
+    public void verifyQuantitySold(BigDecimal quantitySold){
         if(quantitySold.compareTo(BigDecimal.ZERO) <= 0)
             throw new ProductException("A quantidade de produtos deve ser maior que zero.");
     }
 
+    public void updateItemDeliveryQuantity(Long saleItemId, BigDecimal quantityDelivery) {
+        SaleItem saleItem = saleItemRepository.findById(saleItemId)
+                .orElseThrow(() -> new ResourceNotFoundException("Item não localizado pelo id informado."));
+        saleItem.setQuantityDelivered(quantityDelivery);
+        saleItemRepository.save(saleItem);
+    }
 }

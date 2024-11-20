@@ -9,7 +9,7 @@ import RadioGroup from "../../RadioGroup/RadioGroup";
 import TextareaField from "../../TextareaField/TextareaField";
 import LoadingSpin from '../../LoadingSpin/LoadingSpin'
 
-function FormNewClient(dataClient) {
+function FormNewClient( { dataClient, onSubmitSuccess }) {
   const apiUrl = import.meta.env.VITE_API_URL;
 
   const [ResponsiveCliente, setResponsiveCliente] = useState(true);
@@ -105,7 +105,7 @@ function FormNewClient(dataClient) {
   if (cpfRegex.test(cpf)) {
     setError(null);
   } else {
-    setError('Formato de Telefone Inválido!');
+    setError('Formato de Cpf Inválido!');
     return
   }
   }
@@ -135,8 +135,7 @@ function FormNewClient(dataClient) {
     SetPostToUpdade(true)
     setError(null)
     };
-
-
+    
   const handleSubmit = async (event) => {
     event.preventDefault();
     const newClientData = {
@@ -212,7 +211,9 @@ function FormNewClient(dataClient) {
       handleReset();
       setSuccess("Cliente adicionado com sucesso!");
       setIsLoading(false);
-      window.location.reload;
+      if (onSubmitSuccess) {
+        onSubmitSuccess();
+      }
     } catch (err) {
       setIsLoading(false);
       console.error(err);
@@ -305,7 +306,9 @@ function FormNewClient(dataClient) {
       setIsLoading(!isLoading)
       setError(null);
       SetPostToUpdade(true)
-      window.location.reload()
+      if (onSubmitSuccess) {
+        onSubmitSuccess();
+      }
     } catch (err) {
       setIsLoading(!isLoading);
       if (err.response && err.response.data) {
@@ -319,9 +322,11 @@ function FormNewClient(dataClient) {
     }
 
   };
+
   const resposiveClienteShow = () => {
     setResponsiveCliente(!ResponsiveCliente);
   };
+  
  const SetValuestoUpdate = (values) => {
    setUpdateClientId(values.id)
    setNewClientName(values.fullName);
@@ -329,7 +334,7 @@ function FormNewClient(dataClient) {
    setNewClientIE(values.stateRegistration)
    setNewClientAddress(values.address);
    setNewClientDistrict(values.district)
-   setNewClientPhone(values.phoneNumber);
+   setNewClientPhone((values.phoneNumber.replace(/\D/g, "").replace(/(\d{2})(\d{5})(\d{4})/, "($1) $2-$3")));
    setNewClientCPForCNPJ(values.cpfCnpj);
    setNewClientAddressNumber(values.number);
    setNewClientCEP(values.zipCode.replace(/\D/g, ''))
@@ -347,11 +352,9 @@ function FormNewClient(dataClient) {
    
   };
 
-
-
   useEffect(() => {
-  if(dataClient.dataClient){
-    SetValuestoUpdate(dataClient.dataClient);
+  if(dataClient){
+    SetValuestoUpdate(dataClient);
     SetPostToUpdade(false)
   }
 }, [dataClient]);

@@ -32,6 +32,7 @@ const ListEmployees = ({onlyView}) => {
   const [contEmployeePages, setContEmployeePages] = useState(0);
 
   const handleShowEmployees = async () => {
+    setIsLoading(true)
     try {
       const response = await axios.get(`${apiUrl}/api/usuarios`, {
         headers: {
@@ -40,6 +41,7 @@ const ListEmployees = ({onlyView}) => {
       });
 
       setEmployees(response.data.content);
+      setIsLoading(false)
     } catch (err) {
       console.log(err);
       alert("Erro ao puxar employeees!");
@@ -104,7 +106,7 @@ const ListEmployees = ({onlyView}) => {
   return (
     <>
       {isLoading && <LoadingSpin />}
-      {onlyView ? "" : <FormNewEmployee dataEmployee={employeeUpdate} />}
+      {onlyView ? "" : <FormNewEmployee dataEmployee={employeeUpdate} onSubmitSuccess={handleShowEmployees}  />}
       
       <div className="contentListEmployees">
         <div className="ListEmployees">

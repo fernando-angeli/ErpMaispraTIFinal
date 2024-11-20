@@ -77,7 +77,7 @@ function ModalDetails({ show, onClose, content, title }) {
             </div>
             <div className="firstSecond columnClient">
               <div className="label">Limite de Credito:</div>
-              <div className="value">{content && formatarReal(content.creditLimit)}</div>
+              <div className="value">R$ {content && formatarReal(content.creditLimit)}</div>
             </div>
             <div className="third columnClient">
               <div className="label">Status:</div>
