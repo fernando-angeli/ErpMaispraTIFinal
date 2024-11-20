@@ -21,7 +21,7 @@ const ListSaleRegisters = () => {
   const [showModal, setShowModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [saleRegisterNameShow, setSaleRegisterNameShow] = useState("");
-  
+
   const [listSaleRegistersPageSelected, setListSaleRegistersPage] = useState(1);
 
   const handleShowSaleRegisters = async () => {
@@ -38,10 +38,10 @@ const ListSaleRegisters = () => {
   };
 
   useEffect(() => {
-   handleShowSaleRegisters();
-   console.log(filteredSaleRegisters)
-   }, []);
-   
+    handleShowSaleRegisters();
+    console.log(filteredSaleRegisters);
+  }, []);
+
   const deleteSaleRegister = async (saleRegister) => {
     setSaleRegisterNameShow(saleRegister.client.fullName);
     const confirmDelete = await new Promise((resolve) => {
@@ -74,19 +74,22 @@ const ListSaleRegisters = () => {
   };
 
   const filteredSaleRegisters = saleRegisters.filter((saleRegister) => {
-    const matchesSearch = saleRegister.client.fullName.toLowerCase().includes(searchSaleRegister.toLowerCase());
+    const matchesSearch = saleRegister.client.fullName
+      .toLowerCase()
+      .includes(searchSaleRegister.toLowerCase());
     return matchesSearch;
   });
 
   const maxSaleRegistersPerList = 6;
-  const totalPages = Math.ceil(filteredSaleRegisters.length / maxSaleRegistersPerList);
+  const totalPages = Math.ceil(
+    filteredSaleRegisters.length / maxSaleRegistersPerList
+  );
 
   return (
     <>
-    
       {isLoading && <LoadingSpin />}
-      <FormNewSaleRegister dataSaleRegister={saleRegisterUpdate} /> 
-    
+      <FormNewSaleRegister dataSaleRegister={saleRegisterUpdate} />
+
       <div className="contentListSaleRegisters">
         <div className="ListSaleRegisters">
           <div className="headerListSaleRegisters">
@@ -96,11 +99,11 @@ const ListSaleRegisters = () => {
             </div>
             <section>
               <label className="searchSaleRegister">
-                <input 
-                  type="text" 
-                  placeholder="Buscar registro de venda..." 
-                  required 
-                  onChange={(e) => setSearchSaleRegister(e.target.value)} 
+                <input
+                  type="text"
+                  placeholder="Buscar registro de venda..."
+                  required
+                  onChange={(e) => setSearchSaleRegister(e.target.value)}
                 />
                 <a>
                   <BiSearch size={35} />
@@ -152,27 +155,31 @@ const ListSaleRegisters = () => {
               <tbody>
                 <ModalYesOrNot
                   show={showModal}
-                  onClose={() => setShowModal(false)}
                   title="Deletar Registro de Venda?"
-                >
-                  <h6>Confirma Exclusão de {saleRegisterNameShow}?</h6>
-                  <button onClick={() => window.handleModalConfirm(true)}>Sim</button>
-                  <button onClick={() => window.handleModalConfirm(false)}>Não</button>
-                </ModalYesOrNot>
-                <PageOfListSaleRegister 
-                  SaleRegisters={filteredSaleRegisters} 
-                  onEdit={ToFormUpdateSaleRegister} 
-                  onDelete={deleteSaleRegister} 
-                  maxSaleRegistersPerList={maxSaleRegistersPerList} 
+                  deleteItem={saleRegisterNameShow}
+                  onConfirm={() => {
+                    window.handleModalConfirm(true);
+                    setShowModal(false);
+                  }}
+                  onClose={() => {
+                    window.handleModalConfirm(false);
+                    setShowModal(false);
+                  }}
+                />
+                <PageOfListSaleRegister
+                  SaleRegisters={filteredSaleRegisters}
+                  onEdit={ToFormUpdateSaleRegister}
+                  onDelete={deleteSaleRegister}
+                  maxSaleRegistersPerList={maxSaleRegistersPerList}
                   listSaleRegistersPageSelected={listSaleRegistersPageSelected}
                 />
               </tbody>
             </table>
           </div>
           <div className="pagination">
-            <NavigationListSaleRegister 
-              totalPages={totalPages} 
-              setListSaleRegistersPage={setListSaleRegistersPage} 
+            <NavigationListSaleRegister
+              totalPages={totalPages}
+              setListSaleRegistersPage={setListSaleRegistersPage}
             />
           </div>
         </div>
