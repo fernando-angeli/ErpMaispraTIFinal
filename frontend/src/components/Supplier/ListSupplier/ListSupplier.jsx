@@ -29,6 +29,7 @@ const ListSupplier = ({onlyView}) => {
   const [listSuppliersPageSelected, setListSuppliersPage] = useState(1);
   
   const handleShowSuppliers = async () => {
+    setIsLoading(true)
     try {
       const response = await axios.get(`http://localhost:8080/api/fornecedores`, {
         headers: {
@@ -36,6 +37,7 @@ const ListSupplier = ({onlyView}) => {
         },
       });
       setSuppliers(response.data.content);
+      setIsLoading(!true)
     } catch (err) {
       console.log(err);
       alert("Erro ao puxar fornecedores!");
@@ -92,7 +94,7 @@ const ListSupplier = ({onlyView}) => {
   return (
     <>
       {isLoading && <LoadingSpin />}
-      {onlyView ? "" : <FormNewSupplier dataSupplier={supplierUpdate} />}
+      {onlyView ? "" : <FormNewSupplier dataSupplier={supplierUpdate} onSubmitSuccess={handleShowSuppliers} />}
       
       <div className="contentListSuppliers">
         <div className="ListSuppliers">

@@ -18,8 +18,8 @@ function NavigationListClients({ contClientPages, setListClientsPage }) {
   }, [listPageSelected]);
 
   const handlePageClick = (page) => {
-    setListPageSelected(page); // Atualiza o estado local
-    setListClientsPage(page); // Atualiza o estado no componente pai
+    setListPageSelected(page); 
+    setListClientsPage(page); 
   };
 
   const goToNextPage = () => {

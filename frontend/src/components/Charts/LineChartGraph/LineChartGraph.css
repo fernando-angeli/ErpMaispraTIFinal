@@ -44,7 +44,7 @@
     }
 }
 
-/* @media (max-width: 768px) {
+ @media (max-width: 768px) {
     .lineContent h1 {
         font-size: 1.5em;
     }
@@ -57,6 +57,6 @@
         border-radius: 1em;
         padding: 1em;
         height: 100%;
-        width: 25em;
+        width: 100%
     }
-}  */
+}  

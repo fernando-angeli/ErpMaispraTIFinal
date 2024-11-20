@@ -34,8 +34,7 @@ function PageOfListClients({
         show={showModalDetails}
         onClose={() => setshowModalDetails(false)}
         content={selectedClient}
-        title="Detalhes Cliente"
-      ></ModalDetails>
+        title="Detalhes Cliente"> </ModalDetails>
 
       {clientsToList.map((client) => (
         <tr key={client.id}>
