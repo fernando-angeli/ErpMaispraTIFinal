@@ -29,8 +29,9 @@ jobs:
     # Rodar os comandos de deploy
     - name: Deploy on EC2
       run: |
-        ssh -o StrictHostKeyChecking=no ec2-user@34.227.59.55 << 'EOF'
+        ssh -o StrictHostKeyChecking=no ec2-user@{{ secrets.EC2_IP }} << 'EOF'
           cd /home/ec2-user/api
+          export MY_VARIABLE=${{ secrets.MY_VARIABLE }}
           docker-compose down
           docker-compose up -d --build
         EOF
