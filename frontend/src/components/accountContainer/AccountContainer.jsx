@@ -1,5 +1,5 @@
 import userIcon from "../../assets/icons/userIcon.svg";
-import "./accountContainer.css";
+import "./AccountContainer.css";
 import { jwtDecode } from "jwt-decode";
 import { useAuth } from "../AuthContext";
 import { useState, useEffect, useRef } from "react";
@@ -8,7 +8,6 @@ import { RxAvatar } from "react-icons/rx";
 import { AiOutlineMail } from "react-icons/ai";
 import { IoIosHelpCircleOutline } from "react-icons/io";
 import { RxExit } from "react-icons/rx";
-
 
 function AccountContainer({ isLoggedIn }) {
   const { JwtToken } = useAuth();
@@ -56,13 +55,13 @@ function AccountContainer({ isLoggedIn }) {
           </div>
           {isMenuOpen && (
             <div className="account-menu" ref={menuRef}>
-              <div className="menu-item">
+              <div className="menu-item" onClick={() => navigate("/perfil")}>
                 <RxAvatar className="menu-icon" />
                 Perfil
               </div>
               <div
                 className="menu-item"
-                onClick={() => navigate("/notifications")}
+                onClick={() => navigate("/notificacao")}
               >
                 <AiOutlineMail className="menu-icon" />
                 Notificações
