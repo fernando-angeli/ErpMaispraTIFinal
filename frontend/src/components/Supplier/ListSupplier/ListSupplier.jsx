@@ -15,7 +15,6 @@ const ListSupplier = ({ onlyView }) => {
   ListSupplier.defaultProps = {
     onlyView: false,
   };
-  const apiUrl = import.meta.env.VITE_API_URL;
   const { JwtToken } = useAuth();
   const [suppliers, setSuppliers] = useState();
   const [supplierUpdate, setSupplierUpdate] = useState(null);

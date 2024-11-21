@@ -14,7 +14,6 @@ const Login = () => {
   const [Error2, setError2] = useState();
   const { login } = useAuth();
   const navigate = useNavigate();
-  const apiUrl = import.meta.env.VITE_API_URL;
   const [isLoading, setIsLoading] = useState(false);
 
   const isInvalid = (e) => {

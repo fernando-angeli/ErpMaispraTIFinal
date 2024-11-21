@@ -10,10 +10,6 @@ import TextareaField from "../../TextareaField/TextareaField";
 import LoadingSpin from "../../LoadingSpin/LoadingSpin";
 
 function FormNewSupplier({ dataSupplier, onSubmitSuccess }) {
-<<<<<<< HEAD
-=======
-
->>>>>>> 9f65772b089ed41350233632816d49fe1b6b5d06
   const apiUrl = import.meta.env.VITE_API_URL;
 
   const [ResponsiveSupplier, setResponsiveSupplier] = useState(true);
@@ -480,19 +476,13 @@ function FormNewSupplier({ dataSupplier, onSubmitSuccess }) {
         </div>
 
         <div className="line3 line">
-          
-            <InputField
-          <div className="divIE">
+              <div className="divIE">
             <InputField
               type={"text"}
               placeholder={"Digite a Inscrição Estadual"}
               name={"Inscrição Estadual"}
               label={"Inscrição Estadual:"}
-              name={"Inscrição Estadual"}
-              placeholder={"Digite a Inscrição Estadual"}
-              idInput={"newSupplierIE"}
               classNameDiv={"fieldIE"}
-              type={"text"}
               value={newSupplierIE}
               onChange={(e) => {
                 setNewSupplierIE(e.target.value);
@@ -500,8 +490,7 @@ function FormNewSupplier({ dataSupplier, onSubmitSuccess }) {
               }}
               onInvalid={(e) => isInvalid(e)}
             />
-              classNameDiv="inputFieldNoLabel"
-            />
+               <div classNameDiv="inputFieldNoLabel"/>
           </div>
           <InputField
             label={"CEP:"}

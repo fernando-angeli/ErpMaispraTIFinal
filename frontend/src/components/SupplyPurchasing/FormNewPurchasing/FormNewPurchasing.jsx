@@ -52,7 +52,6 @@ function FormNewPurchasing(dataPurchasing) {
     while (elements.length > 0) {
       elements[0].classList.remove("isInvalid");
     }
-
     setProduct("");
     setQte("");
     setDeliveryDate("");
@@ -66,22 +65,12 @@ function FormNewPurchasing(dataPurchasing) {
   useEffect(() => {
     const handleShowSuppliers = async () => {
       try {
-<<<<<<< HEAD
-        const response = await axios.get(
-          `${apiUrl}/api/fornecedores`,
-          {
-            headers: {
-              Authorization: `Bearer ${JwtToken}`,
-            },
-          }
-        );
-=======
+
         const response = await axios.get(`${apiUrl}/api/fornecedores`, {
           headers: {
             Authorization: `Bearer ${JwtToken}`,
           },
         });
->>>>>>> 9f65772b089ed41350233632816d49fe1b6b5d06
 
         const listSupplier = response.data.content.map((supplier) => ({
           value: supplier.id,

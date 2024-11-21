@@ -74,10 +74,7 @@ form.hiddenFormNewEmployee {
   justify-content: end !important;
 }
 
-.selectCity,
-.selectRole {
-.selectCityEmployee,
-.selectRoleEmployee {
+.selectCityEmployee, .selectRoleEmployee {
   padding-inline: 15px;
   padding-block: 17px;
   width: 100%;
@@ -102,7 +99,6 @@ form.hiddenFormNewEmployee {
 } */
 
 .selectCity,
-.selectRole {
 .selectRoleEmployee {
   -webkit-appearance: none; /* Remove a aparência padrão no Chrome/Safari */
   -moz-appearance: none; /* Remove a aparência padrão no Firefox */
