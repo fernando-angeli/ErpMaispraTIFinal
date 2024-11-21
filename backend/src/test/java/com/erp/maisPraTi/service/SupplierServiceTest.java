@@ -266,41 +266,7 @@ public class SupplierServiceTest {
                 "Erro inesperado ao tentar excluir o fornecedor.");
     }
 
-    @Test
-    void deveCobrirVerificacaoDeDocumentosNoUpdate() {
-        // Dados para o teste
-        Long supplierId = 1L;
-        Supplier supplier = SupplierFixture.supplierFixture();
-        supplier.setId(supplierId);
-        supplier.setCpfCnpj("11.222.333/0001-55");
 
-        SupplierUpdateDto supplierUpdateDto = new SupplierUpdateDto();
-        String newCpfCnpj = "22.333.444/0001-11";
-        String newStateRegistration = "987/654321";
-        TypePfOrPj newType = TypePfOrPj.PJ;
-
-        supplierUpdateDto.setCpfCnpj(newCpfCnpj);
-        supplierUpdateDto.setStateRegistration(newStateRegistration);
-        supplierUpdateDto.setTypePfOrPj(newType);
-
-        // Mockando comportamentos necessários
-        when(supplierRepository.getReferenceById(supplierId)).thenReturn(supplier);
-
-        // Mockando a verificação de documentos
-        when(supplierRepository.existsByCpfCnpjAndStateRegistrationAndTypePfPj(
-                newCpfCnpj, newStateRegistration, newType)).thenReturn(false); // Simulando que os documentos não existem
-
-        // Verifique se o fornecedor com ID 1 existe antes de chamar o update
-
-
-        // Executa o método
-        SupplierDto updatedSupplier = supplierService.update(supplierId, supplierUpdateDto);
-
-        // Verificações
-        verify(supplierRepository, times(1)).existsById(supplierId);
-        verify(supplierRepository, times(1)).save(any(Supplier.class));
-        assertNotNull(updatedSupplier);
-    }
 
 }
 

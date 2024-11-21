@@ -23,7 +23,7 @@ public class SupplierFixture {
         supplier.setPhoneNumber("51912345678");
         supplier.setCpfCnpj("11.222.333/0001-99");
         supplier.setStateRegistration("012/3456789");
-        supplier.setTypePfOrPj(TypePfOrPj.PJ);
+
         supplier.setCreditLimit(new BigDecimal(9000.00));
         supplier.setStatus(SupplierStatus.ACTIVE);
         return supplier;
