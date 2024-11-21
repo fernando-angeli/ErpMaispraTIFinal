@@ -25,7 +25,7 @@ function FormNewProduct(dataProduct) {
   const [newProducSupplier, setNewProductSupplier] = useState();
   const [newProductAvailableForSale, setNewProductAvailableForSale] = useState("");
   const [newProductSupplierCode, setNewProductSupplierCode] = useState("");
- 
+
   const [ListSupplier, setListSupplier] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [updateProductId, setUpdateProductId] = useState();
@@ -38,7 +38,7 @@ function FormNewProduct(dataProduct) {
 
 
 
-  const CheckStock = (stock)=> {
+  const CheckStock = (stock) => {
     if (stock >= 0) {
       setError(null);
     } else {
@@ -91,7 +91,7 @@ function FormNewProduct(dataProduct) {
       stock: newProductStock,
       availableForSale: newProductAvailableForSale,
       supplier: newProducSupplier
-      
+
     };
     console.log(newProductData)
     if (!document.getElementById("formNewProduct").reportValidity()) {
@@ -137,8 +137,8 @@ function FormNewProduct(dataProduct) {
       reservedStock: newProductReservedStock,
       incomingStock: newProductIncomingStock,
       supplier: newProducSupplier
-      
-      }
+
+    }
 
     if (!document.getElementById("formNewProduct").reportValidity()) {
       setError("Preencha todos os campos!");
@@ -233,12 +233,12 @@ function FormNewProduct(dataProduct) {
         onSubmit={PostToUpdate ? handleSubmit : handleUpdate}
       >
         <div className="line1 line">
-        <InputField
+          <InputField
             label={"Código do Produto:"}
             placeholder={"Digite o código do Produto"}
             name={"codigoDoProduto"}
             idInput={"newProductSupplierCode"}
-            classNameDiv="fiedSupplierCode"
+            classNameDiv="fieldSupplierCode"
             value={newProductSupplierCode}
             onChange={(e) => {
               setNewProductSupplierCode(e.target.value);
@@ -306,14 +306,15 @@ function FormNewProduct(dataProduct) {
             onInvalid={(e) => isInvalid(e)}
           />
           <SelectFieldSupplier
-          label={"Fornecedor"}
-          placeholder="Fornecedor"
-          arrayOptions={ListSupplier}
-          value={newProducSupplier}
-          onChangeValue={setNewProductSupplier}
-        />
+            label={"Fornecedor"}
+            placeholder="Fornecedor"
+            arrayOptions={ListSupplier}
+            value={newProducSupplier}
+            onChangeValue={setNewProductSupplier}
+            classNameDiv="fieldSupplier"
+          />
 
-          
+
         </div>
 
         <div className="line3 line">
@@ -331,27 +332,35 @@ function FormNewProduct(dataProduct) {
             onInvalid={(e) => isInvalid(e)}
           />
         </div>
+        
 
-        <div className="errorsOrSuccess">
-          <p style={{ color: "red" }}>{Error && Error}</p>
-          <p style={{ color: "green" }}>{Success && Success}</p>
+
+        <div className="line line5">
+          <div className="divStatusAndButtons">
+
+            <div className="errorsOrSuccess">
+              <p style={{ color: "red" }}>{Error && Error}</p>
+              <p style={{ color: "green" }}>{Success && Success}</p>
+            </div>
+            <div className="divButtons">
+              <button
+                type="submit"
+                className="primaryNormal"
+                onClick={PostToUpdate ? handleSubmit : handleUpdate}
+              >
+                {PostToUpdate ? "Salvar" : "Atualizar"}
+              </button>
+              <button
+                type="reset"
+                className="primaryLight"
+                onClick={() => handleReset()}
+              >
+                Cancelar
+              </button>
+            </div>
+          </div>
         </div>
-        <div className="divButtons">
-          <button
-            type="submit"
-            className="primaryNormal"
-            onClick={PostToUpdate ? handleSubmit : handleUpdate}
-          >
-            {PostToUpdate ? "Salvar" : "Atualizar"}
-          </button>
-          <button
-            type="reset"
-            className="primaryLight"
-            onClick={() => handleReset()}
-          >
-            Cancelar
-          </button>
-        </div>
+
       </form >
       {isLoading && <LoadingSpin />}
     </div >

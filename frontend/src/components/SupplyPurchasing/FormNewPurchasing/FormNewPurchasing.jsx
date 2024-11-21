@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
 import "./FormNewPurchasing.css";
+import { useState, useEffect } from "react";
 import { CgAdd, CgRemove } from "react-icons/cg";
 import axios from "axios";
 import { useAuth } from "../../AuthContext";
@@ -66,14 +66,11 @@ function FormNewPurchasing(dataPurchasing) {
   useEffect(() => {
     const handleShowSuppliers = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:8080/api/fornecedores",
-          {
-            headers: {
-              Authorization: `Bearer ${JwtToken}`,
-            },
-          }
-        );
+        const response = await axios.get(`${apiUrl}/api/fornecedores`, {
+          headers: {
+            Authorization: `Bearer ${JwtToken}`,
+          },
+        });
 
         const listSupplier = response.data.content.map((supplier) => ({
           value: supplier.id,
@@ -193,7 +190,7 @@ function FormNewPurchasing(dataPurchasing) {
   return (
     <div className="containerForm">
       <h2 className="tabTitle">
-        Pedido de compra de insumos
+        Pedido de Compra de Insumos
         <a className="hide-desktop" onClick={resposivePurchasingeShow}>
           {!ResponsivePurchasinge ? (
             <CgAdd size={45} />
@@ -227,7 +224,7 @@ function FormNewPurchasing(dataPurchasing) {
             onInvalid={(e) => isInvalid(e)}
           />
           <InputField
-            label={"Qtde:"}
+            label={"Quantidade:"}
             placeholder={"0"}
             name={"qte"}
             idInput={"qte"}
@@ -244,7 +241,7 @@ function FormNewPurchasing(dataPurchasing) {
             label={"Data de Entrega:"}
             name={"deliveryDate"}
             idInput={"deliveryDate"}
-            classNameDiv="fieldDeliveryDate"
+            classNameDiv={"fieldDate"}
             type={"date"}
             value={deliveryDate}
             onChange={(e) => {
@@ -253,11 +250,15 @@ function FormNewPurchasing(dataPurchasing) {
             }}
             onInvalid={(e) => isInvalid(e)}
           />
+        </div>
+
+        <div className="line2 line">
+
           <InputField
-            label={"Data prevista:"}
+            label={"Data Prevista:"}
             name={"ExpectedDate"}
             idInput={"ExpectedDate"}
-            classNameDiv="fieldExpectedDate"
+            classNameDiv={"fieldDate"}
             type={"date"}
             value={expectedDate}
             onChange={(e) => {
@@ -266,37 +267,35 @@ function FormNewPurchasing(dataPurchasing) {
             }}
             onInvalid={(e) => isInvalid(e)}
           />
+          <InputField
+            label={"Responsável pelo Pedido"}
+            name={"Employee"}
+            idInput={"Employee"}
+            classNameDiv={"divSelectEmployee"}
+            classNameSelect={"selectEmployee"}
+            value={decoded.fullName}
+            onInvalid={(e) => selectIsInvalid(e)}
+            disabled={true}
+          />
+
+          <SelectField
+            label={"Fornecedor:"}
+            name={"Supplier"}
+            id={"Supplier"}
+            classnameDiv={"divSelectSupplier"}
+            classNameSelect={"selectSupplier"}
+            value={supplierSelect ? JSON.stringify(supplierSelect[0]) : ""}
+            onInvalid={(e) => selectIsInvalid(e)}
+            onChange={(e) => {
+              const selectedSupplier = JSON.parse(e.target.value);
+              setSupplierSelect([selectedSupplier]);
+              isValid(e);
+            }}
+            arrayOptions={listSupplierSelect}
+          />
+
         </div>
-
-        <div className="line2 line">
-          <div className="line2Left">
-            <InputField
-              label={"Responsável pelo pedido"}
-              name={"Employee"}
-              idInput={"Employee"}
-              classNameDiv={"divSelectEmployee"}
-              classNameSelect={"selectEmployee"}
-              value={decoded.fullName}
-              onInvalid={(e) => selectIsInvalid(e)}
-              disabled={true}
-            />
-
-            <SelectField
-              label={"Fornecedor:"}
-              name={"Supplier"}
-              id={"Supplier"}
-              classnameDiv={"divSelectSupplier"}
-              classNameSelect={"selectSupplier"}
-              value={supplierSelect ? JSON.stringify(supplierSelect[0]) : ""}
-              onInvalid={(e) => selectIsInvalid(e)}
-              onChange={(e) => {
-                const selectedSupplier = JSON.parse(e.target.value);
-                setSupplierSelect([selectedSupplier]);
-                isValid(e);
-              }}
-              arrayOptions={listSupplierSelect}
-            />
-          </div>
+        <div className="line line5">
           <div className="divStatusAndButtons">
             <div className="errorsOrSuccess">
               <p style={{ color: "red" }}>{Error && Error}</p>
