@@ -10,7 +10,7 @@ import TextareaField from "../../TextareaField/TextareaField";
 import LoadingSpin from '../../LoadingSpin/LoadingSpin'
 
 function FormNewSupplier({ dataSupplier, onSubmitSuccess }) {
-  
+  const apiUrl = import.meta.env.VITE_API_URL;
 
   const [ResponsiveSupplier, setResponsiveSupplier] = useState(true);
   const [PostToUpdate, SetPostToUpdade] = useState(true)
@@ -205,7 +205,7 @@ function FormNewSupplier({ dataSupplier, onSubmitSuccess }) {
   
     try {
       const response = await axios.post(
-        `http://localhost:8080/api/fornecedores`,
+        `${apiUrl}/api/fornecedores`,
         newSupplierData,
         {
           headers: {
@@ -296,7 +296,7 @@ function FormNewSupplier({ dataSupplier, onSubmitSuccess }) {
     }
     try {
       const response = await axios.put(
-        `http://localhost:8080/api/fornecedores/${UpdateSupplierId}`,
+        `${apiUrl}/api/fornecedores/${UpdateSupplierId}`,
         newSupplierData,
         {
           headers: {

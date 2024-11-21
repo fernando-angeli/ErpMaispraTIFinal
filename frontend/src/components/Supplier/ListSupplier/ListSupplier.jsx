@@ -15,7 +15,7 @@ const ListSupplier = ({onlyView}) => {
   ListSupplier.defaultProps = {
     onlyView: false,
   };
-
+  const apiUrl = import.meta.env.VITE_API_URL;
   const { JwtToken } = useAuth();
   const [suppliers, setSuppliers] = useState();
   const [supplierUpdate, setSupplierUpdate] = useState(null);
@@ -31,7 +31,7 @@ const ListSupplier = ({onlyView}) => {
   const handleShowSuppliers = async () => {
     setIsLoading(true)
     try {
-      const response = await axios.get(`http://localhost:8080/api/fornecedores`, {
+      const response = await axios.get(`${apiUrl}/api/fornecedores`, {
         headers: {
           Authorization: `Bearer ${JwtToken}`,
         },
@@ -63,7 +63,7 @@ const ListSupplier = ({onlyView}) => {
     }
     setIsLoading(true);
     try {
-      await axios.delete(`http://localhost:8080/api/fornecedores/${supplier.id}`, {
+      await axios.delete(`${apiUrl}/api/fornecedores/${supplier.id}`, {
         headers: {
           Authorization: `Bearer ${JwtToken}`,
         },

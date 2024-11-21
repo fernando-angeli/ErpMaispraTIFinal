@@ -69,12 +69,12 @@ function PageOfListSaleRegisters({
               {formatarDataBR(saleRegister.saleDate)}
             </td>
             <td className="td-cpfCnpj">
-              {formatarDataBR(saleRegister.saleDelivery)}
+              {saleRegister.saleDelivery ? formatarDataBR(saleRegister.saleDelivery) : "Aguardando Entrega"}
             </td>
             <td className="td-editLine"> 
-              <Link onClick={() => { setSelectedsaleRegister(saleRegister);  setshowModalDelivery(true)}}>
+              {saleRegister.saleStatus ? <Link onClick={() => { setSelectedsaleRegister(saleRegister);  setshowModalDelivery(true)}}>
               <CiDeliveryTruck  className="DeliveryLine" size={30} />
-              </Link>
+              </Link> : ''}
               <Link onClick={() => { setSelectedsaleRegister(saleRegister);  setshowModalDetails(true);  }}>
                 <BiDetail className="editLine" size={30} />
               </Link>

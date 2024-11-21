@@ -281,7 +281,7 @@ function FormNewClient( { dataClient, onSubmitSuccess }) {
       
       setIsLoading(true);
       
-      if (cnpjRegex.test(newSupplierData.cpfCnpj)) {
+      if (cnpjRegex.test(newClientData.cpfCnpj)) {
         setError(null);
       } else {
         setIsLoading(false);

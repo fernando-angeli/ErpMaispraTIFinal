@@ -67,7 +67,7 @@ function FormNewPurchasing(dataPurchasing) {
     const handleShowSuppliers = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:8080/api/fornecedores",
+          `${apiUrl}/api/fornecedores`,
           {
             headers: {
               Authorization: `Bearer ${JwtToken}`,

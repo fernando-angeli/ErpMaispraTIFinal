@@ -7,7 +7,7 @@ import LoadingSpin from '../LoadingSpin/LoadingSpin';
 import axios from 'axios';
 
 const ResetPassbyToken = ({ token }) => { 
-
+  const apiUrl = import.meta.env.VITE_API_URL;
   const [ResetPassword, setResetPassword] = useState("");
   const [ConfirmResetPassword, setConfirmResetPassword] = useState("");
   const [CpfConfirm, setCpfConfirm] = useState("");
@@ -49,7 +49,7 @@ const ResetPassbyToken = ({ token }) => {
     }
 
     try {
-      const response = await axios.post(`http://localhost:8080/auth/reset-password?token=${token}`,
+      const response = await axios.post(`${apiUrl}/auth/reset-password?token=${token}`,
         { newPassword: ResetPassword },
         { headers: {
           Authorization: `Bearer ${token}`,

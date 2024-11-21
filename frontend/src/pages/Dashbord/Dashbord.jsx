@@ -41,7 +41,7 @@ const Dashbord = () => {
 
   const handleShowSuppliers = async () => {
     try {
-      const response = await axios.get(`http://localhost:8080/api/fornecedores`, {
+      const response = await axios.get(`${apiUrl}/api/fornecedores`, {
         headers: {
           Authorization: `Bearer ${JwtToken}`,
         },

@@ -44,7 +44,7 @@ form.hiddenformNewClient {
 }
 
 .fieldDate {
-  flex-basis: 25%;
+  flex-basis: 35%;
   flex-grow: 0.5;
   flex-shrink: 2;
 }
@@ -67,12 +67,12 @@ form.hiddenformNewClient {
 .divIE {
   display: flex;
   flex-direction: column;
-  justify-content: END;
-  flex: 1;
-  position: relative;
-  gap: 5px;
+  justify-content: center;
+  align-items: start;
   bottom: 10px;
+  gap:1em;
   flex-basis: 40%;
+  padding-bottom: 3em;
 }
 
 /* line3 */

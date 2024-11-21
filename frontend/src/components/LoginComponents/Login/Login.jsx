@@ -13,6 +13,7 @@ const Login = () => {
   const [Error2, setError2] = useState();
   const { login } = useAuth();
   const navigate = useNavigate();
+  const apiUrl = import.meta.env.VITE_API_URL;
   const [isLoading, setIsLoading] = useState(false);
   
   const isInvalid = (e) => {
@@ -54,10 +55,11 @@ const Login = () => {
   };
 
   const handleSubmit = async (event) => {
+    console.log(`${apiUrl}/auth/login`)
     event.preventDefault();
     setIsLoading(true)
     try {
-      const response = await axios.post('http://localhost:8080/auth/login', {
+      const response = await axios.post(`${apiUrl}/auth/login`, {
         email: LoginEmail,
         password: LoginPassword,
       });
