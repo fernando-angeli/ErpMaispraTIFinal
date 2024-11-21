@@ -20,7 +20,7 @@ function OptionsNavigationMenu() {
     {
       icon: newSupplierIcon,
       description: "Novo Fornecedor",
-      url: "/supplier",
+      url: "/fornecedor",
     },
     {
       icon: newProductIcon,
@@ -30,12 +30,12 @@ function OptionsNavigationMenu() {
     {
       icon: newBuyIcon,
       description: "Compra de Insumos",
-      url: "/supplypurchasing",
+      url: "/compraInsumos",
     },
     {
       icon: newSaleIcon,
       description: "Venda de Produtos",
-      url: "/saleregister",
+      url: "/registroDeVendas",
     },
   ];
 
