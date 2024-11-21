@@ -149,6 +149,30 @@ function FormNewSaleRegister({ dataSaleRegister }) {
     }
   };
 
+
+
+  const deleteCardItem = (idToDelete) => {
+    setCardItems((prevItems) => prevItems.filter(item => item.id !== idToDelete));
+    setCardId(cardId - 1);
+    setCardItems((prevItems) => {
+      const itemToDelete = prevItems.find(item => item.id === idToDelete);
+      if (!itemToDelete) return prevItems
+      setListProducts((prevProducts) =>
+        prevProducts.map((prod) => {
+          if (prod.id === itemToDelete.productId) {
+            return {
+              ...prod,
+              availableForSale: Number(prod.availableForSale) + Number(itemToDelete.quant),
+            };
+          }
+          return prod;
+        })
+      );
+      return prevItems.filter(item => item.id !== idToDelete);
+    });
+    setCardId((prevId) => prevId - 1);
+  };
+
   const handleAddtoCard = (e) => {
     e.preventDefault();
     if (!NewSaleRegisterProduct || NewSaleRegisterProduct.length === 0) {
@@ -164,8 +188,10 @@ function FormNewSaleRegister({ dataSaleRegister }) {
       price: selectedProduct.productPrice,
       subtotal: +selectedProduct.productPrice * +NewSaleRegisterQuant,
     };
+
   
     if (+NewSaleRegisterQuant > +selectedProduct.availableForSale) {
+
       setError(
         +selectedProduct.availableForSale === 0
           ? "Produto sem estoque disponível!"
@@ -173,12 +199,12 @@ function FormNewSaleRegister({ dataSaleRegister }) {
       );
       return;
     }
-  
+
     if (!NewItemtoCard.quant || isNaN(NewItemtoCard.quant) || NewItemtoCard.quant <= 0) {
       setError("A quantidade deve ser preenchida e ser um número positivo.");
       return;
     }
-  
+
     if (!NewItemtoCard.price || isNaN(NewItemtoCard.price) || NewItemtoCard.price <= 0) {
       setError("O preço deve ser preenchido e ser um número positivo.");
       return;
@@ -222,28 +248,6 @@ function FormNewSaleRegister({ dataSaleRegister }) {
     setNewSaleRegisterQuant("");
     setError("");
   };
-  
-   const deleteCardItem = (idToDelete) => {
-    setCardItems((prevItems) => {
-      const itemToDelete = prevItems.find(item => item.id === idToDelete);
-      if (!itemToDelete) return prevItems;
-      setListProducts((prevProducts) =>
-        prevProducts.map((prod) => {
-          if (prod.id === itemToDelete.productId) {
-            return {
-              ...prod,
-              availableForSale: +prod.availableForSale + +itemToDelete.quant,
-            };
-          }
-          return prod;
-        })
-      );
-      return prevItems.filter(item => item.id !== idToDelete);
-    });
-    setCardId((prevId) => prevId - 1);
-  };
-  
-
   const handleGetClients = async () => {
     try {
       const response = await axios.get(`${apiUrl}/api/clientes`, {
@@ -333,6 +337,9 @@ function FormNewSaleRegister({ dataSaleRegister }) {
             onChange={(e) => setNewSaleRegisterData(e.target.value)}
           />
 
+        </div>
+
+        <div className="line">
           <InputField
             classNameDiv="fieldDate"
             label="Data Prevista:"
@@ -341,9 +348,6 @@ function FormNewSaleRegister({ dataSaleRegister }) {
             value={NewSaleRegisterDataPrev}
             onChange={(e) => setNewSaleRegisterDataPrev(e.target.value)}
           />
-        </div>
-
-        <div className="line">
 
           <SelectFieldProduct
             classNameDiv="fieldProduct"
@@ -363,16 +367,17 @@ function FormNewSaleRegister({ dataSaleRegister }) {
             value={NewSaleRegisterQuant}
             onChange={(e) => setNewSaleRegisterQuant(e.target.value)}
           />
-          
 
-            <div className="divRegisterButton">
-              {isLoading ? <LoadingSpin /> : <button type="submit" className="registerButton" onClick={(e) => handleAddtoCard(e)}>Registrar</button>}
-            </div>
+
+          <div className="divRegisterButton">
+            {isLoading ? <LoadingSpin /> : <button type="submit" className="registerButton" onClick={(e) => handleAddtoCard(e)}>Registrar</button>}
+          </div>
+
         </div>
-            <div className="errorsOrSuccess">
-              {Error && <p className="error">{Error}</p>}
-              {Success && <p className="salesuccess">{Success}</p>}
-            </div>
+        <div className="errorsOrSuccess">
+          {Error && <p className="error">{Error}</p>}
+          {Success && <p className="salesuccess">{Success}</p>}
+        </div>
       </form>
       <CardSaleRegister
         saleRegisters={CardItems}
@@ -381,7 +386,7 @@ function FormNewSaleRegister({ dataSaleRegister }) {
         handleSubmit={handleSubmit}
         handleUpdate={handleUpdate}
       />
-      
+
     </div>
   );
 }

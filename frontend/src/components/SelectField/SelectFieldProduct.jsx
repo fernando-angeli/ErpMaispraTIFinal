@@ -22,6 +22,10 @@ function SelectFieldProduct({
     option.name?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  const formatarReal = (valor) => {
+    const formatado = (valor / 1).toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    return formatado;
+}
 
   useEffect(() => {
     if (selectedProduct) {
@@ -61,7 +65,7 @@ function SelectFieldProduct({
             <option
               key={option.id}
               value={option.name} 
-              label={`Disponível: ${option.availableForSale} - Reservado: ${option.reservedStock} - R$ ${option.productPrice.toFixed(2)}`}
+              label={`Disponível: ${option.availableForSale} - Reservado: ${option.reservedStock} - R$ ${formatarReal(option.productPrice)}`}
             />
           ))}
         </datalist>
