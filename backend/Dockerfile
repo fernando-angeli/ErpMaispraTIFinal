@@ -1,13 +1,14 @@
-FROM openjdk:17
+# Usando a imagem do OpenJDK como base
+FROM openjdk:17-jdk-slim
 
-# Define o diretório de trabalho dentro do container
-WORKDIR /api-erp
+# Diretório de trabalho no container
+WORKDIR /app
 
-# Expoe a porta 8080
+# Copiar o arquivo JAR da aplicação para dentro do container
+COPY target/api_erpMaisPraTi.jar app.jar
+
+# Expor a porta da aplicação
 EXPOSE 8080
 
-# Adiciona o arquivo JAR ao container
-ADD ./target/maisPraTi-0.0.1-SNAPSHOT.jar api-erp.jar
-
-# Comando para rodar o JAR correto
-ENTRYPOINT ["java", "-jar", "api-erp.jar"]
+# Comando para rodar a aplicação Spring Boot
+ENTRYPOINT ["java", "-jar", "app.jar"]
